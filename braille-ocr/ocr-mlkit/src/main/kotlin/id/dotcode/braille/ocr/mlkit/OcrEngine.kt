@@ -12,9 +12,10 @@ import id.dotcode.braille.ocr.model.OcrResult
 import id.dotcode.braille.ocr.model.Timings
 import id.dotcode.braille.ocr.pipeline.DocumentStructurer
 import id.dotcode.braille.ocr.pipeline.StructuringConfig
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 import kotlin.system.measureTimeMillis
+import kotlinx.coroutines.suspendCancellableCoroutine
 
 /**
  * The public entry point of the OCR module.
@@ -30,8 +31,10 @@ class OcrEngine(
 
     private val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
     private val structurer = DocumentStructurer(config)
+    private val closed = AtomicBoolean(false)
 
     suspend fun recognize(uri: Uri): OcrResult {
+        if (closed.get()) return OcrResult.Failure(FailureReason.Cancelled, "engine closed")
         var bitmap: Bitmap? = null
         var rotation = 0
         val decodeMs = measureTimeMillis {
@@ -50,6 +53,8 @@ class OcrEngine(
         recognize(bitmap, rotationDegrees, decodeMs = 0)
 
     private suspend fun recognize(bitmap: Bitmap, rotationDegrees: Int, decodeMs: Long): OcrResult {
+        if (closed.get()) return OcrResult.Failure(FailureReason.Cancelled, "engine closed")
+
         var scaled: Bitmap = bitmap
         var gateFailure: FailureReason? = null
         val preprocessMs = measureTimeMillis {
@@ -58,21 +63,22 @@ class OcrEngine(
         }
         gateFailure?.let { return OcrResult.Failure(it) }
 
-        var raw: com.google.mlkit.vision.text.Text? = null
-        var error: Throwable? = null
         val recognizeStart = System.currentTimeMillis()
         val input = InputImage.fromBitmap(scaled, rotationDegrees)
-        val outcome = suspendCoroutine { continuation ->
+        val outcome = suspendCancellableCoroutine { continuation ->
             recognizer.process(input)
-                .addOnSuccessListener { continuation.resume(Result.success(it)) }
-                .addOnFailureListener { continuation.resume(Result.failure(it)) }
+                .addOnSuccessListener { if (continuation.isActive) continuation.resume(RecognitionOutcome.Success(it)) }
+                .addOnFailureListener { if (continuation.isActive) continuation.resume(RecognitionOutcome.Failed(it)) }
+                .addOnCanceledListener { if (continuation.isActive) continuation.resume(RecognitionOutcome.Cancelled) }
         }
-        raw = outcome.getOrNull()
-        error = outcome.exceptionOrNull()
         val recognizeMs = System.currentTimeMillis() - recognizeStart
 
-        error?.let { return OcrResult.Failure(FailureReason.ModelUnavailable, it.message) }
-        val text = raw ?: return OcrResult.Failure(FailureReason.ModelUnavailable)
+        val text = when (outcome) {
+            is RecognitionOutcome.Cancelled -> return OcrResult.Failure(FailureReason.Cancelled)
+            is RecognitionOutcome.Failed ->
+                return OcrResult.Failure(FailureReason.ModelUnavailable, outcome.error.message)
+            is RecognitionOutcome.Success -> outcome.text
+        }
         if (text.textBlocks.isEmpty()) return OcrResult.Failure(FailureReason.NoTextFound)
 
         // Recognition ran on the scaled bitmap, so the document's page space is the
@@ -96,6 +102,15 @@ class OcrEngine(
     }
 
     override fun close() {
-        recognizer.close()
+        if (closed.compareAndSet(false, true)) {
+            recognizer.close()
+        }
+    }
+
+    /** Distinguishes ML Kit's three possible Task outcomes for the suspending bridge. */
+    private sealed interface RecognitionOutcome {
+        data class Success(val text: com.google.mlkit.vision.text.Text) : RecognitionOutcome
+        data class Failed(val error: Throwable) : RecognitionOutcome
+        object Cancelled : RecognitionOutcome
     }
 }
