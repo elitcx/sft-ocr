@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!--
+      Only the accuracy harness needs these, and only when a human has deliberately
+      pushed sample worksheets to shared storage. Under scoped storage a File listing of
+      /sdcard/Download shows the directory but none of another app's files, so the
+      harness sees an empty folder and skips. MANAGE_EXTERNAL_STORAGE is granted out of
+      band with an appops command; see OcrAccuracyHarnessTest's KDoc. Nothing in the
+      shipped library requests these. This manifest merges into the TEST apk only.
+    -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+</manifest>
