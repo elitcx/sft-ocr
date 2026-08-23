@@ -84,6 +84,16 @@ class DocumentStructurer(private val config: StructuringConfig = StructuringConf
         return level.coerceIn(0, config.maxIndentLevel)
     }
 
+    /**
+     * The side-margin guard deliberately runs *before* the centre check, not after. A
+     * block that fills most of its column (small margins on both sides) is visually
+     * indistinguishable from full-width or justified text — there is no reliable signal
+     * left to tell "centered and just happens to be wide" apart from "not centered at
+     * all." Reporting such a block as CENTER would be a false positive the braille
+     * renderer would act on, so any block that does not clear [StructuringConfig
+     * .minSideMarginFraction] on the left is short-circuited to LEFT regardless of how
+     * close its midpoint sits to the column centre. Do not reorder these checks.
+     */
     private fun alignment(
         group: LineGroup,
         columnBounds: ClosedFloatingPointRange<Float>,

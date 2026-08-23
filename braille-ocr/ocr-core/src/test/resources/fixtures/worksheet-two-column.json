@@ -3,22 +3,12 @@
     "imageHeight": 2000,
     "lines": [
         {
-            "text": "LEMBAR KERJA IPA",
+            "text": "5. Jelaskan siklus hidup kupu-kupu",
             "box": {
-                "left": 100.0,
-                "top": 60.0,
-                "right": 600.0,
-                "bottom": 116.0
-            },
-            "confidence": 0.95
-        },
-        {
-            "text": "1. Sebutkan tiga contoh sumber daya alam",
-            "box": {
-                "left": 100.0,
-                "top": 300.0,
-                "right": 600.0,
-                "bottom": 330.0
+                "left": 900.0,
+                "top": 400.0,
+                "right": 1400.0,
+                "bottom": 430.0
             },
             "confidence": 0.95
         },
@@ -33,32 +23,22 @@
             "confidence": 0.95
         },
         {
-            "text": "3. Apa fungsi akar bagi tumbuhan",
+            "text": "7",
             "box": {
                 "left": 100.0,
-                "top": 500.0,
+                "top": 1900.0,
+                "right": 140.0,
+                "bottom": 1930.0
+            },
+            "confidence": 0.95
+        },
+        {
+            "text": "LEMBAR KERJA IPA",
+            "box": {
+                "left": 100.0,
+                "top": 60.0,
                 "right": 600.0,
-                "bottom": 530.0
-            },
-            "confidence": 0.95
-        },
-        {
-            "text": "4. Sebutkan tiga jenis hewan herbivora",
-            "box": {
-                "left": 900.0,
-                "top": 300.0,
-                "right": 1400.0,
-                "bottom": 330.0
-            },
-            "confidence": 0.95
-        },
-        {
-            "text": "5. Jelaskan siklus hidup kupu-kupu",
-            "box": {
-                "left": 900.0,
-                "top": 400.0,
-                "right": 1400.0,
-                "bottom": 430.0
+                "bottom": 116.0
             },
             "confidence": 0.95
         },
@@ -73,12 +53,32 @@
             "confidence": 0.95
         },
         {
-            "text": "7",
+            "text": "3. Apa fungsi akar bagi tumbuhan",
             "box": {
                 "left": 100.0,
-                "top": 1900.0,
-                "right": 140.0,
-                "bottom": 1930.0
+                "top": 500.0,
+                "right": 600.0,
+                "bottom": 530.0
+            },
+            "confidence": 0.95
+        },
+        {
+            "text": "1. Sebutkan tiga contoh sumber daya alam",
+            "box": {
+                "left": 100.0,
+                "top": 300.0,
+                "right": 600.0,
+                "bottom": 330.0
+            },
+            "confidence": 0.95
+        },
+        {
+            "text": "4. Sebutkan tiga jenis hewan herbivora",
+            "box": {
+                "left": 900.0,
+                "top": 300.0,
+                "right": 1400.0,
+                "bottom": 330.0
             },
             "confidence": 0.95
         }

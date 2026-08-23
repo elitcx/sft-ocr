@@ -95,4 +95,38 @@ class DocumentStructurerTest {
             .mapNotNull { it.marker }
         assertEquals(listOf("1.", "2.", "3.", "4.", "5.", "6."), markers)
     }
+
+    @Test
+    fun `a near full width block is not reported as centered`() {
+        // This line alone establishes column bounds of 100..1500 (width 1400). The
+        // target line below sits at 150..1450 — its midpoint (800) lands exactly on the
+        // column centre (800), so without the side-margin guard it would qualify as
+        // CENTER. Its margins (50 on each side) are far below minSideMarginFraction
+        // (0.15 * 1400 = 210), so the guard must force LEFT instead.
+        val doc = structurer.structure(
+            page(
+                line("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", 100f, 60f, 1400f, 30f),
+                line(
+                    "target block text that spans nearly the whole column width",
+                    150f,
+                    300f,
+                    1300f,
+                    30f,
+                ),
+            )
+        )
+        val target = doc.blocks.first { it.text.startsWith("target block") }
+        assertEquals(Alignment.LEFT, target.alignment)
+    }
+
+    @Test
+    fun `mean confidence is null when no line reports confidence`() {
+        val doc = structurer.structure(
+            page(
+                line("baris satu tanpa confidence", 100f, 100f, 400f, 30f, confidence = null),
+                line("baris dua tanpa confidence", 100f, 300f, 400f, 30f, confidence = null),
+            )
+        )
+        assertEquals(null, doc.meanConfidence)
+    }
 }
