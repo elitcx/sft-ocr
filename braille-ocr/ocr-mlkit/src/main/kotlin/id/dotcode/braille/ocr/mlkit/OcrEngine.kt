@@ -2,7 +2,6 @@ package id.dotcode.braille.ocr.mlkit
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
@@ -12,6 +11,7 @@ import id.dotcode.braille.ocr.model.OcrResult
 import id.dotcode.braille.ocr.model.Timings
 import id.dotcode.braille.ocr.pipeline.DocumentStructurer
 import id.dotcode.braille.ocr.pipeline.StructuringConfig
+import java.io.ByteArrayInputStream
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.coroutines.resume
 import kotlin.system.measureTimeMillis
@@ -38,12 +38,19 @@ class OcrEngine(
         var bitmap: Bitmap? = null
         var rotation = 0
         val decodeMs = measureTimeMillis {
-            rotation = runCatching {
-                context.contentResolver.openInputStream(uri)!!.use { ImagePreprocessor.rotationDegrees(it) }
-            }.getOrDefault(0)
-            bitmap = runCatching {
-                context.contentResolver.openInputStream(uri)!!.use { BitmapFactory.decodeStream(it) }
+            // One open. The compressed bytes are a few MB; the decoded bitmap would be
+            // an order of magnitude larger, so buffering the file is the cheap half and
+            // it lets EXIF, the bounds pass and the real decode all share it.
+            val bytes = runCatching {
+                context.contentResolver.openInputStream(uri)!!.use { it.readBytes() }
             }.getOrNull()
+            if (bytes != null) {
+                rotation = runCatching {
+                    ImagePreprocessor.rotationDegrees(ByteArrayInputStream(bytes))
+                }.getOrDefault(0)
+                // Subsampled decode: never allocate the full-resolution frame.
+                bitmap = runCatching { ImagePreprocessor.decodeSampled(bytes) }.getOrNull()
+            }
         }
         val decoded = bitmap ?: return OcrResult.Failure(FailureReason.NoTextFound, "could not decode image")
         return recognize(decoded, rotation, decodeMs)
@@ -83,7 +90,17 @@ class OcrEngine(
 
         // Recognition ran on the scaled bitmap, so the document's page space is the
         // scaled space. Coordinates and page dimensions therefore stay consistent.
-        val adapted = MlKitAdapter.toRawTextResult(text, scaled.width, scaled.height)
+        //
+        // ML Kit reports coordinates in the ROTATED image space, not in the bitmap's own
+        // space. For a 90 or 270 degree EXIF capture - the norm for phone photos, and
+        // this app's primary path - the page is therefore as wide as the bitmap is tall.
+        // Passing the unrotated dimensions transposed the page relative to its boxes,
+        // which broke RoleClassifier's topBandFraction/bottomBandFraction bands and
+        // shipped wrong pageWidth/pageHeight in the exported JSON.
+        val quarterTurn = rotationDegrees % 180 != 0
+        val pageWidth = if (quarterTurn) scaled.height else scaled.width
+        val pageHeight = if (quarterTurn) scaled.width else scaled.height
+        val adapted = MlKitAdapter.toRawTextResult(text, pageWidth, pageHeight)
         var structureMs = 0L
         lateinit var document: id.dotcode.braille.ocr.model.OcrDocument
         structureMs = measureTimeMillis {
