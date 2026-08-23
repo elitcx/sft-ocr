@@ -48,11 +48,14 @@ class SkewEstimatorTest {
         val result = estimator.deskew(input)
         assertTrue(abs(result.skewDeg - 10f) < 0.01f)
         // The input box is axis-aligned (not pre-tilted), so rotating its corners by 10deg
-        // enlarges the enclosing hull: for w=200,h=40 the true post-rotation height is
-        // w*sin(10deg) + h*cos(10deg) ~= 74.1, not the ~30-60 the brief's comment assumed.
-        // The brief's "rotation is area-preserving for the enclosing hull" claim does not
-        // hold for an axis-aligned box rotated in place; widened the bound to match reality
-        // while still asserting the height stays sane (not blown up to page scale).
-        result.result.lines.forEach { assertTrue(it.box.height in 30f..80f) }
+        // enlarges the enclosing hull to the analytically exact values below; this is not
+        // "area-preserving" (that claim was wrong), it is fixed by the hull formula for a
+        // w x h rectangle rotated by theta:
+        //   height' = w*sin(theta) + h*cos(theta) = 200*0.17365 + 40*0.98481 = 74.12
+        //   width'  = w*cos(theta) + h*sin(theta) = 200*0.98481 + 40*0.17365 = 203.90
+        result.result.lines.forEach {
+            assertTrue(abs(it.box.height - 74.12f) < 0.5f)
+            assertTrue(abs(it.box.width - 203.90f) < 0.5f)
+        }
     }
 }
