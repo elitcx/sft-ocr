@@ -23,4 +23,4 @@ dependencyResolutionManagement {
 rootProject.name = "braille-ocr"
 include(":ocr-core")
 include(":ocr-mlkit")
-// :app is added in a later task
+include(":app")
