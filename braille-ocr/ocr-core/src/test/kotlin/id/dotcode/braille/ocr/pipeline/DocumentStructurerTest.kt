@@ -1,8 +1,10 @@
 package id.dotcode.braille.ocr.pipeline
 
+import id.dotcode.braille.ocr.geometry.PointF
 import id.dotcode.braille.ocr.model.Alignment
 import id.dotcode.braille.ocr.model.BlockRole
 import id.dotcode.braille.ocr.model.Timings
+import kotlin.math.abs
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import org.junit.jupiter.api.Test
@@ -94,6 +96,61 @@ class DocumentStructurerTest {
             .filter { it.role == id.dotcode.braille.ocr.model.BlockRole.QUESTION }
             .mapNotNull { it.marker }
         assertEquals(listOf("1.", "2.", "3.", "4.", "5.", "6."), markers)
+    }
+
+    @Test
+    fun `a full width title does not scramble two column reading order`() {
+        // The regression behind CRITICAL 1. The title spans the gutter (1340 > 0.8 *
+        // 1600), so under the old interval-merging it unioned the left and right runs,
+        // the page reported ONE column, and reading order came out 1, 4, 2, 5, 3, 6.
+        val doc = structurer.structure(
+            page(
+                line("LEMBAR KERJA IPA KELAS ENAM", 60f, 60f, 1340f, 56f),
+                line("1. Sebutkan tiga sumber daya alam", 100f, 300f, 500f, 30f),
+                line("2. Jelaskan proses fotosintesis", 100f, 400f, 500f, 30f),
+                line("3. Apa fungsi akar pada tumbuhan", 100f, 500f, 500f, 30f),
+                line("4. Sebutkan tiga hewan herbivora", 900f, 300f, 500f, 30f),
+                line("5. Jelaskan siklus hidup kupu-kupu", 900f, 400f, 500f, 30f),
+                line("6. Apa manfaat matahari bagi tumbuhan", 900f, 500f, 500f, 30f),
+            )
+        )
+        assertEquals(2, doc.columnCount)
+        assertEquals(
+            listOf("1.", "2.", "3.", "4.", "5.", "6."),
+            doc.blocks.filter { it.role == BlockRole.QUESTION }.mapNotNull { it.marker },
+        )
+        // Left column is read out entirely before the right one.
+        assertEquals(
+            listOf(0, 0, 0, 0, 1, 1, 1),
+            doc.blocks.map { it.columnIndex },
+        )
+    }
+
+    @Test
+    fun `a skewed page still classifies its title as a title`() {
+        // The regression behind CRITICAL 2. Before the fix, deskew rebuilt each box as
+        // the AABB of the rotated AABB, inflating height by w*sin+h*cos. At 8 degrees
+        // the 600x56 title measured 139.0 tall and the 700x30 body lines 127.1, so the
+        // title's relative height fell to ~1.09 and it classified as PARAGRAPH. Using
+        // the real corner points, the deskewed heights come back at their true 56 and
+        // 30, giving a relative height of 1.87 and a TITLE.
+        val pivot = PointF(800f, 1000f)
+        val doc = structurer.structure(
+            page(
+                skewedLine("LEMBAR KERJA IPA", 100f, 60f, 600f, 56f, 8f, pivot),
+                skewedLine("Bacalah teks berikut dengan saksama", 100f, 300f, 700f, 30f, 8f, pivot),
+                skewedLine("lalu jawablah pertanyaan yang ada", 100f, 340f, 700f, 30f, 8f, pivot),
+                skewedLine("bersama teman sebangkumu di kelas", 100f, 380f, 700f, 30f, 8f, pivot),
+                skewedLine("dengan tulisan yang rapi dan jelas", 100f, 420f, 700f, 30f, 8f, pivot),
+            )
+        )
+        assertTrue(abs(doc.skewDeg - 8f) < 0.01f, "expected 8 degrees of skew, got ${doc.skewDeg}")
+        val title = doc.blocks.first()
+        assertEquals(BlockRole.TITLE, title.role, "title relativeTextHeight=${title.relativeTextHeight}")
+        assertTrue(
+            title.relativeTextHeight > 1.6f,
+            "expected the deskewed title to stay ~1.87x body height, got ${title.relativeTextHeight}",
+        )
     }
 
     @Test
