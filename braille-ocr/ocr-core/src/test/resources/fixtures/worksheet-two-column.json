@@ -33,11 +33,11 @@
             "confidence": 0.95
         },
         {
-            "text": "LEMBAR KERJA IPA",
+            "text": "LEMBAR KERJA IPA KELAS ENAM",
             "box": {
-                "left": 100.0,
+                "left": 60.0,
                 "top": 60.0,
-                "right": 600.0,
+                "right": 1400.0,
                 "bottom": 116.0
             },
             "confidence": 0.95

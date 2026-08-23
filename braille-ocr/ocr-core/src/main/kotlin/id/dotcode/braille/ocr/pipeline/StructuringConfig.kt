@@ -9,6 +9,12 @@ data class StructuringConfig(
     val minSkewDeg: Float = 0.5f,
     /** A gutter wider than this many median character widths splits a column. */
     val columnGutterFactor: Float = 3.0f,
+    /**
+     * A line wider than this fraction of the page is treated as a spanning element — a
+     * title, header or instruction sentence that crosses the gutter — and is excluded
+     * from gutter detection. It is still assigned to a column afterwards by its centre.
+     */
+    val spanningLineWidthFraction: Float = 0.8f,
     /** A column must hold at least this many lines to be considered real. */
     val minLinesPerColumn: Int = 2,
     /** Below this many lines, never attempt column splitting. */

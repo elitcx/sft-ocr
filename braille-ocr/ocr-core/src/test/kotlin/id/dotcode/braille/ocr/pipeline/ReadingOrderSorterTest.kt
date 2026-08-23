@@ -9,7 +9,7 @@ class ReadingOrderSorterTest {
 
     private fun order(lines: List<id.dotcode.braille.ocr.raw.RawLine>): List<String> {
         val stats = PageStats.from(lines)
-        val columns = ColumnSegmenter(config).segment(lines, stats)
+        val columns = ColumnSegmenter(config).segment(lines, stats, 1600)
         return sorter.sort(lines, columns, stats).map { it.line.text }
     }
 

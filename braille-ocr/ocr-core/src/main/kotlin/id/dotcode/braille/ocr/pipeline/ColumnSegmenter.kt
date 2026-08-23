@@ -9,14 +9,37 @@ import id.dotcode.braille.ocr.raw.RawLine
  * left and right columns line by line, producing text that is not merely misformatted
  * but semantically scrambled. It is deliberately conservative: a wrong split is far more
  * damaging than a missed one, so ambiguous pages collapse to a single column.
+ *
+ * Only *column-bound* lines inform the profile. A line wider than
+ * [StructuringConfig.spanningLineWidthFraction] of the page — a title, a running header,
+ * an instruction sentence — crosses the gutter by construction and therefore carries no
+ * information about where the gutter is. Feeding it into the interval merge unions the
+ * left and right runs into one and collapses the page to a single column, which is what
+ * used to happen on essentially every real worksheet (they all have a full-width title).
+ * Spanning lines are excluded from gutter detection and then assigned to a column by
+ * their centre like everything else.
  */
 class ColumnSegmenter(private val config: StructuringConfig) {
 
-    fun segment(lines: List<RawLine>, stats: PageStats): ColumnAssignment {
+    /**
+     * @param pageWidth width of the page in the same coordinate space as the line boxes.
+     * Used only to decide which lines are full-width spanning elements. A non-positive
+     * value falls back to the observed extent of the lines themselves.
+     */
+    fun segment(lines: List<RawLine>, stats: PageStats, pageWidth: Int): ColumnAssignment {
         val single = singleColumn(lines)
         if (lines.size < config.minLinesForColumnSplit) return single
 
-        val runs = mergeIntervals(lines.map { it.box.left to it.box.right })
+        val effectiveWidth =
+            if (pageWidth > 0) pageWidth.toFloat()
+            else (lines.maxOf { it.box.right } - lines.minOf { it.box.left })
+        val spanThreshold = effectiveWidth * config.spanningLineWidthFraction
+
+        // Lines that stay inside one column are the only evidence of column structure.
+        val columnBound = lines.filter { it.box.width <= spanThreshold }
+        if (columnBound.size < config.minLinesForColumnSplit) return single
+
+        val runs = mergeIntervals(columnBound.map { it.box.left to it.box.right })
         if (runs.size < 2) return single
 
         val threshold = stats.medianCharWidth * config.columnGutterFactor
@@ -29,12 +52,19 @@ class ColumnSegmenter(private val config: StructuringConfig) {
         val columnCount = boundaries.size + 1
 
         // Every column must be substantial, otherwise a stray page number or margin note
-        // masquerades as a column.
-        val populated = (0 until columnCount).all { c -> assignment.count { it == c } >= config.minLinesPerColumn }
+        // masquerades as a column. Counted over the column-bound lines only: a spanning
+        // title lands in one column by centre and must not be able to prop it up.
+        val boundAssignment = columnBound.map { l -> boundaries.count { it < l.box.centerX } }
+        val populated = (0 until columnCount).all { c ->
+            boundAssignment.count { it == c } >= config.minLinesPerColumn
+        }
         if (!populated) return single
 
+        // Column extents come from the column-bound lines too, so a spanning title does
+        // not stretch a column's reported bounds across the whole page and skew the
+        // downstream indent and alignment measurements.
         val bounds = (0 until columnCount).map { c ->
-            val boxes = lines.filterIndexed { i, _ -> assignment[i] == c }.map { it.box }
+            val boxes = columnBound.filterIndexed { i, _ -> boundAssignment[i] == c }.map { it.box }
             boxes.minOf { it.left }..boxes.maxOf { it.right }
         }
         return ColumnAssignment(assignment, columnCount, bounds)

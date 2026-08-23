@@ -11,7 +11,7 @@ class RoleClassifierTest {
 
     private fun classify(lines: List<RawLine>, pageHeight: Int = 2000): List<BlockRole> {
         val stats = PageStats.from(lines)
-        val columns = ColumnSegmenter(config).segment(lines, stats)
+        val columns = ColumnSegmenter(config).segment(lines, stats, 1600)
         val ordered = ReadingOrderSorter(config).sort(lines, columns, stats)
         val groups = LineMerger(config).merge(ordered, stats)
         return classifier.classify(groups, stats, pageHeight)

@@ -9,7 +9,7 @@ class LineMergerTest {
 
     private fun groups(lines: List<id.dotcode.braille.ocr.raw.RawLine>): List<LineGroup> {
         val stats = PageStats.from(lines)
-        val columns = ColumnSegmenter(config).segment(lines, stats)
+        val columns = ColumnSegmenter(config).segment(lines, stats, 1600)
         val ordered = ReadingOrderSorter(config).sort(lines, columns, stats)
         return merger.merge(ordered, stats)
     }
