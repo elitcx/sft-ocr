@@ -1,6 +1,7 @@
 package id.dotcode.braille.ocr.mlkit
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.exifinterface.media.ExifInterface
 import java.io.InputStream
 
@@ -15,6 +16,40 @@ import java.io.InputStream
 object ImagePreprocessor {
 
     const val TARGET_LONG_EDGE = 1600
+
+    /**
+     * Decodes with an [BitmapFactory.Options.inSampleSize] chosen from the header alone,
+     * so a full-resolution capture is never materialized in memory.
+     *
+     * A 12MP JPEG decoded naively allocates ~48MB as ARGB_8888 before any downscale, and
+     * [CaptureQualityGate] then allocates two more `IntArray(w*h)` on top. On the
+     * mid-range phones this app targets that is an OOM waiting to happen. Two passes -
+     * bounds first, then a subsampled decode - cap the peak allocation at roughly the
+     * target size instead. [downscale] covers the remaining non-power-of-two factor.
+     */
+    fun decodeSampled(data: ByteArray, targetLongEdge: Int = TARGET_LONG_EDGE): Bitmap? {
+        val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        BitmapFactory.decodeByteArray(data, 0, data.size, bounds)
+        val options = BitmapFactory.Options().apply {
+            inSampleSize = sampleSizeFor(bounds.outWidth, bounds.outHeight, targetLongEdge)
+            inPreferredConfig = Bitmap.Config.ARGB_8888
+        }
+        return BitmapFactory.decodeByteArray(data, 0, data.size, options)
+    }
+
+    /**
+     * The largest power-of-two subsampling factor that still leaves the long edge at or
+     * above [targetLongEdge]. Never overshoots below the target, so no detail is lost
+     * that the subsequent [downscale] would have kept. Pure arithmetic, hence unit
+     * testable without a device.
+     */
+    fun sampleSizeFor(width: Int, height: Int, targetLongEdge: Int = TARGET_LONG_EDGE): Int {
+        val longEdge = maxOf(width, height)
+        if (longEdge <= 0 || targetLongEdge <= 0) return 1
+        var sample = 1
+        while (longEdge / (sample * 2) >= targetLongEdge) sample *= 2
+        return sample
+    }
 
     fun downscale(bitmap: Bitmap, targetLongEdge: Int = TARGET_LONG_EDGE): Bitmap {
         val longEdge = maxOf(bitmap.width, bitmap.height)
