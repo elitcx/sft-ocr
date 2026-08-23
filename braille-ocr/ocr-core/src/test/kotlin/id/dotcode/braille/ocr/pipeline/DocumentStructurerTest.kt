@@ -127,6 +127,41 @@ class DocumentStructurerTest {
     }
 
     @Test
+    fun `a centred full width title is the first block in reading order`() {
+        // The coin flip, end to end. Left column 100..640, right column 860..1500, so
+        // the gutter midpoint is 750; the title spans 100..1500 with its centre at 800.
+        // Under centre-based assignment the title is pinned to column 1 and, because
+        // ReadingOrderSorter is column-major, it comes out as block 3 — AFTER all three
+        // left-column questions. That is the same scrambled reading order CRITICAL 1
+        // existed to eliminate, surviving in the half that only shows up on real
+        // worksheets. Leftmost-overlap assignment makes it deterministic.
+        val doc = structurer.structure(
+            page(
+                line("LEMBAR KERJA IPA KELAS ENAM SEMESTER SATU", 100f, 60f, 1400f, 56f),
+                line("1. Sebutkan sumber daya alam", 100f, 300f, 540f, 30f),
+                line("2. Jelaskan fotosintesis", 100f, 400f, 540f, 30f),
+                line("3. Apa fungsi akar tumbuhan", 100f, 500f, 540f, 30f),
+                line("4. Sebutkan hewan herbivora", 860f, 300f, 640f, 30f),
+                line("5. Jelaskan siklus kupu-kupu", 860f, 400f, 640f, 30f),
+                line("6. Apa manfaat matahari", 860f, 500f, 640f, 30f),
+            )
+        )
+        assertEquals(2, doc.columnCount)
+
+        val first = doc.blocks.first()
+        assertEquals(0, first.id)
+        assertEquals(BlockRole.TITLE, first.role, "first block was '${first.text}'")
+        assertTrue(
+            first.text.startsWith("LEMBAR KERJA IPA"),
+            "the title must be read before any question, but block 0 was '${first.text}'",
+        )
+        assertEquals(
+            listOf("1.", "2.", "3.", "4.", "5.", "6."),
+            doc.blocks.filter { it.role == BlockRole.QUESTION }.mapNotNull { it.marker },
+        )
+    }
+
+    @Test
     fun `a skewed page still classifies its title as a title`() {
         // The regression behind CRITICAL 2. Before the fix, deskew rebuilt each box as
         // the AABB of the rotated AABB, inflating height by w*sin+h*cos. At 8 degrees

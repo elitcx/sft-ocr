@@ -16,8 +16,8 @@ import id.dotcode.braille.ocr.raw.RawLine
  * information about where the gutter is. Feeding it into the interval merge unions the
  * left and right runs into one and collapses the page to a single column, which is what
  * used to happen on essentially every real worksheet (they all have a full-width title).
- * Spanning lines are excluded from gutter detection and then assigned to a column by
- * their centre like everything else.
+ * Spanning lines are excluded from gutter detection and then assigned to the leftmost
+ * column they overlap.
  */
 class ColumnSegmenter(private val config: StructuringConfig) {
 
@@ -48,12 +48,34 @@ class ColumnSegmenter(private val config: StructuringConfig) {
             .map { (a, b) -> (a.second + b.first) / 2f }
         if (boundaries.isEmpty()) return single
 
-        val assignment = lines.map { l -> boundaries.count { it < l.box.centerX } }
+        // Column-bound lines go to the column containing their centre. Spanning lines go
+        // to the LEFTMOST column they overlap - the column containing their left edge.
+        //
+        // Assigning a spanning line by its centre is a coin flip: on a symmetric
+        // two-column page the gutter midpoint and a centred full-width title's centre
+        // are the same point, so sub-pixel asymmetry decides the outcome. Landing in
+        // column 1 makes ReadingOrderSorter (column-major) emit the page title AFTER
+        // every left-column question, which is exactly the scrambled reading order this
+        // stage exists to prevent. Leftmost-overlap is deterministic and puts a
+        // full-width title ahead of all left-column content.
+        //
+        // WHAT THIS DOES NOT SOLVE: a full-width line in the MIDDLE of a two-column page
+        // should precede the remaining content of BOTH columns. Pinning it to column 0
+        // does not achieve that - it sorts among the left column's content and the right
+        // column still runs past it. The real fix is a spanning-line ordering tier in
+        // ReadingOrderSorter, where a spanning line splits the page into stacked column
+        // groups ordered by vertical position. That is a change to the ordering model,
+        // not to this assignment, and is deliberately not attempted here.
+        val assignment = lines.map { l ->
+            val x = if (l.box.width > spanThreshold) l.box.left else l.box.centerX
+            boundaries.count { it < x }
+        }
         val columnCount = boundaries.size + 1
 
         // Every column must be substantial, otherwise a stray page number or margin note
         // masquerades as a column. Counted over the column-bound lines only: a spanning
-        // title lands in one column by centre and must not be able to prop it up.
+        // title is pinned to some column by the rule above and must not be able to prop
+        // that column up on its own.
         val boundAssignment = columnBound.map { l -> boundaries.count { it < l.box.centerX } }
         val populated = (0 until columnCount).all { c ->
             boundAssignment.count { it == c } >= config.minLinesPerColumn

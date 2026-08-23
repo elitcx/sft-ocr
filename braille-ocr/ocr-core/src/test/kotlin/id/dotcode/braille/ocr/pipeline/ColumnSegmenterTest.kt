@@ -50,7 +50,8 @@ class ColumnSegmenterTest {
         )
         val result = segmenter.segment(lines, PageStats.from(lines), pageWidth)
         assertEquals(2, result.columnCount)
-        // The heading's centre (730) sits left of the gutter midpoint (750).
+        // The heading spans, so it takes the leftmost column it overlaps (its left edge
+        // 60 sits left of the gutter midpoint 750).
         assertEquals(listOf(0, 0, 0, 1, 1), result.columnIndex)
         // Column bounds ignore the spanning line, so column 0 is 100..600 not 60..1400.
         assertEquals(100f..600f, result.bounds[0])
@@ -78,9 +79,9 @@ class ColumnSegmenterTest {
 
     @Test
     fun `a spanning line cannot prop up an underpopulated column`() {
-        // The right "column" holds one genuine line plus a spanning title whose centre
-        // happens to land right of the gutter. The populated guard counts only
-        // column-bound lines, so the split still collapses.
+        // The right "column" holds one genuine line plus a spanning title. The populated
+        // guard counts only column-bound lines, so the split still collapses no matter
+        // which column the spanning title is pinned to.
         val lines = listOf(
             line("judul yang sangat panjang sekali", 140f, 40f, 1400f, 30f),
             line("kiri satu", 100f, 140f, 500f, 30f),
@@ -90,6 +91,29 @@ class ColumnSegmenterTest {
         )
         val result = segmenter.segment(lines, PageStats.from(lines), pageWidth)
         assertEquals(1, result.columnCount)
+    }
+
+    @Test
+    fun `a spanning line takes the leftmost column it overlaps not the one holding its centre`() {
+        // The coin flip. Left column 100..640, right column 860..1500, so the gutter
+        // midpoint is 750. A title spanning 100..1500 has its centre at 800 — right of
+        // the boundary — so centre-based assignment pins the page title to column 1 and
+        // ReadingOrderSorter emits it after every left-column question. Its LEFT edge
+        // (100) is unambiguously in column 0, which is the whole point: a line that
+        // overlaps both columns belongs to the first one a reader reaches.
+        val lines = listOf(
+            line("LEMBAR KERJA IPA KELAS ENAM SEMESTER SATU", 100f, 60f, 1400f, 56f),
+            line("1. Sebutkan sumber daya alam", 100f, 300f, 540f, 30f),
+            line("2. Jelaskan fotosintesis", 100f, 400f, 540f, 30f),
+            line("3. Apa fungsi akar tumbuhan", 100f, 500f, 540f, 30f),
+            line("4. Sebutkan hewan herbivora", 860f, 300f, 640f, 30f),
+            line("5. Jelaskan siklus kupu-kupu", 860f, 400f, 640f, 30f),
+            line("6. Apa manfaat matahari", 860f, 500f, 640f, 30f),
+        )
+        val result = segmenter.segment(lines, PageStats.from(lines), pageWidth)
+        assertEquals(2, result.columnCount)
+        assertEquals(0, result.columnIndex.first(), "the spanning title must land in column 0")
+        assertEquals(listOf(0, 0, 0, 0, 1, 1, 1), result.columnIndex)
     }
 
     @Test
