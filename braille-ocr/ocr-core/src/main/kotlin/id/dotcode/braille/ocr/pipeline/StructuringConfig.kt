@@ -19,6 +19,8 @@ data class StructuringConfig(
     val paragraphGapFactor: Float = 1.6f,
     /** Left edges count as aligned within this many median character widths. */
     val leftAlignToleranceFactor: Float = 1.2f,
+    /** A first-line indent may exceed the left-alignment tolerance by up to this factor. */
+    val firstLineIndentFactor: Float = 4.0f,
     /** Relative text height above which a block is a HEADING. */
     val headingHeightRatio: Float = 1.25f,
     /** Relative text height above which a block is a TITLE. */

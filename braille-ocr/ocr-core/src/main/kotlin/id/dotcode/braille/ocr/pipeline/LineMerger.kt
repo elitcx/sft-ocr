@@ -46,7 +46,8 @@ class LineMerger(private val config: StructuringConfig) {
         val indentTolerance = stats.medianCharWidth * config.leftAlignToleranceFactor
         val leftDelta = abs(next.line.box.left - prev.line.box.left)
         // A first-line indent means the CONTINUATION sits further left than the opener.
-        val isIndentedOpener = prev.line.box.left - next.line.box.left in 0f..(indentTolerance * 4f)
+        val isIndentedOpener =
+            prev.line.box.left - next.line.box.left in 0f..(indentTolerance * config.firstLineIndentFactor)
         return leftDelta <= indentTolerance || isIndentedOpener
     }
 
