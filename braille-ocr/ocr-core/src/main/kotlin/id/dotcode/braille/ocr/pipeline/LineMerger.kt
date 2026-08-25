@@ -45,8 +45,12 @@ class LineMerger(private val config: StructuringConfig) {
      * every genuinely short line in the column look like it stops short by comparison.
      * When the widest line is far ahead of the next-widest one, the next-widest is
      * trusted instead.
+     *
+     * Exposed internally so [RoleClassifier] can reuse this exact margin — rather than
+     * inventing a second way to compute it — to tell a wrapped, full-width body
+     * paragraph from a short heading or caption.
      */
-    private fun columnRightMargins(ordered: List<OrderedLine>): Map<Int, Float> =
+    internal fun columnRightMargins(ordered: List<OrderedLine>): Map<Int, Float> =
         ordered.groupBy { it.columnIndex }.mapValues { (_, group) ->
             val rights = group.map { it.line.box.right }.sorted()
             val max = rights.last()

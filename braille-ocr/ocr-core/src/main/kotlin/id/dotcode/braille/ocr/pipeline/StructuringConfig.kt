@@ -31,8 +31,29 @@ data class StructuringConfig(
     val headingHeightRatio: Float = 1.25f,
     /** Relative text height above which a block is a TITLE. */
     val titleHeightRatio: Float = 1.6f,
-    /** Relative text height below which a block is a CAPTION. */
+    /** Relative text height below which a block is a CAPTION candidate (also see [captionMinShortfallFactor]). */
     val captionHeightRatio: Float = 0.85f,
+    /**
+     * Number of neighbouring blocks, on each side in reading order, averaged into a
+     * block's local height baseline. A handheld photo has a smooth perspective gradient
+     * down the page, so comparing a block's height to nearby blocks (rather than the
+     * whole page's median) cancels that gradient while still catching a genuinely larger
+     * heading sitting among normal text.
+     */
+    val localHeightWindowSize: Int = 5,
+    /**
+     * A local baseline is only trusted when its window contains at least this many
+     * blocks (including the block itself). Below this, there is not enough local context
+     * to cancel perspective distortion, so the classifier falls back to the whole page's
+     * median line height instead.
+     */
+    val minNeighboursForLocalBaseline: Int = 3,
+    /**
+     * A block only qualifies as a CAPTION when it also stops at least this many median
+     * character widths short of its column's right margin. A short block that still
+     * reaches the margin is body text that merely happens to be brief, not a caption.
+     */
+    val captionMinShortfallFactor: Float = 4.0f,
     /** Fraction of page height counted as the top band for TITLE promotion. */
     val topBandFraction: Float = 0.15f,
     /** Fraction of page height counted as the bottom band for PAGE_NUMBER. */

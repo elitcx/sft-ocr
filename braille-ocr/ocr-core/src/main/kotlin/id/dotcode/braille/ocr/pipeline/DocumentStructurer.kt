@@ -45,8 +45,10 @@ class DocumentStructurer(private val config: StructuringConfig = StructuringConf
         val columns = columnSegmenter.segment(lines, stats, deskewed.result.imageWidth)
         val ordered = readingOrderSorter.sort(lines, columns, stats)
         val joined = rowFragmentJoiner.join(ordered, stats)
+        val columnRightMargins = lineMerger.columnRightMargins(joined)
         val groups = lineMerger.merge(joined, stats)
-        val roles = roleClassifier.classify(groups, stats, deskewed.result.imageHeight)
+        val roles = roleClassifier.classify(groups, stats, deskewed.result.imageHeight, columnRightMargins)
+        val localBaselines = roleClassifier.localBaselines(groups, stats)
 
         val blocks = groups.mapIndexed { index, group ->
             val reflowed = LineMerger.reflow(group.lines)
@@ -59,7 +61,7 @@ class DocumentStructurer(private val config: StructuringConfig = StructuringConf
                 marker = marker?.marker,
                 indentLevel = indentLevel(group, columnBounds.start, stats),
                 alignment = alignment(group, columnBounds, stats),
-                relativeTextHeight = roleClassifier.relativeHeight(group, stats),
+                relativeTextHeight = roleClassifier.relativeHeight(group, localBaselines[index]),
                 text = marker?.remainder ?: reflowed,
                 lines = group.lines.map {
                     TextLine(it.text, it.box, it.confidence, it.recognizedLanguage)

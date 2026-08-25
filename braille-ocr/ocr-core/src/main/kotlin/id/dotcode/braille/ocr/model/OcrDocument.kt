@@ -36,7 +36,14 @@ data class TextBlock(
     val marker: String? = null,
     val indentLevel: Int = 0,
     val alignment: Alignment = Alignment.LEFT,
-    /** Median line height of this block divided by the page's body-text median. 1.0 is body text. */
+    /**
+     * Median line height of this block divided by a LOCAL baseline: the median line
+     * height of nearby blocks in reading order (falling back to the whole page's median
+     * when too few neighbours exist). This is deliberately local, not page-wide, because
+     * a handheld photo's perspective makes lines near the bottom of the page measure
+     * taller than lines near the top even at identical printed font size; comparing
+     * locally cancels that gradient. 1.0 is body text relative to its neighbours.
+     */
     val relativeTextHeight: Float = 1f,
     /** Reflowed text with the marker stripped. Original breaks stay in [lines]. */
     val text: String,
