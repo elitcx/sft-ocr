@@ -21,6 +21,7 @@ class DocumentStructurer(private val config: StructuringConfig = StructuringConf
     private val skewEstimator = SkewEstimator(config)
     private val columnSegmenter = ColumnSegmenter(config)
     private val readingOrderSorter = ReadingOrderSorter(config)
+    private val rowFragmentJoiner = RowFragmentJoiner(config)
     private val lineMerger = LineMerger(config)
     private val roleClassifier = RoleClassifier(config)
 
@@ -43,7 +44,8 @@ class DocumentStructurer(private val config: StructuringConfig = StructuringConf
         val stats = PageStats.from(lines)
         val columns = columnSegmenter.segment(lines, stats, deskewed.result.imageWidth)
         val ordered = readingOrderSorter.sort(lines, columns, stats)
-        val groups = lineMerger.merge(ordered, stats)
+        val joined = rowFragmentJoiner.join(ordered, stats)
+        val groups = lineMerger.merge(joined, stats)
         val roles = roleClassifier.classify(groups, stats, deskewed.result.imageHeight)
 
         val blocks = groups.mapIndexed { index, group ->

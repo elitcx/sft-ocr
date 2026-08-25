@@ -212,6 +212,44 @@ class DocumentStructurerTest {
     }
 
     @Test
+    fun `a justified paragraph with sentence-ending wraps stays one block, followed by a second paragraph`() {
+        // End-to-end regression for BUG 1: several full-width lines whose sentences
+        // happen to end at the line break, followed by a genuinely short final line,
+        // then a second paragraph with the same shape. Must come back as exactly two
+        // blocks, not one split per sentence.
+        val doc = structurer.structure(
+            page(
+                line(
+                    "Pemberian program makan siang gratis untuk siswa sekolah telah menjadi topik pembahasan publik yang penting.",
+                    214f, 203f, 700f, 20f,
+                ),
+                line(
+                    "Para pendukung berpendapat bahwa program semacam ini dapat meningkatkan kesehatan anak dan performa akademik",
+                    214f, 224f, 700f, 20f,
+                ),
+                line(
+                    "serta membantu keluarga kurang mampu memenuhi kebutuhan gizi harian anak-anak mereka setiap hari.",
+                    214f, 245f, 700f, 20f,
+                ),
+                line("Itulah gambaran singkatnya.", 214f, 266f, 200f, 20f),
+                line(
+                    "Namun demikian terdapat pula tantangan besar terkait pembiayaan dan distribusi program tersebut.",
+                    214f, 300f, 700f, 20f,
+                ),
+                line("Itulah tantangannya.", 214f, 321f, 200f, 20f),
+            )
+        )
+
+        assertEquals(2, doc.blocks.size)
+        assertEquals(4, doc.blocks[0].lines.size)
+        assertEquals(2, doc.blocks[1].lines.size)
+        assertTrue(doc.blocks[0].text.startsWith("Pemberian program makan siang gratis"))
+        assertTrue(doc.blocks[0].text.endsWith("Itulah gambaran singkatnya."))
+        assertTrue(doc.blocks[1].text.startsWith("Namun demikian terdapat pula tantangan"))
+        assertTrue(doc.blocks[1].text.endsWith("Itulah tantangannya."))
+    }
+
+    @Test
     fun `mean confidence is null when no line reports confidence`() {
         val doc = structurer.structure(
             page(
