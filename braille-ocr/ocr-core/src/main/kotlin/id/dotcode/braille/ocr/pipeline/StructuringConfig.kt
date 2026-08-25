@@ -47,4 +47,10 @@ data class StructuringConfig(
     val centerToleranceFraction: Float = 0.05f,
     /** A block must leave this fraction of the column free on the left to count as centered or right-aligned. */
     val minSideMarginFraction: Float = 0.15f,
+    /** A line ending this many median character widths short of its column's right margin is a paragraph end, not a wrap. */
+    val lineEndToleranceFactor: Float = 3.0f,
+    /** Two fragments on the same visual row join when their horizontal gap is below this many median character widths. */
+    val rowFragmentGapFactor: Float = 2.5f,
+    /** Two lines are on the same visual row when their vertical extents overlap by more than this fraction of the smaller height. */
+    val rowOverlapFraction: Float = 0.5f,
 )
