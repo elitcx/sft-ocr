@@ -63,12 +63,12 @@ class OcrEngine(
         if (closed.get()) return OcrResult.Failure(FailureReason.Cancelled, "engine closed")
 
         var scaled: Bitmap = bitmap
-        var gateFailure: FailureReason? = null
+        lateinit var gateEvaluation: CaptureQualityGate.Evaluation
         val preprocessMs = measureTimeMillis {
             scaled = ImagePreprocessor.downscale(bitmap)
-            gateFailure = qualityGate.evaluate(scaled)
+            gateEvaluation = qualityGate.evaluate(scaled)
         }
-        gateFailure?.let { return OcrResult.Failure(it) }
+        gateEvaluation.reason?.let { return OcrResult.Failure(it, gateEvaluation.detail) }
 
         val recognizeStart = System.currentTimeMillis()
         val input = InputImage.fromBitmap(scaled, rotationDegrees)
