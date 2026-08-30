@@ -17,39 +17,71 @@ import kotlin.math.ceil
  * only catastrophic captures (lens cap, heavy motion blur, a dark room), not to second-guess
  * anything borderline.
  *
- * Sharpness is measured as a high percentile of the per-pixel absolute horizontal gradient,
- * not its mean. A real worksheet photo is overwhelmingly flat: white paper, desk, margins.
- * Text edges are a small fraction of all pixels, so averaging the gradient over every pixel
- * dilutes even perfectly sharp text toward zero and rejects sparse-but-sharp pages - the
- * bug this replaces. Looking at how strong the STRONGEST edges are, instead of how many
- * edges there are, measures actual sharpness: a sharp image has some pixels with large
- * gradients no matter how sparse the content is, while blur spreads every transition across
- * several pixels and caps the per-pixel magnitude everywhere, so a genuinely blurred capture
- * still fails even at a high percentile.
+ * Sharpness is measured over EDGE pixels only, not all pixels - and not by a percentile
+ * over the whole frame. The previous fix (a high percentile of the gradient histogram over
+ * every pixel) still depended on how much of the frame was text: it only reflected the text
+ * once high-gradient pixels passed roughly 1% of the frame, so a genuinely sharp photo of a
+ * sparse worksheet - a title and a couple of short questions with wide margins, a completely
+ * normal page - fell below that cliff and was rejected as blurry again. That is the bug this
+ * replaces.
+ *
+ * The fix separates two questions the old metric conflated: "how much of the frame is text"
+ * (irrelevant to sharpness) and "how strong are the edges that exist" (the actual signal).
+ * A pixel counts as an EDGE when its gradient exceeds [edgeGradientFloor]; the sharpness
+ * score is then the [sharpnessPercentile] of gradient magnitude computed ONLY over those
+ * edge pixels. A sharp glyph edge produces a large gradient in one step regardless of how
+ * few such edges the page has; blur spreads every transition across several pixels and caps
+ * the per-step magnitude everywhere, including at the edges that do exist - so the edge-only
+ * score still separates sharp from blurred at any text coverage. Separately, [minEdgeFraction]
+ * asks "is there any text-like content at all" - a blank sheet or a lens-cap shot has (near)
+ * zero edge pixels, which is a different failure ([FailureReason.NoTextFound]) from a page
+ * that has real content but shot out of focus ([FailureReason.TooBlurry]): telling a student
+ * to hold the phone steadier is misleading advice when there is nothing there to focus on.
  *
  * Gradient magnitudes are bounded to 0..255 (an absolute difference of two lumas), so a
- * 256-bin histogram gives the exact percentile from one pass, with no sorting and no
- * allocation proportional to the frame size.
+ * 256-bin histogram gives exact percentiles and fractions from one pass, with no sorting and
+ * no allocation proportional to the frame size.
  */
 class CaptureQualityGate(
     private val minMeanLuma: Int = 35,
     /**
-     * The percentile of the absolute-gradient histogram used as the sharpness score.
-     * 0.99 means: a capture is judged by its top 1% of pixel-to-pixel transitions. High
-     * enough that JPEG noise and antialiasing on otherwise-flat regions cannot fake
-     * sharpness; low enough that a text region covering just a few percent of the frame -
-     * the norm for a worksheet photo with real margins - still dominates the tail of the
-     * distribution and is measured.
+     * Minimum absolute gradient (0..255) for a pixel to count as an EDGE pixel at all,
+     * rather than JPEG noise or antialiasing on an otherwise-flat region. Synthetic flat
+     * regions in this gate's own test fixtures produce zero gradient; real camera sensor
+     * noise on paper/desk background is typically a few luma levels. 10 sits comfortably
+     * above that noise floor while still well below the ~18 a genuinely blurred glyph edge
+     * produces (see [minSharpness]), so it does not itself risk misclassifying blur as
+     * "no edges".
      */
-    private val sharpnessPercentile: Double = 0.99,
+    private val edgeGradientFloor: Int = 10,
     /**
-     * Minimum gradient magnitude (0..255) required at [sharpnessPercentile] to call a
-     * capture sharp. Derived from synthetic sharp vs. blurred black-on-white text: a hard
-     * glyph edge produces gradients in the 200+ range, while spreading that same edge over
-     * a several-pixel ramp - what defocus or motion blur does to it - caps the per-step
-     * gradient at roughly 30-50. 80 sits comfortably below the sharp case and above the
-     * blurred case, with the gap biased toward letting borderline captures through rather
-     * than rejecting them, per this gate's permissive design intent.
+     * Minimum fraction of all pixel-to-pixel gradient samples that must be EDGE pixels
+     * (see [edgeGradientFloor]) before this gate will even attempt a sharpness verdict.
+     * Below this, the page is treated as having no text at all ([FailureReason.NoTextFound])
+     * rather than being blurry. A synthetic sharp worksheet fixture at 0.2% text coverage -
+     * near the sparse end of a real page (a title and a couple of short questions) -
+     * measures roughly 0.05% edge-pixel fraction; 0.0001 (0.01%) sits five times below that,
+     * so genuine sparse content is never mistaken for a blank page, while a fully flat frame
+     * (zero edge pixels) is always caught.
+     */
+    private val minEdgeFraction: Double = 0.0001,
+    /**
+     * The percentile of gradient magnitude, computed over EDGE pixels only, used as the
+     * sharpness score. The median (0.5) is deliberately not a high percentile like the old
+     * whole-frame metric: restricting to edge pixels already isolates the text-edge
+     * population, so the score should describe that population's typical strength rather
+     * than chase its extreme tail, which would make the score sensitive to a handful of
+     * outlier reflections or JPEG artifacts.
+     */
+    private val sharpnessPercentile: Double = 0.5,
+    /**
+     * Minimum sharpness score required to call a capture sharp. Derived from synthetic
+     * sharp vs. blurred black-on-white text at text coverage from 0.2% to 5%: hard glyph
+     * edges score ~215 regardless of coverage, while the same edges blurred by a 13-pixel
+     * ramp score ~17, also regardless of coverage - restricting the metric to edge pixels
+     * makes both numbers coverage-independent. 80 sits in the wide gap between them, biased
+     * toward letting borderline captures through rather than rejecting them, per this
+     * gate's permissive design intent.
      */
     private val minSharpness: Int = 80,
 ) {
@@ -93,9 +125,21 @@ class CaptureQualityGate(
                 samples++
             }
         }
-        val sharpness = percentile(histogram, samples, sharpnessPercentile)
-        val detail = "meanLuma=%.1f, p%d gradient=%d (min %d)".format(
+
+        val edgeSamples = histogram.drop(edgeGradientFloor + 1).sumOf { it.toLong() }
+        val edgeFraction = if (samples == 0L) 0.0 else edgeSamples.toDouble() / samples
+        if (edgeFraction < minEdgeFraction) {
+            return Evaluation(
+                FailureReason.NoTextFound,
+                "edgeFraction=%.6f is below minEdgeFraction=%.6f (edgeSamples=%d)"
+                    .format(edgeFraction, minEdgeFraction, edgeSamples),
+            )
+        }
+
+        val sharpness = percentile(histogram, edgeSamples, sharpnessPercentile, startValue = edgeGradientFloor + 1)
+        val detail = "meanLuma=%.1f, edgeFraction=%.6f, p%d edge-gradient=%d (min %d)".format(
             meanLuma,
+            edgeFraction,
             (sharpnessPercentile * 100).toInt(),
             sharpness,
             minSharpness,
@@ -108,15 +152,16 @@ class CaptureQualityGate(
     }
 
     /**
-     * The smallest histogram bucket value `v` such that at least a [p] fraction of samples
-     * are `<= v`. Equivalent to the [p]-th percentile of the underlying gradient values,
-     * computed from the histogram's cumulative distribution in a single pass.
+     * The smallest histogram bucket value `v` in `[startValue, 255]` such that at least a
+     * [p] fraction of [samples] (the total count across that same range) are `<= v`.
+     * Equivalent to the [p]-th percentile of the underlying gradient values restricted to
+     * `>= startValue`, computed from the histogram's cumulative distribution in one pass.
      */
-    private fun percentile(histogram: IntArray, samples: Long, p: Double): Int {
+    private fun percentile(histogram: IntArray, samples: Long, p: Double, startValue: Int = 0): Int {
         if (samples == 0L) return 0
         val target = ceil(samples * p).toLong().coerceAtLeast(1L)
         var cumulative = 0L
-        for (value in histogram.indices) {
+        for (value in startValue..255) {
             cumulative += histogram[value]
             if (cumulative >= target) return value
         }

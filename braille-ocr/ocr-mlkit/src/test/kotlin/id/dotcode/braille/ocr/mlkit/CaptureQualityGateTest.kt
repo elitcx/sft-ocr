@@ -87,8 +87,13 @@ class CaptureQualityGateTest {
     }
 
     @Test
-    fun `a flat mid gray frame is too blurry`() {
-        assertEquals(FailureReason.TooBlurry, gate.evaluateLuma(flat(64, 64, 128), 64, 64).reason)
+    fun `a flat mid gray frame is no text found, not too blurry`() {
+        // A flat frame has ZERO gradient anywhere: there is no text to be blurry, so
+        // "hold the phone steadier" would be misleading advice. See the reasoning in
+        // `a fully flat frame with no edges anywhere is too blurry` below (renamed
+        // expectation - both flat-frame cases are NoTextFound under the new edge-only
+        // metric, which can tell "no edges" apart from "edges too weak").
+        assertEquals(FailureReason.NoTextFound, gate.evaluateLuma(flat(64, 64, 128), 64, 64).reason)
     }
 
     @Test
@@ -148,9 +153,12 @@ class CaptureQualityGateTest {
     }
 
     @Test
-    fun `a fully flat frame with no edges anywhere is too blurry`() {
+    fun `a fully flat frame with no edges anywhere is no text found`() {
+        // Renamed expectation: under the pixel-density-independent metric, "no edges at
+        // all" (a blank sheet, a lens cap) is distinguished from "edges exist but are
+        // weak" (genuine blur). The former is NoTextFound, not TooBlurry - see class KDoc.
         val result = gate.evaluateLuma(flat(1600, 1200, 200), 1600, 1200)
-        assertEquals(FailureReason.TooBlurry, result.reason)
+        assertEquals(FailureReason.NoTextFound, result.reason)
     }
 
     @Test
@@ -170,5 +178,46 @@ class CaptureQualityGateTest {
 
         val result = gate.evaluateLuma(luma, width, height)
         assertNull(result.reason, "dim but sharp text should not be double-rejected: ${result.detail}")
+    }
+
+    /**
+     * Coverage sweep: the p99-over-all-pixels metric this gate replaces still depended on
+     * how much of the frame was text (it cleared ~1.5% coverage but fell below ~1%). The
+     * edge-only metric must be density-independent: sharp text passes and blurred text is
+     * rejected at every coverage level, from a title-and-a-few-short-questions page (0.2%)
+     * up to a fairly dense block (5%).
+     */
+    @Test
+    fun `sharp text passes and blurred text is rejected across a coverage sweep`() {
+        val width = 1600
+        val height = 1200
+        val blockWidth = 160
+
+        for (coveragePercent in listOf(0.2, 0.5, 1.0, 5.0)) {
+            val blockHeight = ((coveragePercent / 100.0) * width * height / blockWidth).toInt()
+            val sharp = sparseTextOnFlat(
+                width = width,
+                height = height,
+                background = 250,
+                blockWidth = blockWidth,
+                blockHeight = blockHeight,
+                period = 4,
+                low = 20,
+                high = 235,
+            )
+            val sharpResult = gate.evaluateLuma(sharp, width, height)
+            assertNull(
+                sharpResult.reason,
+                "sharp text at ~$coveragePercent% coverage should pass: ${sharpResult.detail}",
+            )
+
+            val blurred = blurHorizontally(sharp, width, height, rampWidth = 6)
+            val blurredResult = gate.evaluateLuma(blurred, width, height)
+            assertEquals(
+                FailureReason.TooBlurry,
+                blurredResult.reason,
+                "blurred text at ~$coveragePercent% coverage should be rejected: ${blurredResult.detail}",
+            )
+        }
     }
 }
