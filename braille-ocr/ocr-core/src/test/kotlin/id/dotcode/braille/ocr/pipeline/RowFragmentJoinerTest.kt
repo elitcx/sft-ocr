@@ -36,6 +36,39 @@ class RowFragmentJoinerTest {
     }
 
     @Test
+    fun `fragments straddling a band boundary join in left-to-right reading order`() {
+        // A crease clips the RIGHT fragment's vertical extent, shifting its centerY (and
+        // therefore its ReadingOrderSorter band) upward relative to the LEFT fragment, even
+        // though the two fragments still overlap enough vertically to be the same printed
+        // row. ReadingOrderSorter sorts by band before by left, so the right fragment (band
+        // 19) is ordered BEFORE the left fragment (band 20) despite sitting physically to
+        // the right. A naive list-order join would then emit "<right> <left>": reversed text.
+        val left = line("Concerns about financialc", 100f, 302f, 150f, 28f) // right=250, bottom=330
+        val right = line("cost and food waste", 400f, 295f, 200f, 17f) // right=600, bottom=312
+
+        val stats = PageStats.from(listOf(left, right))
+        val orderedLines = ordered(listOf(left, right))
+
+        // Confirm the premise: the sorter really does put the right fragment first because
+        // of the band split, which is exactly the situation this fix must handle correctly.
+        assertEquals(
+            listOf("cost and food waste", "Concerns about financialc"),
+            orderedLines.map { it.line.text },
+            "test premise broken: expected ReadingOrderSorter to place the right fragment first",
+        )
+
+        val result = joiner.join(orderedLines, stats)
+
+        assertEquals(1, result.size)
+        assertEquals(
+            "Concerns about financialc cost and food waste",
+            result.first().line.text,
+        )
+        assertEquals(100f, result.first().line.box.left)
+        assertEquals(600f, result.first().line.box.right)
+    }
+
+    @Test
     fun `a left column line and a right column line sharing a row do not join`() {
         val lines = listOf(
             line("kiri satu", 100f, 100f, 500f, 30f),

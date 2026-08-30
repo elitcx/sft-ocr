@@ -46,7 +46,19 @@ class RowFragmentJoiner(private val config: StructuringConfig) {
         return gap <= gapTolerance
     }
 
-    private fun joinLines(a: RawLine, b: RawLine): RawLine {
+    /**
+     * Joins two same-row fragments in left-to-right reading order, NOT list order.
+     *
+     * [join] receives fragments in [ReadingOrderSorter] order, which sorts by visual band
+     * before by `left` - so two fragments of one printed row that straddle a band boundary
+     * (a crease clips one fragment's vertical extent, shifting its centerY into the
+     * neighbouring band) can arrive with the right fragment first. Concatenating in list
+     * order would then silently reverse the text. Sorting the pair by `box.left` here makes
+     * the join correct regardless of what order the caller found them in.
+     */
+    private fun joinLines(first: RawLine, second: RawLine): RawLine {
+        val a = if (first.box.left <= second.box.left) first else second
+        val b = if (a === first) second else first
         val confidence = when {
             a.confidence != null && b.confidence != null -> (a.confidence + b.confidence) / 2f
             else -> a.confidence ?: b.confidence
