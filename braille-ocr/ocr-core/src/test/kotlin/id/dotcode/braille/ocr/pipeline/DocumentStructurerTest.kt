@@ -688,4 +688,42 @@ class DocumentStructurerTest {
             "paragraphs must stay in the original top-to-bottom reading order: $allText",
         )
     }
+
+    @Test
+    fun `isolated low-confidence margin fragments from a curved book page are dropped, not injected mid-paragraph`() {
+        // Same real curved-book-page photo as the rotation test above. Between its real
+        // paragraph lines, ML Kit also reports 7 short, low-confidence, right-margin
+        // fragments - almost certainly OCR noise from the curved/warped right edge of
+        // the page near the binding: "lseder", "pert", "keadaa", "A", "pandai",
+        // "Uga sed", "Ja yar" (an 8th, "fogpro", sits close enough to the real body
+        // text's right margin that it is deliberately NOT caught - see
+        // MarginFragmentFilter's KDoc on why a tight margin is left alone rather than
+        // guessed at). Left uncaught, these become their own PARAGRAPH blocks
+        // interleaved into the real paragraph flow: a blind reader hits nonsense words
+        // in the middle of otherwise-correct prose with no way to know they are
+        // artefacts, which the project's own governing priority calls the worst
+        // possible outcome - worse than a missing label, worse than a refused capture.
+        val json = checkNotNull(javaClass.getResourceAsStream("/fixtures/real-rotated-230941-raw.json"))
+            .bufferedReader().readText()
+        val raw = id.dotcode.braille.ocr.raw.RawTextResult.fromJson(json)
+
+        val doc = structurer.structure(raw, rotationDegrees = 180)
+
+        val junkFragments = setOf("lseder", "pert", "keadaa", "A", "pandai", "Uga sed", "Ja yar")
+        val blockTexts = doc.blocks.map { it.text.trim() }
+        for (junk in junkFragments) {
+            assertTrue(
+                junk !in blockTexts,
+                "margin noise \"$junk\" must not survive as its own block: $blockTexts",
+            )
+        }
+
+        // The real paragraph content on either side of where these fragments used to be
+        // injected must still be present and in order, untouched by the drop.
+        val allText = doc.blocks.joinToString(" ") { it.text }
+        assertTrue(allText.contains("Santa Angela lahir pada tanggal 21 Maret"))
+        assertTrue(allText.contains("hidup rukun. Angela sebagai seorang gadis selalu"))
+        assertTrue(allText.contains("bermacam-macam pekerjaan tangan dan pekerjaan"))
+        assertTrue(allText.contains("belajar mengurus dirinya sendiri. Pada waktu itu"))
+    }
 }

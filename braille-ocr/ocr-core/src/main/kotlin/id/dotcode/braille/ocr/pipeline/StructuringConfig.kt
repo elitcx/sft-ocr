@@ -20,6 +20,40 @@ data class StructuringConfig(
      * plausible genuine camera tilt.
      */
     val maxPlausibleSkewDeg: Float = 45f,
+    /**
+     * A line narrower than this many median character widths is a candidate isolated
+     * margin fragment for [MarginFragmentFilter] — never a real multi-word sentence.
+     * Evidence: the 7 dropped margin-noise fragments on a real curved book page
+     * (fixture `real-rotated-230941-raw.json`) measured under 5 median character
+     * widths each. 8 stays comfortably above that while still excluding every real
+     * short line on the same page this project must not drop — "belajar sendiri."
+     * (13.9), "Sisi Tuhan." (9.2), "Angela bahwa" (13.9), "tekun berdoa" (11.4) all
+     * measure wider than 8; only the genuine page-number block ("[6]", 2.8) is
+     * narrower, and that block is correctly kept anyway because it fails the position
+     * check below (it sits well inside the body's margin, not past it).
+     */
+    val marginFragmentMaxWidthFactor: Float = 8.0f,
+    /**
+     * A candidate margin fragment must sit at least this many median character widths
+     * to the right of the rightmost edge any non-narrow ("body") line reaches anywhere
+     * on the page to count as isolated, for [MarginFragmentFilter]. Evidence: on the
+     * same real fixture, 7 of the 8 observed fragments cleared this gap by 14-64
+     * pixels (1.1-4.8 median character widths); the 8th ("fogpro") cleared it by only
+     * 0.6 pixels and is deliberately left alone — a gap that thin is genuine ambiguity,
+     * not isolation, and guessing wrong here corrupts real text, the worst outcome
+     * under this project's governing priority.
+     */
+    val marginFragmentGapFactor: Float = 1.0f,
+    /**
+     * A candidate margin fragment must also measure recognizer confidence below this
+     * value for [MarginFragmentFilter] to drop it. Evidence: all 7 dropped fragments on
+     * the real fixture measured 0.28-0.69; every real body line on the same page
+     * measured 0.76 or above. Confidence alone is not a safe signal on its own — the
+     * page's own genuine page-number block measured a LOWER confidence (0.49) than
+     * several of the dropped fragments — so this is required together with the width
+     * and position checks above, never in place of them.
+     */
+    val marginFragmentMaxConfidence: Float = 0.7f,
     /** A gutter wider than this many median character widths splits a column. */
     val columnGutterFactor: Float = 3.0f,
     /**

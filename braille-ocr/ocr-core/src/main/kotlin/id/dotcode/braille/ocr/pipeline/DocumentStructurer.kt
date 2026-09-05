@@ -48,8 +48,16 @@ class DocumentStructurer(private val config: StructuringConfig = StructuringConf
         }
 
         val deskewed = skewEstimator.deskew(usable)
-        val lines = deskewed.result.lines
-        val stats = PageStats.from(lines)
+        val allLines = deskewed.result.lines
+        val stats = PageStats.from(allLines)
+        // Drop isolated margin-noise fragments (a curved page edge, an intruding second
+        // sheet) BEFORE column segmentation and reading order ever see them - see
+        // MarginFragmentFilter's KDoc for why ColumnSegmenter's own clutter mechanism
+        // does not catch this case. Stats are deliberately computed from allLines above,
+        // including the fragments this drops, matching the existing precedent below
+        // where ColumnSegmenter's own line drops likewise do not trigger a stats
+        // recompute.
+        val lines = MarginFragmentFilter.filter(allLines, stats, config)
         val columns = columnSegmenter.segment(lines, stats, deskewed.result.imageWidth)
 
         // A -1 entry marks a line ColumnSegmenter identified as clutter from outside the
