@@ -1,6 +1,7 @@
 package id.dotcode.braille.ocr.pipeline
 
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 import org.junit.jupiter.api.Test
 
 class ColumnSegmenterTest {
@@ -114,6 +115,58 @@ class ColumnSegmenterTest {
         assertEquals(2, result.columnCount)
         assertEquals(0, result.columnIndex.first(), "the spanning title must land in column 0")
         assertEquals(listOf(0, 0, 0, 0, 1, 1, 1), result.columnIndex)
+    }
+
+    @Test
+    fun `background clutter at the frame edge is dropped, not treated as a second column`() {
+        // Representative of a real defect: a second sheet lying underneath the
+        // photographed worksheet, upside down, partially visible at the left frame
+        // edge. Its five small fragments (x roughly 56..110) satisfy the OLD
+        // minLinesPerColumn floor (5 >= 2) despite being a vanishingly small share of
+        // the page's real content (72 lines), which used to make the page report a
+        // phantom 2-column layout with the clutter read FIRST.
+        val clutter = listOf(
+            line("noN", 56f, 0f, 50f, 15f),
+            line("\"ue", 61f, 40f, 30f, 20f),
+            line("Buou", 72f, 80f, 32f, 20f),
+            line("1snu", 80f, 125f, 27f, 17f),
+            line("pur", 88f, 172f, 21f, 14f),
+        )
+        // 40 body lines keeps clutter's share at 5 / 45 = 11%, below the 15% clutter
+        // floor - proportional to the real fixture, where 5 clutter lines out of 77
+        // total (6.5%) is what must be dropped.
+        val body = (0 until 40).map { i -> line("baris tubuh nomor $i pada halaman ini", 191f, 50f + i * 20f, 760f, 17f) }
+        val lines = clutter + body
+        val result = segmenter.segment(lines, PageStats.from(lines), pageWidth)
+
+        assertEquals(1, result.columnCount, "clutter must not be reported as a real column")
+        assertEquals(
+            List(clutter.size) { -1 },
+            result.columnIndex.take(clutter.size),
+            "clutter lines must be marked dropped (-1), not folded into the surviving column",
+        )
+        assertTrue(
+            result.columnIndex.drop(clutter.size).all { it == 0 },
+            "every real body line must survive in the single surviving column",
+        )
+    }
+
+    @Test
+    fun `an under-populated column with a fair share is collapsed but not dropped`() {
+        // Distinguishes "clutter" (dropped) from "a genuinely small second column"
+        // (kept, just not treated as its own reading column). This column fails only
+        // the ABSOLUTE line-count floor, not the share floor (1 of 4 lines is 25%,
+        // comfortably above the 15% clutter threshold) - it must survive.
+        val lines = listOf(
+            line("kiri satu", 100f, 100f, 500f, 30f),
+            line("kiri dua", 100f, 140f, 500f, 30f),
+            line("kiri tiga", 100f, 180f, 500f, 30f),
+            line("kanan satu", 900f, 100f, 500f, 30f),
+        )
+        val result = segmenter.segment(lines, PageStats.from(lines), pageWidth)
+
+        assertEquals(1, result.columnCount)
+        assertTrue(result.columnIndex.all { it == 0 }, "a fair-share column must not be dropped, only collapsed")
     }
 
     @Test

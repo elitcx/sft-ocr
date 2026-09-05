@@ -11,7 +11,14 @@ data class LineGroup(val lines: List<RawLine>, val columnIndex: Int) {
     val box: BoxF get() = BoxF.enclosing(lines.map { it.box })
 }
 
-/** Column layout of a page. [columnIndex] is parallel to the input line list. */
+/**
+ * Column layout of a page. [columnIndex] is parallel to the input line list.
+ *
+ * A value of -1 marks a line as DROPPED - clutter [ColumnSegmenter] identified as
+ * belonging to no real column of this page (see [StructuringConfig.minColumnLineShareFraction])
+ * and that the caller must exclude from the document entirely, not merely from column
+ * assignment.
+ */
 data class ColumnAssignment(
     val columnIndex: List<Int>,
     val columnCount: Int,

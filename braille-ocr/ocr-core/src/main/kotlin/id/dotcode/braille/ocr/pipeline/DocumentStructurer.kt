@@ -43,7 +43,20 @@ class DocumentStructurer(private val config: StructuringConfig = StructuringConf
         val lines = deskewed.result.lines
         val stats = PageStats.from(lines)
         val columns = columnSegmenter.segment(lines, stats, deskewed.result.imageWidth)
-        val ordered = readingOrderSorter.sort(lines, columns, stats)
+
+        // A -1 entry marks a line ColumnSegmenter identified as clutter from outside the
+        // page's real column(s) - see ColumnAssignment's KDoc. It must be excluded here,
+        // not merely left out of column numbering: sorting it into the reading order by
+        // vertical position would scatter garbage text through the real content.
+        val keptIndices = lines.indices.filter { columns.columnIndex.getOrElse(it) { 0 } >= 0 }
+        val effectiveLines = if (keptIndices.size == lines.size) lines else keptIndices.map { lines[it] }
+        val effectiveColumns = if (keptIndices.size == lines.size) {
+            columns
+        } else {
+            ColumnAssignment(keptIndices.map { columns.columnIndex[it] }, columns.columnCount, columns.bounds)
+        }
+
+        val ordered = readingOrderSorter.sort(effectiveLines, effectiveColumns, stats)
         val joined = rowFragmentJoiner.join(ordered, stats)
         val columnRightMargins = lineMerger.columnRightMargins(joined, stats)
         val groups = lineMerger.merge(joined, stats)
@@ -77,7 +90,7 @@ class DocumentStructurer(private val config: StructuringConfig = StructuringConf
             skewDeg = deskewed.skewDeg,
             columnCount = columns.columnCount,
             blocks = blocks,
-            meanConfidence = averageConfidence(lines.mapNotNull { it.confidence }),
+            meanConfidence = averageConfidence(effectiveLines.mapNotNull { it.confidence }),
             timings = timings,
         )
     }

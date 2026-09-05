@@ -17,6 +17,27 @@ data class StructuringConfig(
     val spanningLineWidthFraction: Float = 0.8f,
     /** A column must hold at least this many lines to be considered real. */
     val minLinesPerColumn: Int = 2,
+    /**
+     * A column must also hold at least this fraction of the page's column-bound lines to
+     * be considered real, in addition to [minLinesPerColumn]. A handful of fragments from
+     * background clutter in the photographed frame - most commonly a second sheet lying
+     * underneath the worksheet, partially visible at a frame edge - can satisfy the
+     * absolute line-count floor while being a vanishingly small share of the page's real
+     * content, which [minLinesPerColumn] alone cannot catch: five clutter fragments comfortably
+     * clear a floor of two. A share floor does, without needing an absolute count so high it
+     * misfires on a genuinely short second column on a real two-column worksheet.
+     *
+     * A column failing ONLY this share floor (not [minLinesPerColumn]) is treated as
+     * clutter: when exactly one other column clearly dominates the page, that column's
+     * lines are dropped from the document entirely rather than folded into the survivor,
+     * where sorting them by vertical position would scatter garbage text throughout the
+     * real content instead of merely misreporting the column count. A column failing only
+     * the absolute-count floor (but still holding a fair share) is NOT clutter by this
+     * signal - it collapses the page to a single column as before, but nothing is
+     * discarded, since a small legitimate column is a very different situation from a
+     * different sheet of paper in the frame.
+     */
+    val minColumnLineShareFraction: Float = 0.15f,
     /** Below this many lines, never attempt column splitting. */
     val minLinesForColumnSplit: Int = 4,
     /** Row banding granularity for reading order, in median line heights. */

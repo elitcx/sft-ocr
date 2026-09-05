@@ -77,10 +77,32 @@ class ColumnSegmenter(private val config: StructuringConfig) {
         // title is pinned to some column by the rule above and must not be able to prop
         // that column up on its own.
         val boundAssignment = columnBound.map { l -> boundaries.count { it < l.box.centerX } }
-        val populated = (0 until columnCount).all { c ->
-            boundAssignment.count { it == c } >= config.minLinesPerColumn
+        val counts = (0 until columnCount).map { c -> boundAssignment.count { it == c } }
+        val shareFloor = columnBound.size * config.minColumnLineShareFraction
+        val populated = counts.all { it >= config.minLinesPerColumn && it >= shareFloor }
+        if (!populated) {
+            // A column failing the SHARE floor (not merely the absolute-count floor) is
+            // clutter, not a legitimate small column - see StructuringConfig
+            // .minColumnLineShareFraction. When exactly one other column clearly
+            // dominates the page, drop the clutter column's lines outright: folding them
+            // into the surviving column would still sort them into the reading order by
+            // vertical position, scattering garbage text through the real content instead
+            // of merely misreporting the column count.
+            val clutterColumns = (0 until columnCount).filter { c -> counts[c] < shareFloor }
+            val dominantColumns = (0 until columnCount).filterNot { it in clutterColumns }
+            if (clutterColumns.isNotEmpty() && dominantColumns.size == 1) {
+                val keep = dominantColumns.single()
+                val keptIndices = lines.indices.filter { i -> assignment[i] == keep }
+                val keptLines = keptIndices.map { lines[it] }
+                if (keptLines.isNotEmpty() && keptLines.size < lines.size) {
+                    val columnIndexOut = MutableList(lines.size) { -1 }
+                    keptIndices.forEach { columnIndexOut[it] = 0 }
+                    val bounds = listOf(keptLines.minOf { it.box.left }..keptLines.maxOf { it.box.right })
+                    return ColumnAssignment(columnIndexOut, 1, bounds)
+                }
+            }
+            return single
         }
-        if (!populated) return single
 
         // Column extents come from the column-bound lines too, so a spanning title does
         // not stretch a column's reported bounds across the whole page and skew the
