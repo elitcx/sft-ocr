@@ -63,9 +63,25 @@ class RowFragmentJoiner(private val config: StructuringConfig) {
             a.confidence != null && b.confidence != null -> (a.confidence + b.confidence) / 2f
             else -> a.confidence ?: b.confidence
         }
+        val union = a.box.union(b.box)
+        // The union box's HEIGHT is not used as-is. A crease that clips one fragment's
+        // vertical extent (see the band-boundary case above) shifts that fragment's top
+        // or bottom relative to the other, so the union spans more than either fragment's
+        // true line height - e.g. two 15px-tall fragments whose creased vertical offset
+        // makes their union 22px tall. That inflated height feeds RoleClassifier's local
+        // baseline, and because a joined line is a SINGLE-line block, the "a multi-line
+        // full-width block is body text" rule can never rescue it: a crease can silently
+        // manufacture a HEADING out of ordinary body text. The joined box keeps the
+        // union's horizontal extent (left/right) and vertical centre - both are still
+        // correct positional signals - but its height is reset to the average of the two
+        // fragments' own heights, which is what a reader's eye would call this line's
+        // size.
+        val typicalHeight = (a.box.height + b.box.height) / 2f
+        val centerY = union.centerY
+        val box = union.copy(top = centerY - typicalHeight / 2f, bottom = centerY + typicalHeight / 2f)
         return a.copy(
             text = "${a.text} ${b.text}",
-            box = a.box.union(b.box),
+            box = box,
             // Dropped rather than carried through: the union box no longer corresponds
             // to either fragment's tilted quadrilateral, and there is no well-defined
             // quad for the union of two independently-recognized fragments. Producing
