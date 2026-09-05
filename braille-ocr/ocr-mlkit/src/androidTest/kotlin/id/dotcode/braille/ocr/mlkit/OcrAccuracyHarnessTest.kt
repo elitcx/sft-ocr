@@ -1,14 +1,16 @@
 package id.dotcode.braille.ocr.mlkit
 
+import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import id.dotcode.braille.ocr.accuracy.AccuracyReport
+import id.dotcode.braille.ocr.accuracy.DocumentFlattener
 import id.dotcode.braille.ocr.accuracy.ErrorRate
-import id.dotcode.braille.ocr.model.OcrDocument
 import id.dotcode.braille.ocr.model.OcrResult
 import java.io.File
+import java.io.IOException
 import kotlinx.coroutines.runBlocking
 import org.junit.Assume.assumeTrue
 import org.junit.Test
@@ -45,8 +47,13 @@ import kotlin.test.assertTrue
  * `/sdcard/Android/media/id.dotcode.braille.ocr.mlkit.test/braille-samples` is readable
  * without any grant, if you would rather not use appops.
  *
- * With no samples present the test SKIPS with a message naming the directory it searched.
- * It deliberately does not fail (an unpopulated device is not a regression) and equally
+ * With no samples present in the device directory the test does NOT skip: it also always
+ * scores the small seed dataset bundled at `assets/ground-truth/` (image + `.txt` pairs,
+ * committed to the repo — see `docs/dataset-schema.md`), so `connectedDebugAndroidTest`
+ * measures real accuracy on every run with no `adb push` required. It only skips if that
+ * bundled seed is itself missing or empty AND the device directory has nothing either,
+ * which would mean the harness genuinely has nothing to measure. It deliberately does not
+ * fail on an unpopulated *device* directory (that alone is not a regression) and equally
  * deliberately does not pass silently, which would report a green accuracy run that never
  * measured anything.
  */
@@ -62,11 +69,13 @@ class OcrAccuracyHarnessTest {
         val dirPath = InstrumentationRegistry.getArguments()?.getString(ARG_DIR) ?: DEFAULT_DIR
         val dir = File(dirPath)
 
-        val pairs = findPairs(dir)
-        val skipMessage = "no sample worksheets found in $dirPath — " +
-            "populate it with matching pairs (worksheet-01.jpg or .png plus " +
-            "worksheet-01.txt) via `adb push samples/worksheet-01.png $dirPath/`, or " +
-            "point the harness elsewhere with " +
+        val seeded = seedFromAssets(context)
+        val pairs = seeded + findPairs(dir)
+        val skipMessage = "no sample worksheets found: bundled seed at assets/$ASSET_DIR " +
+            "yielded ${seeded.size} pair(s) and $dirPath yielded ${pairs.size - seeded.size} " +
+            "more. Populate the device directory with matching pairs (worksheet-01.jpg or " +
+            ".png plus worksheet-01.txt) via `adb push samples/worksheet-01.png $dirPath/`, " +
+            "or point the harness elsewhere with " +
             "-Pandroid.testInstrumentationRunnerArguments.$ARG_DIR=/path/on/device. " +
             "Directory exists=${dir.exists()} readable=${dir.canRead()} " +
             "entries=${dir.listFiles()?.size ?: -1}. If the directory exists and is " +
@@ -85,7 +94,7 @@ class OcrAccuracyHarnessTest {
                 val expected = transcript.readText()
                 val result = engine.recognize(Uri.fromFile(image))
                 val actual = when (result) {
-                    is OcrResult.Success -> flatten(result.document)
+                    is OcrResult.Success -> DocumentFlattener.flatten(result.document)
                     is OcrResult.Failure -> {
                         // A rejected capture is a real accuracy outcome, not an excuse to
                         // drop the sample: it scores as zero recognized text.
@@ -125,13 +134,42 @@ class OcrAccuracyHarnessTest {
         )
     }
 
-    /** The document's text as a reader would encounter it: reading order, markers kept. */
-    private fun flatten(document: OcrDocument): String =
-        document.blocks.joinToString("\n") { block ->
-            listOfNotNull(block.marker?.takeIf { it.isNotBlank() }, block.text)
-                .joinToString(" ")
-                .trim()
+    /**
+     * Copies the repo-committed seed dataset out of the test APK's assets into the cache dir
+     * (assets are a `Context.assets` stream, not a `File`, so the rest of this harness — and
+     * `findPairs` — can't address them directly) and returns image/transcript pairs from it.
+     * Missing or empty `assets/$ASSET_DIR` is a normal state (no seed committed yet, or an
+     * old build without one), not an error — returns an empty list either way.
+     */
+    private fun seedFromAssets(context: Context): List<Pair<File, File>> {
+        val assets = context.assets
+        val names = try {
+            assets.list(ASSET_DIR)?.toList() ?: emptyList()
+        } catch (e: IOException) {
+            Log.w(tag, "no bundled seed assets under $ASSET_DIR: ${e.message}")
+            emptyList()
         }
+        val outDir = File(context.cacheDir, "ground-truth-seed").apply { mkdirs() }
+        return names
+            .filter { it.substringAfterLast('.', "").lowercase() in IMAGE_EXTENSIONS }
+            .sorted()
+            .mapNotNull { imageName ->
+                val txtName = "${imageName.substringBeforeLast('.')}.txt"
+                if (txtName !in names) {
+                    Log.w(tag, "asset $imageName: no $txtName beside it in $ASSET_DIR, skipping")
+                    return@mapNotNull null
+                }
+                val imageOut = File(outDir, imageName)
+                assets.open("$ASSET_DIR/$imageName").use { input ->
+                    imageOut.outputStream().use { input.copyTo(it) }
+                }
+                val txtOut = File(outDir, txtName)
+                assets.open("$ASSET_DIR/$txtName").use { input ->
+                    txtOut.outputStream().use { input.copyTo(it) }
+                }
+                imageOut to txtOut
+            }
+    }
 
     /** Images with a same-named `.txt` beside them, in a deterministic order. */
     private fun findPairs(dir: File): List<Pair<File, File>> {
@@ -151,6 +189,7 @@ class OcrAccuracyHarnessTest {
     private companion object {
         const val DEFAULT_DIR = "/sdcard/Download/braille-samples"
         const val ARG_DIR = "brailleSamplesDir"
+        const val ASSET_DIR = "ground-truth"
         const val MIN_CHARACTER_ACCURACY = 0.9
         val IMAGE_EXTENSIONS = setOf("jpg", "jpeg", "png")
     }

@@ -1,0 +1,14 @@
+PARABOLA
+1.Seorang terjun dari pesawat yang terbang mendatar 360 Km/jam,pada ketinggian 450 m di atas tanah.Bila g = 10 m/s² berapa jarak mendatar yang dicapai orang tersebut?
+2.Helikopter terbang mendatar pada ketinggian 500 m diatas tanah dengan kecepatan mendatar 50 m/s,menjatuhkan barang logistik .Berapa kecepatan barang saat membentur tanah?
+3.Peluru ditembakan dengan kecepatan awal 100 m/s sudut elevasi α (cos α = 3/5)
+g= 10m/s².Hitung :
+a. posisi peluru saat t = 2 dt
+b.kecepatan peluru saat t = 2 dt
+4.Seorang kiper menendang bola dengan kecepatan awal 50 m/s sudut elevasi 37⁰.berapa waktu yang diperlukan bola untuk mencapai tanah dan tinggi maksimum yang dicapai?
+5.Sebuah bola dilempar dengan sudut elevasi 60⁰ kecepatan awal 50 m/s ,tentukan selang waktu untuk mencapai titik tertinggi dan jarak mendatar yang dicapai !
+6.Sebuah roket diluncurkan dengan kecepatan awal 100 m/s ,dengan sudut elevasi α mengenai sasaran sejauh 250√2 m. Jika g = 10 m/s² berapa besar sudut elevasinya ?
+7.Sebuah meriam ditembakan dari atas tanah datar dengan sudut elevasi α (cos α = 3/5) , ternyata jarak tembaknya 540 m .Jika g = 10 m/s² berapa kecepatan awalnya ?
+8.Jika lintasan gerak peluru mencapai jarak tembaknya sama dengan empat kali tinggi maksimumnya,maka besarnya sudut elevasi adalah ....
+9.Sebuah granat dilempar dengan sudut elevasi 30⁰ ,ternyata meledak setelah menumbuk tembok yang berada 20√3 m didepan pelempar dan 15 m dari titik pelemparan.Hitung selang waktu dan kecepatan awal!
+10.Berapakah perbandingan jarak tembakan dua buah peluru yang ditembakan dari senapan yang sama tapi sudut elevasi 30⁰ dan 60⁰ ?

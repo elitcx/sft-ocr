@@ -1,0 +1,10 @@
+{
+    "schemaVersion": 1,
+    "sourceImageFileName": "IMG-20260821-WA0035.jpg",
+    "sourceImageSha256": "0b33e64a5837aedf6f36b015f8d43eccf7fed6b455dd48a299dd46957d2186c0",
+    "pipelineVersion": "2026.09.05-1",
+    "capturedAtEpochMs": 1788595200000,
+    "transcriptionSource": "HUMAN_CORRECTED",
+    "blockRoleLabels": [],
+    "notes": "Seed sample for the first real CER/WER measurement (2026-09-05). Transcribed by reading the committed photo directly; not derived from any OCR run."
+}

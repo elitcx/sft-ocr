@@ -42,10 +42,22 @@ import id.dotcode.braille.ocr.model.OcrResult
 import id.dotcode.braille.ocr.model.TextBlock
 
 @Composable
-fun ResultScreen(result: OcrResult, onRetake: () -> Unit) {
+fun ResultScreen(
+    result: OcrResult,
+    trainingDataEnabled: Boolean,
+    sampleSaveState: SampleSaveState,
+    onSaveWrongResult: () -> Unit,
+    onRetake: () -> Unit,
+) {
     when (result) {
         is OcrResult.Failure -> FailureView(result.reason, onRetake)
-        is OcrResult.Success -> DocumentView(result.document, onRetake)
+        is OcrResult.Success -> DocumentView(
+            document = result.document,
+            trainingDataEnabled = trainingDataEnabled,
+            sampleSaveState = sampleSaveState,
+            onSaveWrongResult = onSaveWrongResult,
+            onRetake = onRetake,
+        )
     }
 }
 
@@ -67,7 +79,13 @@ private fun FailureReason.toIndonesian(): String = when (this) {
 }
 
 @Composable
-private fun DocumentView(document: OcrDocument, onRetake: () -> Unit) {
+private fun DocumentView(
+    document: OcrDocument,
+    trainingDataEnabled: Boolean,
+    sampleSaveState: SampleSaveState,
+    onSaveWrongResult: () -> Unit,
+    onRetake: () -> Unit,
+) {
     val context = LocalContext.current
     var isReadingView by remember { mutableStateOf(true) }
 
@@ -124,6 +142,24 @@ private fun DocumentView(document: OcrDocument, onRetake: () -> Unit) {
                 },
                 modifier = Modifier.padding(start = 8.dp),
             ) { Text("Ekspor Teks") }
+        }
+
+        if (trainingDataEnabled) {
+            Row(Modifier.fillMaxWidth().padding(bottom = 8.dp)) {
+                when (sampleSaveState) {
+                    SampleSaveState.Saved -> Text(
+                        "Tersimpan untuk membantu perbaikan akurasi.",
+                        style = MaterialTheme.typography.labelLarge,
+                    )
+                    SampleSaveState.Failed -> Text(
+                        "Gagal menyimpan sampel. Coba lagi.",
+                        style = MaterialTheme.typography.labelLarge,
+                    )
+                    SampleSaveState.Idle -> OutlinedButton(onClick = onSaveWrongResult) {
+                        Text("Tandai Hasil Salah & Simpan")
+                    }
+                }
+            }
         }
 
         ViewToggle(isReadingView = isReadingView, onChange = { isReadingView = it })

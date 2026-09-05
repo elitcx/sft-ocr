@@ -1,0 +1,5 @@
+HOTS Ikhwan menendang bola secara horizontal dari lantai 10 sebuah gedung yang tingginya 20 meter. Bola keluar dari gedung dengan kecepatan 54 km/jam. Beri tanda centang (✓) pada kolom Benar atau Salah untuk setiap pernyataan berikut. (g = 10 m/s²)
+Pernyataan Benar Salah
+Bola mengalami perpaduan gerak jatuh bebas dan gerak mendatar.
+Bola menyentuh tanah sesaat setelah bergerak 4 s.
+Jarak mendatar jatuhnya bola di tanah sejauh 30 m.

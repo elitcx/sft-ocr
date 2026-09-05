@@ -1,0 +1,6 @@
+2. Mobil mula-mula bergerak dengan kecepatan tetap 72 km/jam. Tepat setelah bergerak 20 s, mobil direm sehingga mengalami perlambatan 0,8 m/s². Jarak total yang ditempuh mobil tersebut hingga berhenti adalah . . . .
+A. 250 m
+B. 400 m
+C. 500 m
+D. 650 m
+E. 800 m
