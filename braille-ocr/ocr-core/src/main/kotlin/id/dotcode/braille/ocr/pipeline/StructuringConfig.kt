@@ -160,4 +160,39 @@ data class StructuringConfig(
      * right after it.
      */
     val questionRunAdjacencyWindow: Int = 2,
+    /**
+     * A block may only be promoted to TITLE or HEADING by height when it has at most
+     * this many words. Above this, it is prose, no matter how tall perspective made it
+     * measure.
+     *
+     * Chosen from real-fixture evidence (real-worksheet-exercises.json): a vocabulary
+     * table's Definition cells were promoted to TITLE/HEADING purely by height - e.g.
+     * "extremety careful, thorough, and exacting people responsible for developing or
+     * deciding public policies" (13 words) and "the process of putting a plan, policy,
+     * or systerm into action in a way that can continue over the long term without
+     * exhausting resources" (24 words). Both are ordinary sentence-length definitions,
+     * not headings. 9 is the word count of the real-worksheet-reading.json fixture's
+     * own genuine heading, "Should the Government Provide Free Nutritious Meals for
+     * Students?" - the highest word count a real heading in either fixture is known to
+     * need, so it is the highest ceiling that still fixes both observed regressions
+     * without excluding a real heading this codebase has actually seen.
+     *
+     * KNOWN RESIDUAL GAP: several shorter Definition cells in the same table (8-9
+     * words each, e.g. "the process of distributing money, resources, or
+     * responsibilities") sit at or below this same ceiling and are NOT caught by it -
+     * word count alone cannot separate them from a genuine short heading of the same
+     * length. See the report for the full list. Under the governing priority (a wrong
+     * label is worse than none), lowering the ceiling further to close that gap would
+     * also exclude the real 9-word heading above, which is the greater harm.
+     */
+    val headingMaxWordCount: Int = 9,
+    /**
+     * A block may only be promoted to TITLE or HEADING by height when it spans at most
+     * this many lines. A real heading is a short label, not a multi-line passage; a
+     * block this long that still measures tall is far more likely to be an
+     * unfortunately-tall paragraph that [RoleClassifier]'s wrapped-full-width check
+     * (which only fires when a line reaches the column's right margin) did not catch,
+     * for example a short-lined table cell that never reaches the margin at all.
+     */
+    val headingMaxLineCount: Int = 2,
 )

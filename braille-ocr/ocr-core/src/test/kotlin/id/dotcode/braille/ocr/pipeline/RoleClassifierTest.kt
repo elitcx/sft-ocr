@@ -380,4 +380,77 @@ class RoleClassifierTest {
         )
         assertEquals(BlockRole.PARAGRAPH, classify(lines, pageHeight = 2000).last())
     }
+
+    // --- Defect: a vocabulary table's Definition cell, an ordinary sentence-length
+    // phrase with no terminal punctuation, was promoted to TITLE/HEADING purely because
+    // camera perspective made it measure taller than its local baseline. See
+    // real-worksheet-exercises.json and StructuringConfig.headingMaxWordCount /
+    // .headingMaxLineCount for the real regressions this corroboration guard was built
+    // against; DocumentStructurerTest exercises those exact real fixture blocks
+    // end-to-end. These are synthetic unit-level regressions for the same shapes.
+
+    @Test
+    fun `a tall multi-word sentence-shaped block is not promoted to a heading`() {
+        // Mirrors the shape of the real fixture's Definition cells: a single tall block,
+        // well over headingMaxWordCount words, with no terminal period - so the word
+        // count guard is the only thing standing between it and a false HEADING.
+        val lines = listOf(
+            line("Paragraf normal pertama di sini saja", 100f, 100f, 700f, 30f),
+            line("Paragraf normal kedua di sini saja juga", 100f, 250f, 700f, 30f),
+            line(
+                "extremety careful thorough and exacting people responsible for developing or deciding",
+                100f, 400f, 500f, 45f,
+            ),
+            line("Paragraf normal ketiga di sini saja", 100f, 550f, 700f, 30f),
+        )
+        assertEquals(BlockRole.PARAGRAPH, classify(lines)[2])
+    }
+
+    @Test
+    fun `a tall block ending in a terminal period is not promoted to a heading`() {
+        // Short enough to pass the word-count guard, but sentence-punctuated: a period
+        // marks prose, not a heading.
+        val lines = listOf(
+            line("Paragraf normal pertama di sini saja", 100f, 100f, 700f, 30f),
+            line("Paragraf normal kedua di sini saja juga", 100f, 250f, 700f, 30f),
+            line("Singkat tapi kalimat penuh.", 100f, 400f, 300f, 45f),
+            line("Paragraf normal ketiga di sini saja", 100f, 550f, 700f, 30f),
+        )
+        assertEquals(BlockRole.PARAGRAPH, classify(lines)[2])
+    }
+
+    @Test
+    fun `a tall block spanning more than the heading line limit is not promoted`() {
+        // Three short lines, none reaching the column's right margin (so
+        // isWrappedFullWidth never fires), each individually heading-word-count-eligible
+        // - only the line-count guard stands between this and a false HEADING/TITLE.
+        val lines = listOf(
+            line("Paragraf normal pertama di sini saja", 100f, 100f, 700f, 30f),
+            line("Paragraf normal kedua di sini saja juga", 100f, 250f, 700f, 30f),
+            line("Baris satu pendek", 100f, 400f, 200f, 45f),
+            line("baris dua pendek", 100f, 450f, 200f, 45f),
+            line("baris tiga pendek", 100f, 500f, 200f, 45f),
+            line("Paragraf normal ketiga di sini saja", 100f, 650f, 700f, 30f),
+        )
+        val roles = classify(lines)
+        assertEquals(4, roles.size, "expected the three short lines to merge into one block")
+        assertEquals(BlockRole.PARAGRAPH, roles[2])
+    }
+
+    @Test
+    fun `a short heading ending in a question mark is still eligible to be a heading`() {
+        // "Should the Government Provide Free Nutritious Meals for Students?" from the
+        // real reading-comprehension fixture is 9 words and ends in "?", not ".". It
+        // must not be excluded by either the word-count or terminal-punctuation guard.
+        val lines = listOf(
+            line("Kalimat paragraf satu di sini", 100f, 100f, 700f, 30f),
+            line("Kalimat paragraf dua di sini", 100f, 250f, 700f, 30f),
+            line("Kalimat paragraf tiga di sini", 100f, 400f, 700f, 30f),
+            line("Should the Government Provide Free Nutritious Meals for Students?", 100f, 550f, 600f, 45f),
+            line("Kalimat paragraf lima di sini", 100f, 700f, 700f, 30f),
+            line("Kalimat paragraf enam di sini", 100f, 850f, 700f, 30f),
+            line("Kalimat paragraf tujuh di sini", 100f, 1000f, 700f, 30f),
+        )
+        assertEquals(BlockRole.HEADING, classify(lines)[3])
+    }
 }

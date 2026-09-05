@@ -140,13 +140,35 @@ class RoleClassifier(private val config: StructuringConfig) {
 
         val relativeHeight = relativeHeight(group, localBaseline)
         val inTopBand = group.box.centerY <= pageHeight * config.topBandFraction
+        val heightAlonePromotable = !isHeadingShapeImplausible(group, text)
         return when {
-            relativeHeight >= config.titleHeightRatio -> BlockRole.TITLE
-            relativeHeight >= config.headingHeightRatio && inTopBand -> BlockRole.TITLE
-            relativeHeight >= config.headingHeightRatio -> BlockRole.HEADING
+            relativeHeight >= config.titleHeightRatio && heightAlonePromotable -> BlockRole.TITLE
+            relativeHeight >= config.headingHeightRatio && inTopBand && heightAlonePromotable -> BlockRole.TITLE
+            relativeHeight >= config.headingHeightRatio && heightAlonePromotable -> BlockRole.HEADING
             isCaption(group, relativeHeight, columnRightMargins, stats, inTopBand) -> BlockRole.CAPTION
             else -> BlockRole.PARAGRAPH
         }
+    }
+
+    /**
+     * True when [group]'s text is not shaped like a real title or heading, no matter how
+     * tall it measures. Text height alone is not sufficient evidence that a block is a
+     * heading — on a real photographed worksheet, a vocabulary table's Definition cell is
+     * ordinary sentence-length prose that camera perspective can make measure as tall as,
+     * or taller than, a genuine heading (see [StructuringConfig.headingMaxWordCount] for
+     * the real regressions this was found against). A real heading is short, fits on
+     * [StructuringConfig.headingMaxLineCount] line(s) or fewer, and is not punctuated like
+     * a finished sentence — a heading MAY end in "?" (an essay's own title is often
+     * phrased as a question, e.g. "Should the Government Provide Free Nutritious Meals
+     * for Students?"), but a period marks prose, not a heading. Under the governing
+     * priority — a wrong structural label is worse than none — any one of these failing
+     * is enough to keep a tall block at PARAGRAPH rather than risk a false TITLE/HEADING.
+     */
+    private fun isHeadingShapeImplausible(group: LineGroup, text: String): Boolean {
+        if (group.lines.size > config.headingMaxLineCount) return true
+        if (text.trim().endsWith(".")) return true
+        val wordCount = text.trim().split(WHITESPACE_REGEX).count { it.isNotBlank() }
+        return wordCount > config.headingMaxWordCount
     }
 
     private fun isPageNumber(group: LineGroup, text: String, pageHeight: Int): Boolean =
@@ -245,6 +267,7 @@ class RoleClassifier(private val config: StructuringConfig) {
 
     companion object {
         private val PAGE_NUMBER_REGEX = Regex("^\\d{1,4}$")
+        private val WHITESPACE_REGEX = Regex("\\s+")
     }
 }
 

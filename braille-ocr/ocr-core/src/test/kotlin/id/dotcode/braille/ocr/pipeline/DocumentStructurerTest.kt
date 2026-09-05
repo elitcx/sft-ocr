@@ -548,5 +548,28 @@ class DocumentStructurerTest {
                 "row numbers must not merge into one block: found '$merged'",
             )
         }
+
+        // --- Defect C: the same vocabulary table's Definition cells (a different column
+        // from the row numbers checked above) were promoted to TITLE/HEADING purely
+        // because camera perspective made them measure taller than their local
+        // baseline. Each of these is ordinary sentence-length prose, not a heading, no
+        // matter how tall it was recognized. See StructuringConfig.headingMaxWordCount.
+        val definitionTexts = listOf(
+            "extremety careful, thorough, and exacting people responsible for developing or deciding public policies",
+            "the process of putting a plan, policy, or systerm into action in a way that can continue over the long term without exhausting resources",
+            // Already PARAGRAPH before this fix (relative height 1.20 falls short of
+            // headingHeightRatio) - included so a future threshold change that would
+            // regress it is caught here too.
+            "the goals that a plan or program was designed to achieve",
+        )
+        for (text in definitionTexts) {
+            val block = doc.blocks.firstOrNull { it.text == text }
+            assertTrue(block != null, "expected a block with text '$text': ${doc.blocks.map { it.text }}")
+            assertEquals(
+                BlockRole.PARAGRAPH,
+                block!!.role,
+                "a vocabulary table definition must never be labelled TITLE or HEADING by height alone: '$text' was ${block.role}",
+            )
+        }
     }
 }
