@@ -88,23 +88,23 @@ class OcrEngine(
         }
         if (text.textBlocks.isEmpty()) return OcrResult.Failure(FailureReason.NoTextFound)
 
-        // Recognition ran on the scaled bitmap, so the document's page space is the
-        // scaled space. Coordinates and page dimensions therefore stay consistent.
-        //
-        // ML Kit reports coordinates in the ROTATED image space, not in the bitmap's own
-        // space. For a 90 or 270 degree EXIF capture - the norm for phone photos, and
-        // this app's primary path - the page is therefore as wide as the bitmap is tall.
-        // Passing the unrotated dimensions transposed the page relative to its boxes,
-        // which broke RoleClassifier's topBandFraction/bottomBandFraction bands and
-        // shipped wrong pageWidth/pageHeight in the exported JSON.
-        val quarterTurn = rotationDegrees % 180 != 0
-        val pageWidth = if (quarterTurn) scaled.height else scaled.width
-        val pageHeight = if (quarterTurn) scaled.width else scaled.height
-        val adapted = MlKitAdapter.toRawTextResult(text, pageWidth, pageHeight)
+        // ML Kit's Text.Line coordinates are relative to the bitmap that was actually
+        // decoded (`scaled`) - the ORIGINAL, un-rotated frame - regardless of the
+        // rotationDegrees hint passed to InputImage.fromBitmap above. A prior version of
+        // this code passed the EXIF-rotated (width/height swapped) page dimensions here
+        // while these coordinates stayed in the original frame, which desynchronized
+        // every downstream stage's notion of page space from the boxes it was handed.
+        // Measured on real 90-degree-rotated photographs: SkewEstimator (fed a pivot
+        // built from the wrong, swapped dimensions) reported the page as skewed 85-91
+        // degrees, and boxes spilled outside the declared page bounds. Handing
+        // FrameRotation the SAME frame for both dimensions and coordinates, and letting
+        // it - not this call site - produce the upright, swapped page space, is what
+        // keeps everything downstream self-consistent. See FrameRotation's KDoc.
+        val adapted = MlKitAdapter.toRawTextResult(text, scaled.width, scaled.height)
         var structureMs = 0L
         lateinit var document: id.dotcode.braille.ocr.model.OcrDocument
         structureMs = measureTimeMillis {
-            document = structurer.structure(adapted)
+            document = structurer.structure(adapted, rotationDegrees = rotationDegrees)
         }
         return OcrResult.Success(
             document.copy(

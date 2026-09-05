@@ -24,12 +24,21 @@ class DocumentStructurer(private val config: StructuringConfig = StructuringConf
     private val lineMerger = LineMerger(config)
     private val roleClassifier = RoleClassifier(config)
 
-    fun structure(raw: RawTextResult, timings: Timings = Timings()): OcrDocument {
-        val usable = raw.copy(lines = raw.lines.filter { it.text.isNotBlank() })
+    /**
+     * @param rotationDegrees the EXIF-driven clockwise rotation, in degrees, needed to
+     * bring [raw] upright (a multiple of 90; 0 for an already-upright capture). This is
+     * NOT the same thing as [OcrDocument.skewDeg]: it is the discrete quarter-turn EXIF
+     * declares in advance, applied once via [FrameRotation] before [SkewEstimator] ever
+     * runs, so skew estimation only ever measures genuine residual camera tilt. See
+     * [FrameRotation]'s KDoc for the bug this separation fixes.
+     */
+    fun structure(raw: RawTextResult, timings: Timings = Timings(), rotationDegrees: Int = 0): OcrDocument {
+        val uprightRaw = FrameRotation.apply(raw, rotationDegrees)
+        val usable = uprightRaw.copy(lines = uprightRaw.lines.filter { it.text.isNotBlank() })
         if (usable.lines.isEmpty()) {
             return OcrDocument(
-                pageWidth = raw.imageWidth,
-                pageHeight = raw.imageHeight,
+                pageWidth = uprightRaw.imageWidth,
+                pageHeight = uprightRaw.imageHeight,
                 skewDeg = 0f,
                 columnCount = 1,
                 blocks = emptyList(),

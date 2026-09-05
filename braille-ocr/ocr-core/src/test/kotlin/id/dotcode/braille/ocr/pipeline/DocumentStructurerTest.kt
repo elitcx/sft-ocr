@@ -572,4 +572,60 @@ class DocumentStructurerTest {
             )
         }
     }
+
+    @Test
+    fun `a real 90-degree EXIF capture deskews to near-zero, not 90, when rotationDegrees is supplied`() {
+        // 116 REAL RawLine records captured by ML Kit from an actual photographed page
+        // held sideways (EXIF orientation 6, a 90-degree clockwise rotation) - an
+        // Indonesian book page ("...Sebagai Sekolah Katolik...", items 3/4/5). Captured
+        // with the RAW (un-rotated, 1600x1200) frame for BOTH imageWidth/imageHeight and
+        // every line's box/cornerPoints, exactly as ML Kit reports them - this is what
+        // MlKitAdapter.toRawTextResult produces before any rotation correction.
+        //
+        // Before FrameRotation existed, OcrEngine instead handed DocumentStructurer the
+        // EXIF-SWAPPED page dimensions (1200x1600) while these coordinates stayed in the
+        // raw 1600x1200 frame. Measured on the real corpus this shipped: skewDeg of
+        // -83 to -91 degrees for every one of ten genuinely upright 90-degree-rotated
+        // photographs (never happened on the untagged/upright photos, which measured
+        // -1.9 to 0 degrees) - a page a human would call perfectly straight, reported as
+        // tilted almost exactly on its side. This test pins the fix: given the SAME raw
+        // frame for both dimensions and coordinates, plus the EXIF rotation as an
+        // explicit parameter, the page must come out upright with only small residual
+        // skew, at the correct swapped page size, and with every block's box inside the
+        // page bounds.
+        val json = checkNotNull(javaClass.getResourceAsStream("/fixtures/real-rotated-231023-raw.json"))
+            .bufferedReader().readText()
+        val raw = id.dotcode.braille.ocr.raw.RawTextResult.fromJson(json)
+        assertEquals(1600, raw.imageWidth, "fixture precondition: captured in the raw, un-rotated frame")
+        assertEquals(1200, raw.imageHeight, "fixture precondition: captured in the raw, un-rotated frame")
+
+        val doc = structurer.structure(raw, rotationDegrees = 90)
+
+        assertEquals(1200, doc.pageWidth, "a 90-degree capture's page is as wide as the raw frame was tall")
+        assertEquals(1600, doc.pageHeight, "a 90-degree capture's page is as tall as the raw frame was wide")
+        assertTrue(
+            abs(doc.skewDeg) < 10f,
+            "a genuinely upright real photograph must not report ~90 degrees of skew " +
+                "after its known EXIF rotation is applied; got ${doc.skewDeg}",
+        )
+        for (block in doc.blocks) {
+            assertTrue(
+                block.box.left >= -1f && block.box.right <= doc.pageWidth + 1f,
+                "block box must lie within the declared page width, not spill outside it " +
+                    "from rotating about the wrong pivot: ${block.box} vs pageWidth=${doc.pageWidth}",
+            )
+            assertTrue(
+                block.box.top >= -1f && block.box.bottom <= doc.pageHeight + 1f,
+                "block box must lie within the declared page height: ${block.box} vs pageHeight=${doc.pageHeight}",
+            )
+        }
+
+        // Reading order must still be correct: numbered items 3, 4, 5 in that order,
+        // each followed by its own paragraph, exactly as a sighted reader encounters them.
+        val questions = doc.blocks.filter { it.role == BlockRole.QUESTION }
+        assertEquals(listOf("3.", "4.", "5."), questions.map { it.marker })
+        assertTrue(questions[0].text.startsWith("Sebagai Sekolah Katolik"))
+        assertTrue(questions[1].text.startsWith("Sebagai Sekolah Ursulin"))
+        assertTrue(questions[2].text.startsWith("Sebagai bagian dari Ursulin"))
+    }
 }

@@ -1,0 +1,1562 @@
+{
+    "imageWidth": 1600,
+    "imageHeight": 1200,
+    "lines": [
+        {
+            "text": "3. Sebagai Sekolah Katolik (Catholic School )",
+            "box": {
+                "left": 380.0,
+                "top": 499.0,
+                "right": 930.0,
+                "bottom": 544.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 517.0,
+                    "y": 820.0
+                },
+                {
+                    "x": 499.0,
+                    "y": 271.0
+                },
+                {
+                    "x": 526.0,
+                    "y": 270.0
+                },
+                {
+                    "x": 544.0,
+                    "y": 819.0
+                }
+            ],
+            "angleDeg": -91.85489,
+            "recognizedLanguage": "st",
+            "confidence": 0.877504,
+            "words": [
+                {
+                    "text": "3.",
+                    "box": {
+                        "left": 380.0,
+                        "top": 516.0,
+                        "right": 390.0,
+                        "bottom": 544.0
+                    },
+                    "confidence": 0.7363281
+                },
+                {
+                    "text": "Sebagai",
+                    "box": {
+                        "left": 417.0,
+                        "top": 513.0,
+                        "right": 493.0,
+                        "bottom": 543.0
+                    },
+                    "confidence": 0.8677455
+                },
+                {
+                    "text": "Sekolah",
+                    "box": {
+                        "left": 501.0,
+                        "top": 510.0,
+                        "right": 586.0,
+                        "bottom": 540.0
+                    },
+                    "confidence": 0.88839287
+                },
+                {
+                    "text": "Katolik",
+                    "box": {
+                        "left": 605.0,
+                        "top": 507.0,
+                        "right": 681.0,
+                        "bottom": 536.0
+                    },
+                    "confidence": 0.85491073
+                },
+                {
+                    "text": "(Catholic",
+                    "box": {
+                        "left": 691.0,
+                        "top": 503.0,
+                        "right": 815.0,
+                        "bottom": 534.0
+                    },
+                    "confidence": 0.91449654
+                },
+                {
+                    "text": "School",
+                    "box": {
+                        "left": 829.0,
+                        "top": 499.0,
+                        "right": 914.0,
+                        "bottom": 529.0
+                    },
+                    "confidence": 0.9108073
+                },
+                {
+                    "text": ")",
+                    "box": {
+                        "left": 922.0,
+                        "top": 499.0,
+                        "right": 930.0,
+                        "bottom": 526.0
+                    },
+                    "confidence": 0.77734375
+                }
+            ]
+        },
+        {
+            "text": "Sekolah Ursulin menanamkan semangat Santa Angela pada setian",
+            "box": {
+                "left": 409.0,
+                "top": 531.0,
+                "right": 1191.0,
+                "bottom": 568.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 539.0,
+                    "y": 791.0
+                },
+                {
+                    "x": 531.0,
+                    "y": 10.0
+                },
+                {
+                    "x": 560.0,
+                    "y": 9.0
+                },
+                {
+                    "x": 568.0,
+                    "y": 790.0
+                }
+            ],
+            "angleDeg": -90.560425,
+            "recognizedLanguage": "ms",
+            "confidence": 0.8854658,
+            "words": [
+                {
+                    "text": "Sekolah",
+                    "box": {
+                        "left": 409.0,
+                        "top": 538.0,
+                        "right": 484.0,
+                        "bottom": 568.0
+                    },
+                    "confidence": 0.8889509
+                },
+                {
+                    "text": "Ursulin",
+                    "box": {
+                        "left": 495.0,
+                        "top": 537.0,
+                        "right": 572.0,
+                        "bottom": 567.0
+                    },
+                    "confidence": 0.85714287
+                },
+                {
+                    "text": "menanamkan",
+                    "box": {
+                        "left": 590.0,
+                        "top": 535.0,
+                        "right": 726.0,
+                        "bottom": 566.0
+                    },
+                    "confidence": 0.90703124
+                },
+                {
+                    "text": "semangat",
+                    "box": {
+                        "left": 732.0,
+                        "top": 534.0,
+                        "right": 849.0,
+                        "bottom": 565.0
+                    },
+                    "confidence": 0.89208984
+                },
+                {
+                    "text": "Santa",
+                    "box": {
+                        "left": 867.0,
+                        "top": 534.0,
+                        "right": 930.0,
+                        "bottom": 564.0
+                    },
+                    "confidence": 0.8890625
+                },
+                {
+                    "text": "Angela",
+                    "box": {
+                        "left": 951.0,
+                        "top": 533.0,
+                        "right": 1037.0,
+                        "bottom": 563.0
+                    },
+                    "confidence": 0.88151044
+                },
+                {
+                    "text": "pada",
+                    "box": {
+                        "left": 1048.0,
+                        "top": 532.0,
+                        "right": 1109.0,
+                        "bottom": 561.0
+                    },
+                    "confidence": 0.89453125
+                },
+                {
+                    "text": "setian",
+                    "box": {
+                        "left": 1119.0,
+                        "top": 531.0,
+                        "right": 1191.0,
+                        "bottom": 561.0
+                    },
+                    "confidence": 0.8645833
+                }
+            ]
+        },
+        {
+            "text": "pribadi agar dapat",
+            "box": {
+                "left": 404.0,
+                "top": 570.0,
+                "right": 596.0,
+                "bottom": 601.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 571.0,
+                    "y": 796.0
+                },
+                {
+                    "x": 570.0,
+                    "y": 605.0
+                },
+                {
+                    "x": 600.0,
+                    "y": 604.0
+                },
+                {
+                    "x": 601.0,
+                    "y": 795.0
+                }
+            ],
+            "angleDeg": -90.19901,
+            "recognizedLanguage": "ms",
+            "confidence": 0.8925781,
+            "words": [
+                {
+                    "text": "pribadi",
+                    "box": {
+                        "left": 404.0,
+                        "top": 570.0,
+                        "right": 470.0,
+                        "bottom": 601.0
+                    },
+                    "confidence": 0.9001116
+                },
+                {
+                    "text": "agar",
+                    "box": {
+                        "left": 480.0,
+                        "top": 570.0,
+                        "right": 527.0,
+                        "bottom": 600.0
+                    },
+                    "confidence": 0.8964844
+                },
+                {
+                    "text": "dapat",
+                    "box": {
+                        "left": 539.0,
+                        "top": 570.0,
+                        "right": 596.0,
+                        "bottom": 600.0
+                    },
+                    "confidence": 0.87890625
+                }
+            ]
+        },
+        {
+            "text": "mengintegrasikan ilmu, iman",
+            "box": {
+                "left": 618.0,
+                "top": 568.0,
+                "right": 985.0,
+                "bottom": 600.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 570.0,
+                    "y": 582.0
+                },
+                {
+                    "x": 568.0,
+                    "y": 216.0
+                },
+                {
+                    "x": 598.0,
+                    "y": 215.0
+                },
+                {
+                    "x": 600.0,
+                    "y": 581.0
+                }
+            ],
+            "angleDeg": -90.19901,
+            "recognizedLanguage": "ms",
+            "confidence": 0.86765623,
+            "words": [
+                {
+                    "text": "mengintegrasikan",
+                    "box": {
+                        "left": 618.0,
+                        "top": 569.0,
+                        "right": 816.0,
+                        "bottom": 600.0
+                    },
+                    "confidence": 0.9055176
+                },
+                {
+                    "text": "ilmu,",
+                    "box": {
+                        "left": 833.0,
+                        "top": 569.0,
+                        "right": 898.0,
+                        "bottom": 599.0
+                    },
+                    "confidence": 0.75390625
+                },
+                {
+                    "text": "iman",
+                    "box": {
+                        "left": 912.0,
+                        "top": 569.0,
+                        "right": 985.0,
+                        "bottom": 599.0
+                    },
+                    "confidence": 0.85839844
+                }
+            ]
+        },
+        {
+            "text": "dan nilai-nilai",
+            "box": {
+                "left": 1003.0,
+                "top": 568.0,
+                "right": 1192.0,
+                "bottom": 598.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 569.0,
+                    "y": 197.0
+                },
+                {
+                    "x": 568.0,
+                    "y": 9.0
+                },
+                {
+                    "x": 597.0,
+                    "y": 8.0
+                },
+                {
+                    "x": 598.0,
+                    "y": 196.0
+                }
+            ],
+            "angleDeg": -90.19901,
+            "recognizedLanguage": "ms",
+            "confidence": 0.7723214,
+            "words": [
+                {
+                    "text": "dan",
+                    "box": {
+                        "left": 1003.0,
+                        "top": 568.0,
+                        "right": 1043.0,
+                        "bottom": 598.0
+                    },
+                    "confidence": 0.90234375
+                },
+                {
+                    "text": "nilai-nilai",
+                    "box": {
+                        "left": 1070.0,
+                        "top": 568.0,
+                        "right": 1192.0,
+                        "bottom": 598.0
+                    },
+                    "confidence": 0.7368608
+                }
+            ]
+        },
+        {
+            "text": "kemanusiaan untuk menjawab tantangan zaman dan mewujud-",
+            "box": {
+                "left": 395.0,
+                "top": 601.0,
+                "right": 1179.0,
+                "bottom": 637.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 601.0,
+                    "y": 805.0
+                },
+                {
+                    "x": 611.0,
+                    "y": 21.0
+                },
+                {
+                    "x": 637.0,
+                    "y": 21.0
+                },
+                {
+                    "x": 627.0,
+                    "y": 805.0
+                }
+            ],
+            "angleDeg": -89.20174,
+            "recognizedLanguage": "ms",
+            "confidence": 0.82828444,
+            "words": [
+                {
+                    "text": "kemanusiaan",
+                    "box": {
+                        "left": 395.0,
+                        "top": 601.0,
+                        "right": 525.0,
+                        "bottom": 628.0
+                    },
+                    "confidence": 0.9009233
+                },
+                {
+                    "text": "untuk",
+                    "box": {
+                        "left": 543.0,
+                        "top": 603.0,
+                        "right": 600.0,
+                        "bottom": 629.0
+                    },
+                    "confidence": 0.88671875
+                },
+                {
+                    "text": "menjawab",
+                    "box": {
+                        "left": 626.0,
+                        "top": 604.0,
+                        "right": 739.0,
+                        "bottom": 631.0
+                    },
+                    "confidence": 0.8823242
+                },
+                {
+                    "text": "tantangan",
+                    "box": {
+                        "left": 747.0,
+                        "top": 606.0,
+                        "right": 870.0,
+                        "bottom": 633.0
+                    },
+                    "confidence": 0.82508683
+                },
+                {
+                    "text": "zaman",
+                    "box": {
+                        "left": 893.0,
+                        "top": 608.0,
+                        "right": 975.0,
+                        "bottom": 635.0
+                    },
+                    "confidence": 0.65703124
+                },
+                {
+                    "text": "dan",
+                    "box": {
+                        "left": 996.0,
+                        "top": 610.0,
+                        "right": 1036.0,
+                        "bottom": 635.0
+                    },
+                    "confidence": 0.7682292
+                },
+                {
+                    "text": "mewujud",
+                    "box": {
+                        "left": 1071.0,
+                        "top": 610.0,
+                        "right": 1173.0,
+                        "bottom": 637.0
+                    },
+                    "confidence": 0.7709961
+                }
+            ]
+        },
+        {
+            "text": "nyatakan SERVIAM dalam hidup sehari-hari.",
+            "box": {
+                "left": 387.0,
+                "top": 632.0,
+                "right": 910.0,
+                "bottom": 663.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 632.0,
+                    "y": 813.0
+                },
+                {
+                    "x": 636.0,
+                    "y": 290.0
+                },
+                {
+                    "x": 663.0,
+                    "y": 290.0
+                },
+                {
+                    "x": 659.0,
+                    "y": 813.0
+                }
+            ],
+            "angleDeg": -89.51771,
+            "recognizedLanguage": "id",
+            "confidence": 0.8602196,
+            "words": [
+                {
+                    "text": "nyatakan",
+                    "box": {
+                        "left": 387.0,
+                        "top": 632.0,
+                        "right": 475.0,
+                        "bottom": 659.0
+                    },
+                    "confidence": 0.890625
+                },
+                {
+                    "text": "SERVIAM",
+                    "box": {
+                        "left": 491.0,
+                        "top": 633.0,
+                        "right": 609.0,
+                        "bottom": 660.0
+                    },
+                    "confidence": 0.87109375
+                },
+                {
+                    "text": "dalam",
+                    "box": {
+                        "left": 624.0,
+                        "top": 634.0,
+                        "right": 685.0,
+                        "bottom": 661.0
+                    },
+                    "confidence": 0.88125
+                },
+                {
+                    "text": "hidup",
+                    "box": {
+                        "left": 695.0,
+                        "top": 635.0,
+                        "right": 760.0,
+                        "bottom": 662.0
+                    },
+                    "confidence": 0.78515625
+                },
+                {
+                    "text": "sehari-hari.",
+                    "box": {
+                        "left": 772.0,
+                        "top": 635.0,
+                        "right": 910.0,
+                        "bottom": 663.0
+                    },
+                    "confidence": 0.8561198
+                }
+            ]
+        },
+        {
+            "text": "4. Sebagai Sekolah Ursulin Indon esia (Ursuline School in",
+            "box": {
+                "left": 341.0,
+                "top": 686.0,
+                "right": 1167.0,
+                "bottom": 750.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 686.0,
+                    "y": 858.0
+                },
+                {
+                    "x": 721.0,
+                    "y": 33.0
+                },
+                {
+                    "x": 750.0,
+                    "y": 34.0
+                },
+                {
+                    "x": 715.0,
+                    "y": 859.0
+                }
+            ],
+            "angleDeg": -87.53728,
+            "recognizedLanguage": "id",
+            "confidence": 0.8844866,
+            "words": [
+                {
+                    "text": "4.",
+                    "box": {
+                        "left": 341.0,
+                        "top": 687.0,
+                        "right": 359.0,
+                        "bottom": 715.0
+                    },
+                    "confidence": 0.8515625
+                },
+                {
+                    "text": "Sebagai",
+                    "box": {
+                        "left": 383.0,
+                        "top": 688.0,
+                        "right": 467.0,
+                        "bottom": 720.0
+                    },
+                    "confidence": 0.8973214
+                },
+                {
+                    "text": "Sekolah",
+                    "box": {
+                        "left": 488.0,
+                        "top": 692.0,
+                        "right": 581.0,
+                        "bottom": 724.0
+                    },
+                    "confidence": 0.8978795
+                },
+                {
+                    "text": "Ursulin",
+                    "box": {
+                        "left": 616.0,
+                        "top": 698.0,
+                        "right": 698.0,
+                        "bottom": 730.0
+                    },
+                    "confidence": 0.890067
+                },
+                {
+                    "text": "Indon",
+                    "box": {
+                        "left": 726.0,
+                        "top": 703.0,
+                        "right": 799.0,
+                        "bottom": 734.0
+                    },
+                    "confidence": 0.88984376
+                },
+                {
+                    "text": "esia",
+                    "box": {
+                        "left": 807.0,
+                        "top": 706.0,
+                        "right": 850.0,
+                        "bottom": 736.0
+                    },
+                    "confidence": 0.91796875
+                },
+                {
+                    "text": "(Ursuline",
+                    "box": {
+                        "left": 876.0,
+                        "top": 709.0,
+                        "right": 1007.0,
+                        "bottom": 743.0
+                    },
+                    "confidence": 0.89626735
+                },
+                {
+                    "text": "School",
+                    "box": {
+                        "left": 1044.0,
+                        "top": 717.0,
+                        "right": 1124.0,
+                        "bottom": 748.0
+                    },
+                    "confidence": 0.84440106
+                },
+                {
+                    "text": "in",
+                    "box": {
+                        "left": 1140.0,
+                        "top": 721.0,
+                        "right": 1166.0,
+                        "bottom": 750.0
+                    },
+                    "confidence": 0.79296875
+                }
+            ]
+        },
+        {
+            "text": "Indonesia)",
+            "box": {
+                "left": 370.0,
+                "top": 721.0,
+                "right": 488.0,
+                "bottom": 755.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 721.0,
+                    "y": 829.0
+                },
+                {
+                    "x": 725.0,
+                    "y": 712.0
+                },
+                {
+                    "x": 755.0,
+                    "y": 713.0
+                },
+                {
+                    "x": 751.0,
+                    "y": 830.0
+                }
+            ],
+            "angleDeg": -87.76031,
+            "recognizedLanguage": "id",
+            "confidence": 0.903125,
+            "words": [
+                {
+                    "text": "Indonesia)",
+                    "box": {
+                        "left": 370.0,
+                        "top": 721.0,
+                        "right": 488.0,
+                        "bottom": 755.0
+                    },
+                    "confidence": 0.903125
+                }
+            ]
+        },
+        {
+            "text": "Sekolah Ursulin menanamkan kecintaan pada budaya, bangsa,",
+            "box": {
+                "left": 370.0,
+                "top": 750.0,
+                "right": 1152.0,
+                "bottom": 829.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 750.0,
+                    "y": 829.0
+                },
+                {
+                    "x": 798.0,
+                    "y": 48.0
+                },
+                {
+                    "x": 829.0,
+                    "y": 49.0
+                },
+                {
+                    "x": 781.0,
+                    "y": 830.0
+                }
+            ],
+            "angleDeg": -86.455475,
+            "recognizedLanguage": "ms",
+            "confidence": 0.8883272,
+            "words": [
+                {
+                    "text": "Sekolah",
+                    "box": {
+                        "left": 370.0,
+                        "top": 750.0,
+                        "right": 454.0,
+                        "bottom": 786.0
+                    },
+                    "confidence": 0.88727677
+                },
+                {
+                    "text": "Ursulin",
+                    "box": {
+                        "left": 476.0,
+                        "top": 757.0,
+                        "right": 549.0,
+                        "bottom": 792.0
+                    },
+                    "confidence": 0.84598213
+                },
+                {
+                    "text": "menanamkan",
+                    "box": {
+                        "left": 578.0,
+                        "top": 763.0,
+                        "right": 722.0,
+                        "bottom": 802.0
+                    },
+                    "confidence": 0.90898436
+                },
+                {
+                    "text": "kecintaan",
+                    "box": {
+                        "left": 743.0,
+                        "top": 773.0,
+                        "right": 863.0,
+                        "bottom": 811.0
+                    },
+                    "confidence": 0.9157986
+                },
+                {
+                    "text": "pada",
+                    "box": {
+                        "left": 876.0,
+                        "top": 782.0,
+                        "right": 938.0,
+                        "bottom": 815.0
+                    },
+                    "confidence": 0.8955078
+                },
+                {
+                    "text": "budaya,",
+                    "box": {
+                        "left": 960.0,
+                        "top": 787.0,
+                        "right": 1054.0,
+                        "bottom": 822.0
+                    },
+                    "confidence": 0.87109375
+                },
+                {
+                    "text": "bangsa,",
+                    "box": {
+                        "left": 1071.0,
+                        "top": 793.0,
+                        "right": 1152.0,
+                        "bottom": 828.0
+                    },
+                    "confidence": 0.88002235
+                }
+            ]
+        },
+        {
+            "text": "dan tanah air Indonesia dengarn menghargai pluralitas budaya dan",
+            "box": {
+                "left": 365.0,
+                "top": 785.0,
+                "right": 1145.0,
+                "bottom": 864.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 785.0,
+                    "y": 834.0
+                },
+                {
+                    "x": 833.0,
+                    "y": 55.0
+                },
+                {
+                    "x": 864.0,
+                    "y": 56.0
+                },
+                {
+                    "x": 816.0,
+                    "y": 835.0
+                }
+            ],
+            "angleDeg": -86.42221,
+            "recognizedLanguage": "id",
+            "confidence": 0.8901367,
+            "words": [
+                {
+                    "text": "dan",
+                    "box": {
+                        "left": 365.0,
+                        "top": 785.0,
+                        "right": 399.0,
+                        "bottom": 818.0
+                    },
+                    "confidence": 0.8802083
+                },
+                {
+                    "text": "tanah",
+                    "box": {
+                        "left": 404.0,
+                        "top": 788.0,
+                        "right": 467.0,
+                        "bottom": 821.0
+                    },
+                    "confidence": 0.8882812
+                },
+                {
+                    "text": "air",
+                    "box": {
+                        "left": 476.0,
+                        "top": 792.0,
+                        "right": 505.0,
+                        "bottom": 824.0
+                    },
+                    "confidence": 0.89192706
+                },
+                {
+                    "text": "Indonesia",
+                    "box": {
+                        "left": 508.0,
+                        "top": 794.0,
+                        "right": 627.0,
+                        "bottom": 832.0
+                    },
+                    "confidence": 0.86762154
+                },
+                {
+                    "text": "dengarn",
+                    "box": {
+                        "left": 640.0,
+                        "top": 802.0,
+                        "right": 715.0,
+                        "bottom": 837.0
+                    },
+                    "confidence": 0.875
+                },
+                {
+                    "text": "menghargai",
+                    "box": {
+                        "left": 744.0,
+                        "top": 809.0,
+                        "right": 881.0,
+                        "bottom": 848.0
+                    },
+                    "confidence": 0.9046875
+                },
+                {
+                    "text": "pluralitas",
+                    "box": {
+                        "left": 896.0,
+                        "top": 818.0,
+                        "right": 1005.0,
+                        "bottom": 855.0
+                    },
+                    "confidence": 0.9265625
+                },
+                {
+                    "text": "budaya",
+                    "box": {
+                        "left": 1018.0,
+                        "top": 826.0,
+                        "right": 1104.0,
+                        "bottom": 862.0
+                    },
+                    "confidence": 0.88216144
+                },
+                {
+                    "text": "dan",
+                    "box": {
+                        "left": 1112.0,
+                        "top": 832.0,
+                        "right": 1145.0,
+                        "bottom": 863.0
+                    },
+                    "confidence": 0.85026044
+                }
+            ]
+        },
+        {
+            "text": "agama serta membangun kepedulian terhadap sesama dan alam",
+            "box": {
+                "left": 355.0,
+                "top": 822.0,
+                "right": 1145.0,
+                "bottom": 898.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 822.0,
+                    "y": 844.0
+                },
+                {
+                    "x": 869.0,
+                    "y": 55.0
+                },
+                {
+                    "x": 898.0,
+                    "y": 56.0
+                },
+                {
+                    "x": 851.0,
+                    "y": 845.0
+                }
+            ],
+            "angleDeg": -86.55737,
+            "recognizedLanguage": "id",
+            "confidence": 0.8859375,
+            "words": [
+                {
+                    "text": "agama",
+                    "box": {
+                        "left": 355.0,
+                        "top": 822.0,
+                        "right": 424.0,
+                        "bottom": 855.0
+                    },
+                    "confidence": 0.8546875
+                },
+                {
+                    "text": "serta",
+                    "box": {
+                        "left": 441.0,
+                        "top": 827.0,
+                        "right": 492.0,
+                        "bottom": 859.0
+                    },
+                    "confidence": 0.8734375
+                },
+                {
+                    "text": "membangun",
+                    "box": {
+                        "left": 511.0,
+                        "top": 831.0,
+                        "right": 650.0,
+                        "bottom": 868.0
+                    },
+                    "confidence": 0.8975694
+                },
+                {
+                    "text": "kepedulian",
+                    "box": {
+                        "left": 662.0,
+                        "top": 840.0,
+                        "right": 797.0,
+                        "bottom": 877.0
+                    },
+                    "confidence": 0.89023435
+                },
+                {
+                    "text": "terhadap",
+                    "box": {
+                        "left": 813.0,
+                        "top": 850.0,
+                        "right": 924.0,
+                        "bottom": 884.0
+                    },
+                    "confidence": 0.90527344
+                },
+                {
+                    "text": "sesama",
+                    "box": {
+                        "left": 939.0,
+                        "top": 857.0,
+                        "right": 1022.0,
+                        "bottom": 890.0
+                    },
+                    "confidence": 0.90625
+                },
+                {
+                    "text": "dan",
+                    "box": {
+                        "left": 1041.0,
+                        "top": 864.0,
+                        "right": 1080.0,
+                        "bottom": 894.0
+                    },
+                    "confidence": 0.89453125
+                },
+                {
+                    "text": "alam",
+                    "box": {
+                        "left": 1093.0,
+                        "top": 866.0,
+                        "right": 1145.0,
+                        "bottom": 898.0
+                    },
+                    "confidence": 0.828125
+                }
+            ]
+        },
+        {
+            "text": "ciptaan.",
+            "box": {
+                "left": 352.0,
+                "top": 856.0,
+                "right": 429.0,
+                "bottom": 886.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 856.0,
+                    "y": 848.0
+                },
+                {
+                    "x": 857.0,
+                    "y": 771.0
+                },
+                {
+                    "x": 886.0,
+                    "y": 771.0
+                },
+                {
+                    "x": 885.0,
+                    "y": 848.0
+                }
+            ],
+            "angleDeg": -88.92256,
+            "recognizedLanguage": "su",
+            "confidence": 0.77490234,
+            "words": [
+                {
+                    "text": "ciptaan.",
+                    "box": {
+                        "left": 352.0,
+                        "top": 856.0,
+                        "right": 429.0,
+                        "bottom": 886.0
+                    },
+                    "confidence": 0.77490234
+                }
+            ]
+        },
+        {
+            "text": "5. Sebagai bagian dari Ursulin Internasional (Internationai",
+            "box": {
+                "left": 303.0,
+                "top": 918.0,
+                "right": 1118.0,
+                "bottom": 1004.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 918.0,
+                    "y": 895.0
+                },
+                {
+                    "x": 972.0,
+                    "y": 82.0
+                },
+                {
+                    "x": 1004.0,
+                    "y": 84.0
+                },
+                {
+                    "x": 950.0,
+                    "y": 897.0
+                }
+            ],
+            "angleDeg": -86.17695,
+            "recognizedLanguage": "id",
+            "confidence": 0.81817514,
+            "words": [
+                {
+                    "text": "5.",
+                    "box": {
+                        "left": 303.0,
+                        "top": 918.0,
+                        "right": 323.0,
+                        "bottom": 951.0
+                    },
+                    "confidence": 0.68359375
+                },
+                {
+                    "text": "Sebagai",
+                    "box": {
+                        "left": 348.0,
+                        "top": 921.0,
+                        "right": 439.0,
+                        "bottom": 958.0
+                    },
+                    "confidence": 0.88058037
+                },
+                {
+                    "text": "bagian",
+                    "box": {
+                        "left": 461.0,
+                        "top": 929.0,
+                        "right": 538.0,
+                        "bottom": 965.0
+                    },
+                    "confidence": 0.89973956
+                },
+                {
+                    "text": "dari",
+                    "box": {
+                        "left": 564.0,
+                        "top": 936.0,
+                        "right": 618.0,
+                        "bottom": 970.0
+                    },
+                    "confidence": 0.7421875
+                },
+                {
+                    "text": "Ursulin",
+                    "box": {
+                        "left": 651.0,
+                        "top": 941.0,
+                        "right": 738.0,
+                        "bottom": 978.0
+                    },
+                    "confidence": 0.8833705
+                },
+                {
+                    "text": "Internasional",
+                    "box": {
+                        "left": 759.0,
+                        "top": 949.0,
+                        "right": 935.0,
+                        "bottom": 991.0
+                    },
+                    "confidence": 0.8783053
+                },
+                {
+                    "text": "(Internationai",
+                    "box": {
+                        "left": 954.0,
+                        "top": 962.0,
+                        "right": 1118.0,
+                        "bottom": 1003.0
+                    },
+                    "confidence": 0.7045201
+                }
+            ]
+        },
+        {
+            "text": "Ursuline)",
+            "box": {
+                "left": 353.0,
+                "top": 953.0,
+                "right": 444.0,
+                "bottom": 992.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 953.0,
+                    "y": 844.0
+                },
+                {
+                    "x": 962.0,
+                    "y": 756.0
+                },
+                {
+                    "x": 992.0,
+                    "y": 759.0
+                },
+                {
+                    "x": 983.0,
+                    "y": 847.0
+                }
+            ],
+            "angleDeg": -84.00066,
+            "recognizedLanguage": "en",
+            "confidence": 0.86848956,
+            "words": [
+                {
+                    "text": "Ursuline)",
+                    "box": {
+                        "left": 353.0,
+                        "top": 953.0,
+                        "right": 444.0,
+                        "bottom": 992.0
+                    },
+                    "confidence": 0.86848956
+                }
+            ]
+        },
+        {
+            "text": "Sekolah Ursulin Indonesia meningkatkan dengan kerjasama",
+            "box": {
+                "left": 339.0,
+                "top": 985.0,
+                "right": 1107.0,
+                "bottom": 1077.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 985.0,
+                    "y": 859.0
+                },
+                {
+                    "x": 1029.0,
+                    "y": 93.0
+                },
+                {
+                    "x": 1077.0,
+                    "y": 95.0
+                },
+                {
+                    "x": 1033.0,
+                    "y": 861.0
+                }
+            ],
+            "angleDeg": -86.692635,
+            "recognizedLanguage": "id",
+            "confidence": 0.88804686,
+            "words": [
+                {
+                    "text": "Sekolah",
+                    "box": {
+                        "left": 340.0,
+                        "top": 989.0,
+                        "right": 420.0,
+                        "bottom": 1024.0
+                    },
+                    "confidence": 0.8889509
+                },
+                {
+                    "text": "Ursulin",
+                    "box": {
+                        "left": 461.0,
+                        "top": 1001.0,
+                        "right": 535.0,
+                        "bottom": 1035.0
+                    },
+                    "confidence": 0.8671875
+                },
+                {
+                    "text": "Indonesia",
+                    "box": {
+                        "left": 554.0,
+                        "top": 1009.0,
+                        "right": 674.0,
+                        "bottom": 1047.0
+                    },
+                    "confidence": 0.90755206
+                },
+                {
+                    "text": "meningkatkan",
+                    "box": {
+                        "left": 713.0,
+                        "top": 1024.0,
+                        "right": 875.0,
+                        "bottom": 1060.0
+                    },
+                    "confidence": 0.91764325
+                },
+                {
+                    "text": "dengan",
+                    "box": {
+                        "left": 1044.0,
+                        "top": 1029.0,
+                        "right": 1107.0,
+                        "bottom": 1058.0
+                    },
+                    "confidence": 0.8463542
+                },
+                {
+                    "text": "kerjasama",
+                    "box": {
+                        "left": 905.0,
+                        "top": 1031.0,
+                        "right": 1012.0,
+                        "bottom": 1065.0
+                    },
+                    "confidence": 0.8723958
+                }
+            ]
+        },
+        {
+            "text": "alumni dan sekolah-sekolah Ursulin baik Indonesia di maupun",
+            "box": {
+                "left": 326.0,
+                "top": 1026.0,
+                "right": 1076.0,
+                "bottom": 1104.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 1026.0,
+                    "y": 872.0
+                },
+                {
+                    "x": 1062.0,
+                    "y": 124.0
+                },
+                {
+                    "x": 1104.0,
+                    "y": 126.0
+                },
+                {
+                    "x": 1068.0,
+                    "y": 874.0
+                }
+            ],
+            "angleDeg": -87.18339,
+            "recognizedLanguage": "en",
+            "confidence": 0.87394834,
+            "words": [
+                {
+                    "text": "alumni",
+                    "box": {
+                        "left": 327.0,
+                        "top": 1026.0,
+                        "right": 408.0,
+                        "bottom": 1061.0
+                    },
+                    "confidence": 0.8697917
+                },
+                {
+                    "text": "dan",
+                    "box": {
+                        "left": 422.0,
+                        "top": 1034.0,
+                        "right": 457.0,
+                        "bottom": 1064.0
+                    },
+                    "confidence": 0.8932292
+                },
+                {
+                    "text": "sekolah-sekolah",
+                    "box": {
+                        "left": 471.0,
+                        "top": 1037.0,
+                        "right": 665.0,
+                        "bottom": 1081.0
+                    },
+                    "confidence": 0.8921875
+                },
+                {
+                    "text": "Ursulin",
+                    "box": {
+                        "left": 687.0,
+                        "top": 1054.0,
+                        "right": 767.0,
+                        "bottom": 1088.0
+                    },
+                    "confidence": 0.88671875
+                },
+                {
+                    "text": "baik",
+                    "box": {
+                        "left": 784.0,
+                        "top": 1061.0,
+                        "right": 830.0,
+                        "bottom": 1093.0
+                    },
+                    "confidence": 0.9296875
+                },
+                {
+                    "text": "Indonesia",
+                    "box": {
+                        "left": 874.0,
+                        "top": 1066.0,
+                        "right": 987.0,
+                        "bottom": 1091.0
+                    },
+                    "confidence": 0.8897569
+                },
+                {
+                    "text": "di",
+                    "box": {
+                        "left": 846.0,
+                        "top": 1067.0,
+                        "right": 861.0,
+                        "bottom": 1091.0
+                    },
+                    "confidence": 0.8066406
+                },
+                {
+                    "text": "maupun",
+                    "box": {
+                        "left": 1002.0,
+                        "top": 1067.0,
+                        "right": 1074.0,
+                        "bottom": 1092.0
+                    },
+                    "confidence": 0.76953125
+                }
+            ]
+        },
+        {
+            "text": "tingkat internasional khususnya di Asia Pasifik.",
+            "box": {
+                "left": 320.0,
+                "top": 1061.0,
+                "right": 894.0,
+                "bottom": 1131.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 1061.0,
+                    "y": 878.0
+                },
+                {
+                    "x": 1100.0,
+                    "y": 306.0
+                },
+                {
+                    "x": 1131.0,
+                    "y": 308.0
+                },
+                {
+                    "x": 1092.0,
+                    "y": 880.0
+                }
+            ],
+            "angleDeg": -86.09517,
+            "recognizedLanguage": "id",
+            "confidence": 0.8774528,
+            "words": [
+                {
+                    "text": "tingkat",
+                    "box": {
+                        "left": 320.0,
+                        "top": 1061.0,
+                        "right": 407.0,
+                        "bottom": 1097.0
+                    },
+                    "confidence": 0.87946427
+                },
+                {
+                    "text": "internasional",
+                    "box": {
+                        "left": 412.0,
+                        "top": 1067.0,
+                        "right": 566.0,
+                        "bottom": 1108.0
+                    },
+                    "confidence": 0.9245793
+                },
+                {
+                    "text": "khususnya",
+                    "box": {
+                        "left": 578.0,
+                        "top": 1079.0,
+                        "right": 707.0,
+                        "bottom": 1117.0
+                    },
+                    "confidence": 0.8958333
+                },
+                {
+                    "text": "di",
+                    "box": {
+                        "left": 720.0,
+                        "top": 1089.0,
+                        "right": 740.0,
+                        "bottom": 1120.0
+                    },
+                    "confidence": 0.78515625
+                },
+                {
+                    "text": "Asia",
+                    "box": {
+                        "left": 759.0,
+                        "top": 1091.0,
+                        "right": 798.0,
+                        "bottom": 1124.0
+                    },
+                    "confidence": 0.8720703
+                },
+                {
+                    "text": "Pasifik.",
+                    "box": {
+                        "left": 817.0,
+                        "top": 1095.0,
+                        "right": 894.0,
+                        "bottom": 1131.0
+                    },
+                    "confidence": 0.8041992
+                }
+            ]
+        }
+    ]
+}
