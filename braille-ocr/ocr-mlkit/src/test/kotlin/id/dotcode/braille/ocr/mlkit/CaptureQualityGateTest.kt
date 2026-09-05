@@ -181,6 +181,31 @@ class CaptureQualityGateTest {
     }
 
     /**
+     * Pins the exact sharpness boundary documented on [CaptureQualityGate.minSharpness]
+     * (80): a future tweak to the metric or the threshold should not be able to move this
+     * line silently. [stripes] with a fixed step size G produces edge pixels whose gradient
+     * magnitude is EXACTLY G at every transition and 0 everywhere else, so the p50-over-edge-
+     * pixels sharpness score this gate computes is exactly G - no approximation needed to
+     * land a synthetic frame precisely on either side of the threshold.
+     */
+    @Test
+    fun `sharpness decision flips exactly at the documented threshold`() {
+        // G = 80 (the threshold itself): sharpness < minSharpness is false, so it passes.
+        val atThreshold = stripes(64, 64, 4, 0, 80)
+        val atResult = gate.evaluateLuma(atThreshold, 64, 64)
+        assertNull(atResult.reason, "a frame scoring exactly at minSharpness must pass: ${atResult.detail}")
+
+        // G = 79: one gradient level below the threshold must flip the decision to TooBlurry.
+        val justBelow = stripes(64, 64, 4, 0, 79)
+        val belowResult = gate.evaluateLuma(justBelow, 64, 64)
+        assertEquals(
+            FailureReason.TooBlurry,
+            belowResult.reason,
+            "a frame scoring one gradient level below minSharpness must fail: ${belowResult.detail}",
+        )
+    }
+
+    /**
      * Coverage sweep: the p99-over-all-pixels metric this gate replaces still depended on
      * how much of the frame was text (it cleared ~1.5% coverage but fell below ~1%). The
      * edge-only metric must be density-independent: sharp text passes and blurred text is
