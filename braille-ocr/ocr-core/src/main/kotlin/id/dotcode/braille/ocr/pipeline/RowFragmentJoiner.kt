@@ -40,10 +40,38 @@ class RowFragmentJoiner(private val config: StructuringConfig) {
         val smallerHeight = min(a.line.box.height, b.line.box.height)
         if (smallerHeight <= 0f || overlap <= smallerHeight * config.rowOverlapFraction) return false
 
-        // A negative gap (slight overlap) counts as adjacent too.
+        // Two fragments of one physical row are printed at the same size. A short label
+        // sitting just above a much taller line of text can satisfy the vertical-overlap
+        // and horizontal-gap checks purely by layout coincidence without being the same
+        // row at all - see StructuringConfig.rowFragmentMaxHeightRatioFactor.
+        val largerHeight = maxOf(a.line.box.height, b.line.box.height)
+        if (largerHeight > smallerHeight * config.rowFragmentMaxHeightRatioFactor) return false
+
         val gap = b.line.box.left - a.line.box.right
         val gapTolerance = stats.medianCharWidth * config.rowFragmentGapFactor
-        return gap <= gapTolerance
+
+        // `a` is spatially to the LEFT of `b` in the ordinary case, and `gap` is then the
+        // true seam width between them - a slight negative value (a couple of pixels of
+        // overlap) is a crease shifting the split, and is bounded below: a gap far more
+        // negative than that means one fragment's x-range is substantially CONTAINED
+        // within the other's, which is two lines stacked on different physical rows, not
+        // two halves of one split row (see [StructuringConfig.rowFragmentMaxOverlapFactor]).
+        //
+        // But the straddling-band-boundary case (see [joinLines]) can hand this function
+        // the physically-RIGHT fragment as `a` - reading order sorts by band before by
+        // left, so a crease-clipped fragment's shifted centerY can put it in an earlier
+        // band despite sitting to the right. `gap` computed as `b.left - a.right` is then
+        // NOT a seam width at all; it is roughly the negative of both fragments' combined
+        // width, which the lower bound would always reject. That reversed case is
+        // detected here (`a` starts to the right of `b`) and exempted from the lower
+        // bound - the upper `gapTolerance` check alone is what the pre-existing
+        // reversed-order test relies on, and a large negative number always clears it.
+        return if (a.line.box.left <= b.line.box.left) {
+            val maxOverlap = stats.medianCharWidth * config.rowFragmentMaxOverlapFactor
+            gap in -maxOverlap..gapTolerance
+        } else {
+            gap <= gapTolerance
+        }
     }
 
     /**

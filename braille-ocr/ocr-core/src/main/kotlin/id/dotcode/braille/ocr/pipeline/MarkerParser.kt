@@ -16,7 +16,15 @@ data class ParsedMarker(val marker: String, val kind: MarkerKind, val remainder:
 object MarkerParser {
 
     private val ROMAN = Regex("^([ivxlIVXL]{1,6})[.)]\\s+(\\S.*)$")
-    private val NUMERIC = Regex("^(\\d{1,3})[.)]\\s+(\\S.*)$")
+
+    // The space after the marker punctuation is normally required, but ML Kit routinely
+    // drops it on real photographed worksheets ("1.Providing free nutritious meals..."),
+    // so the space is made optional when the character immediately following the
+    // punctuation is a LETTER. It stays mandatory when that character is anything else,
+    // which is what keeps "3.14 adalah nilai pi" from being misread as marker "3." - '1'
+    // is not a letter, so the no-space branch never fires and the mandatory-space branch
+    // fails on the missing space, exactly as before.
+    private val NUMERIC = Regex("^(\\d{1,3})[.)](?:\\s+|(?=[A-Za-z]))(\\S.*)$")
     private val ALPHA = Regex("^([a-zA-Z])[.)]\\s+(\\S.*)$")
     private val BULLET = Regex("^([•·●*\\-–])\\s+(\\S.*)$")
 

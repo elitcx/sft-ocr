@@ -156,6 +156,28 @@ class RowFragmentJoinerTest {
     }
 
     @Test
+    fun `a Reason label does not join with the next question's text despite overlapping boxes`() {
+        // Real coordinates (post-deskew) from the photographed worksheet: "Reason:" and
+        // the start of the FOLLOWING numbered question are printed on separate physical
+        // rows with tight leading, so their bounding boxes overlap vertically by more
+        // than rowOverlapFraction, and "Reason:"'s box is almost entirely CONTAINED in
+        // the question line's x-range (both start near the same left margin), which
+        // used to satisfy the old unconditional "negative gap counts as adjacent" rule.
+        // Joining them concatenated "Reason:" onto the question text, burying that
+        // question's numeric marker mid-string where MarkerParser could never find it.
+        val reason = line("Reason:", 236f, 1220f, 50f, 11f)
+        val nextQuestion = line(
+            "2. The passage states that providing free meals will automatically guarantee better academic performance for",
+            237f, 1221f, 708f, 33f,
+        )
+        val stats = PageStats.from(listOf(reason, nextQuestion))
+        val result = joiner.join(ordered(listOf(reason, nextQuestion)), stats)
+
+        assertEquals(2, result.size, "Reason: and the next question must stay separate lines")
+        assertEquals(listOf("Reason:", nextQuestion.text), result.map { it.line.text })
+    }
+
+    @Test
     fun `a chain of three widely separated items on one row does not collapse`() {
         // A table-like row: three separate cells on the same visual row, each pair
         // separated by a wide gap. If the gap guard only prevented the FIRST join, a

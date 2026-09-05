@@ -423,4 +423,85 @@ class DocumentStructurerTest {
         )
         assertEquals(null, doc.meanConfidence)
     }
+
+    @Test
+    fun `golden end-to-end fixture - background clutter is dropped and numbered questions are addressable`() {
+        // 77 REAL RawLine records captured from an actual photographed page: a single
+        // A4 worksheet (essay conclusion, then "Exercises", then a 24-row vocabulary
+        // table, then a "True or False" section with four numbered questions each
+        // followed by a "Reason: ______" answer line). At the LEFT EDGE of the frame,
+        // a second sheet lies underneath, upside down, partially visible - ML Kit reads
+        // five small fragments of it ("noN", "\"ue", "Buou", "1snu", "pur") at roughly
+        // half the x-position of the real page content.
+        //
+        // This is the fixture behind two real defects found by driving the app on an
+        // emulator: (1) those five clutter fragments used to be numerous and cohesive
+        // enough to form a phantom second "column", reported to the user as 2 kolom for
+        // a single-column page, and were read FIRST because their column sorted before
+        // the real one; (2) the "Reason: ____" line before each of questions 2-4
+        // physically overlaps the next question's first line just enough (tight
+        // leading) that RowFragmentJoiner mistook them for one crease-split printed
+        // row, concatenating "Reason:" onto the FOLLOWING question's text and burying
+        // that question's numeric marker mid-string where MarkerParser could never
+        // find it - so question 7-style per-answer tracking silently could not address
+        // questions 2, 3 or 4.
+        val json = checkNotNull(javaClass.getResourceAsStream("/fixtures/real-worksheet-exercises.json"))
+            .bufferedReader().readText()
+        val raw = kotlinx.serialization.json.Json.decodeFromString(
+            id.dotcode.braille.ocr.raw.RawTextResult.serializer(), json,
+        )
+        val doc = DocumentStructurer().structure(raw)
+
+        // --- Defect 1: no phantom column, and no clutter text anywhere in the document.
+        assertEquals(1, doc.columnCount, "a single-column page must not report a phantom clutter column")
+        val clutterFragments = listOf("noN", "\"ue", "Buou", "1snu", "pur")
+        for (fragment in clutterFragments) {
+            assertTrue(
+                doc.blocks.none { it.text == fragment },
+                "background-sheet fragment '$fragment' must be dropped, not read as its own block",
+            )
+        }
+        assertTrue(
+            doc.blocks.first().text.startsWith("In conclusion, providing free nutritious meals"),
+            "the page's real content must be read FIRST, not preceded by background clutter: " +
+                "${doc.blocks.first().text.take(80)}",
+        )
+
+        // --- Defect 2: questions 1, 2 and 3 are each their own block with the numeric
+        // marker extracted, not buried mid-string in the previous "Reason:" line or the
+        // following section heading.
+        val questions = doc.blocks.filter { it.role == BlockRole.QUESTION }
+        assertEquals(
+            listOf("1.", "2.", "3."),
+            questions.map { it.marker },
+            "each numbered question must be its own addressable block with its marker extracted",
+        )
+        assertTrue(questions[0].text.startsWith("Providing free nutritious meals could support"))
+        assertTrue(questions[0].text.endsWith("better concentration."))
+        assertTrue(questions[1].text.startsWith("The passage states that providing free meals"))
+        assertTrue(questions[1].text.endsWith("every student."))
+        assertTrue(questions[2].text.startsWith("If the program is poorly managed"))
+        assertTrue(questions[2].text.endsWith("waste public resources."))
+
+        // Each "Reason:" answer line is its own block too, not glued to the question
+        // before OR after it.
+        val reasonBlocks = doc.blocks.filter { it.text == "Reason:" }
+        assertEquals(3, reasonBlocks.size, "each Reason: line must stand as its own block")
+
+        // KNOWN RESIDUAL GAP (not fixed here - see the report): ML Kit's recognition of
+        // this specific photo drops question 4's "4." marker entirely - it is not
+        // present ANYWHERE in the recognizer output, confirmed against the raw fixture.
+        // MarkerParser cannot extract a marker that was never recognized as text; this
+        // is upstream OCR data loss, not a structuring defect. Question 4 IS still its
+        // own separate block (the fix above still applies), just without a marker.
+        val lastBlock = doc.blocks.last()
+        assertTrue(lastBlock.text.startsWith("Auniversal meal program"))
+        assertEquals(
+            null,
+            lastBlock.marker,
+            "documents the residual gap: OCR dropped question 4's marker text entirely, " +
+                "so there is nothing for MarkerParser to extract - if this ever starts " +
+                "finding a marker, ML Kit's output for this fixture changed upstream",
+        )
+    }
 }

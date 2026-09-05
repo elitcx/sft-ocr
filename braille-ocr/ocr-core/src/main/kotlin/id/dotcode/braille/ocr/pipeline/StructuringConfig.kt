@@ -110,6 +110,36 @@ data class StructuringConfig(
     val marginOutlierFactor: Float = 3.0f,
     /** Two fragments on the same visual row join when their horizontal gap is below this many median character widths. */
     val rowFragmentGapFactor: Float = 2.5f,
+    /**
+     * The most a second same-row fragment's left edge may sit BEHIND the first fragment's
+     * right edge (a negative horizontal gap) and still be treated as a crease-shifted
+     * split of one printed row, in median character widths. A genuine crease split only
+     * ever overlaps by a couple of pixels at the seam.
+     *
+     * Without this bound, a large negative gap - one fragment's x-range almost entirely
+     * contained within the other's - passed the old "negative gap counts as adjacent"
+     * rule unconditionally. That is not a split row at all: it is two lines stacked on
+     * different physical rows whose bounding boxes merely happen to overlap vertically,
+     * for example a short "Reason: ____" answer line printed with tight leading right
+     * above the next numbered question. Joining them concatenates the label onto the
+     * following question's text, burying that question's marker mid-string where
+     * [MarkerParser] can never find it.
+     */
+    val rowFragmentMaxOverlapFactor: Float = 1.5f,
+    /**
+     * The most the taller of two candidate same-row fragments' heights may exceed the
+     * shorter one's, as a ratio, and still be treated as one crease-split printed row.
+     * Two fragments of the SAME physical line are printed at the same font size and
+     * therefore measure similar heights - a crease shifting one fragment's vertical
+     * extent by a few pixels does not change that. A short label like "Reason:" sitting
+     * just above a much taller multi-word question line can satisfy both the vertical-overlap
+     * and horizontal-gap checks purely by coincidence of layout, without being anywhere
+     * near the same printed row; its height being a fraction of the other fragment's is
+     * the tell. Genuine crease splits observed in real captures stay well under 1.7x; this
+     * leaves headroom above that while still catching a same-row false positive whose
+     * height ratio runs past 2x.
+     */
+    val rowFragmentMaxHeightRatioFactor: Float = 2.0f,
     /** Two lines are on the same visual row when their vertical extents overlap by more than this fraction of the smaller height. */
     val rowOverlapFraction: Float = 0.5f,
 )
