@@ -182,21 +182,23 @@ class CaptureQualityGateTest {
 
     /**
      * Pins the exact sharpness boundary documented on [CaptureQualityGate.minSharpness]
-     * (80): a future tweak to the metric or the threshold should not be able to move this
+     * (40): a future tweak to the metric or the threshold should not be able to move this
      * line silently. [stripes] with a fixed step size G produces edge pixels whose gradient
-     * magnitude is EXACTLY G at every transition and 0 everywhere else, so the p50-over-edge-
+     * magnitude is EXACTLY G at every transition and 0 everywhere else, so the p95-over-edge-
      * pixels sharpness score this gate computes is exactly G - no approximation needed to
      * land a synthetic frame precisely on either side of the threshold.
      */
     @Test
     fun `sharpness decision flips exactly at the documented threshold`() {
-        // G = 80 (the threshold itself): sharpness < minSharpness is false, so it passes.
-        val atThreshold = stripes(64, 64, 4, 0, 80)
+        // G = 40 (the threshold itself): sharpness < minSharpness is false, so it passes.
+        // low/high are chosen so the mean luma (40) clears minMeanLuma (35) while the step
+        // size stays exactly 40.
+        val atThreshold = stripes(64, 64, 4, 20, 60)
         val atResult = gate.evaluateLuma(atThreshold, 64, 64)
         assertNull(atResult.reason, "a frame scoring exactly at minSharpness must pass: ${atResult.detail}")
 
-        // G = 79: one gradient level below the threshold must flip the decision to TooBlurry.
-        val justBelow = stripes(64, 64, 4, 0, 79)
+        // G = 39: one gradient level below the threshold must flip the decision to TooBlurry.
+        val justBelow = stripes(64, 64, 4, 20, 59)
         val belowResult = gate.evaluateLuma(justBelow, 64, 64)
         assertEquals(
             FailureReason.TooBlurry,
