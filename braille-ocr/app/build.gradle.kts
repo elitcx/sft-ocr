@@ -24,6 +24,19 @@ android {
     buildTypes {
         release { isMinifyEnabled = false }
     }
+
+    // The bundled ML Kit model ships native libraries for four ABIs, and a universal APK
+    // carries all of them - about 22 MB of that is x86/x86_64, which only an emulator ever
+    // loads. Splitting per ABI gives a phone-sized artifact (arm64-v8a is every Galaxy in
+    // the target range) while keeping an x86_64 APK for emulator testing.
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            include("arm64-v8a", "armeabi-v7a", "x86_64")
+            isUniversalApk = true
+        }
+    }
 }
 
 kotlin {
