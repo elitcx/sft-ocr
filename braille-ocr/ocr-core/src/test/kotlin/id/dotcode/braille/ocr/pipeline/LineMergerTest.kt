@@ -14,6 +14,13 @@ class LineMergerTest {
         return merger.merge(ordered, stats)
     }
 
+    private fun rightMargins(lines: List<id.dotcode.braille.ocr.raw.RawLine>): Map<Int, Float> {
+        val stats = PageStats.from(lines)
+        val columns = ColumnSegmenter(config).segment(lines, stats, 1600)
+        val ordered = ReadingOrderSorter(config).sort(lines, columns, stats)
+        return merger.columnRightMargins(ordered, stats)
+    }
+
     @Test
     fun `tight lines with aligned edges form one paragraph`() {
         val lines = listOf(
@@ -47,6 +54,41 @@ class LineMergerTest {
             line("Kalimat kedua dimulai dengan baris yang jauh lebih panjang", 100f, 136f, 600f, 30f),
         )
         assertEquals(2, groups(lines).size)
+    }
+
+    @Test
+    fun `KNOWN GAP - a final full-width line ending in a period can swallow the next paragraph`() {
+        // Pins current behaviour rather than fixing it (see the coverage-hardening
+        // report for the acceptability call). The line-end-tolerance fix in
+        // `continues()` cannot distinguish "this line reaches the margin because it is
+        // mid-paragraph" from "this line reaches the margin because it is the paragraph's
+        // OWN final line and the sentence simply runs long" - both look identical: full
+        // width, terminal punctuation. When the next paragraph starts immediately below
+        // with no indent and a tight (sub-paragraphGapFactor) vertical gap, it merges
+        // into the first paragraph's block instead of starting a new one. Reading order
+        // and content are still correct (nothing is lost, nothing reordered) - only the
+        // paragraph boundary itself is lost.
+        val paragraphOne = listOf(
+            line(
+                "Pemberian program makan siang gratis untuk siswa sekolah telah menjadi topik pembahasan",
+                214f, 203f, 700f, 20f,
+            ),
+            // This IS the paragraph's last line. It happens to reach the same right
+            // margin as every other body line and ends with a period.
+            line(
+                "publik yang penting dan terus dibicarakan oleh banyak pihak yang peduli pendidikan.",
+                214f, 224f, 700f, 20f,
+            ),
+        )
+        val paragraphTwo = line(
+            "Argumen kedua yang juga penting untuk dipertimbangkan secara mendalam adalah biaya.",
+            214f, 245f, 700f, 20f, // tight gap, no indent
+        )
+        val result = groups(paragraphOne + listOf(paragraphTwo))
+
+        // Pinned: they merge into ONE block, not two.
+        assertEquals(1, result.size)
+        assertEquals(3, result.first().lines.size)
     }
 
     @Test
@@ -137,5 +179,51 @@ class LineMergerTest {
             line("alam", 100f, 136f, 200f, 30f),
         )
         assertEquals("sumber daya alam", LineMerger.reflow(lines))
+    }
+
+    // --- columnRightMargins outlier guard. Previously untested, and previously measured
+    // its "is this an outlier" distance in a column-local median character width while
+    // every OTHER use of the same tolerance factor (continues(), isWrappedFullWidth(),
+    // isCaption()) measured in the page-wide stats.medianCharWidth - two rulers for one
+    // margin. Both the guard and its callers now use stats.medianCharWidth via the
+    // dedicated marginOutlierFactor field.
+
+    @Test
+    fun `a single anomalously long line does not inflate the column's right margin`() {
+        val lines = listOf(
+            line("baris pendek satu di sini", 100f, 100f, 600f, 30f), // right = 700
+            line("baris pendek dua di sini", 100f, 140f, 605f, 30f), // right = 705
+            // A spanning line pinned into this column: far past every genuine line.
+            line("baris yang sangat sangat panjang sekali melebar penuh", 100f, 180f, 1300f, 30f), // right = 1400
+        )
+        val margins = rightMargins(lines)
+        assertEquals(705f, margins.getValue(0), 0.01f, "the 1400 outlier must not become the margin")
+    }
+
+    @Test
+    fun `normal lines of similar width report the widest as the margin`() {
+        val lines = listOf(
+            line("baris pendek satu di sini", 100f, 100f, 600f, 30f), // right = 700
+            line("baris pendek dua di sini", 100f, 140f, 605f, 30f), // right = 705
+            line("baris pendek tiga di sini", 100f, 180f, 610f, 30f), // right = 710
+        )
+        val margins = rightMargins(lines)
+        assertEquals(710f, margins.getValue(0), 0.01f)
+    }
+
+    @Test
+    fun `two long lines close in width both stand - dropping a single outlier is not enough to shrink the margin`() {
+        // Pins current behaviour: the guard only ever excludes the SINGLE widest line
+        // by comparing it against the second-widest. When two lines are both anomalously
+        // wide and close to each other, the second-widest is ALSO an outlier, so the gap
+        // it is compared against (widest vs second-widest) is small and the guard does
+        // not fire - the margin stays the true widest line.
+        val lines = listOf(
+            line("baris pendek satu di sini", 100f, 100f, 600f, 30f), // right = 700
+            line("baris panjang dua yang melebar hampir penuh kolom", 100f, 140f, 1290f, 30f), // right = 1390
+            line("baris panjang tiga yang melebar hampir penuh kolom", 100f, 180f, 1300f, 30f), // right = 1400
+        )
+        val margins = rightMargins(lines)
+        assertEquals(1400f, margins.getValue(0), 0.01f, "two close wide lines both survive as legitimate")
     }
 }

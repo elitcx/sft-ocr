@@ -15,7 +15,7 @@ class LineMerger(private val config: StructuringConfig) {
     fun merge(ordered: List<OrderedLine>, stats: PageStats): List<LineGroup> {
         if (ordered.isEmpty()) return emptyList()
 
-        val columnRightMargins = columnRightMargins(ordered)
+        val columnRightMargins = columnRightMargins(ordered, stats)
 
         val groups = mutableListOf<LineGroup>()
         var current = mutableListOf(ordered.first().line)
@@ -49,18 +49,22 @@ class LineMerger(private val config: StructuringConfig) {
      * Exposed internally so [RoleClassifier] can reuse this exact margin — rather than
      * inventing a second way to compute it — to tell a wrapped, full-width body
      * paragraph from a short heading or caption.
+     *
+     * The outlier distance is measured in the PAGE-WIDE [PageStats.medianCharWidth],
+     * the same unit [continues] uses for its own margin-shortfall tolerance. A
+     * column-local character width would give a column with only a handful of lines
+     * (or an unusually large/small font in one column) a different notion of "how far
+     * is an outlier" than the rest of the page uses for "did this line reach the
+     * margin" - two comparisons against the same margin value should use the same
+     * ruler.
      */
-    internal fun columnRightMargins(ordered: List<OrderedLine>): Map<Int, Float> =
+    internal fun columnRightMargins(ordered: List<OrderedLine>, stats: PageStats): Map<Int, Float> =
         ordered.groupBy { it.columnIndex }.mapValues { (_, group) ->
             val rights = group.map { it.line.box.right }.sorted()
             val max = rights.last()
             if (rights.size >= 3) {
                 val secondWidest = rights[rights.size - 2]
-                val charWidths = group
-                    .filter { it.line.text.isNotBlank() && it.line.box.width > 0f }
-                    .map { it.line.box.width / it.line.text.length }
-                val medianCharWidth = PageStats.median(charWidths) ?: 1f
-                if (max - secondWidest > medianCharWidth * config.lineEndToleranceFactor) secondWidest else max
+                if (max - secondWidest > stats.medianCharWidth * config.marginOutlierFactor) secondWidest else max
             } else {
                 max
             }

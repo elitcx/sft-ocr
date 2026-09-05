@@ -42,10 +42,11 @@ data class StructuringConfig(
      */
     val localHeightWindowSize: Int = 5,
     /**
-     * A local baseline is only trusted when its window contains at least this many
-     * blocks (including the block itself). Below this, there is not enough local context
-     * to cancel perspective distortion, so the classifier falls back to the whole page's
-     * median line height instead.
+     * A local baseline is only trusted when the block has at least this many actual
+     * NEIGHBOURS in its window (the block itself does not count). Below this, there is
+     * not enough local context to cancel perspective distortion, so the classifier falls
+     * back to the whole page's median line height instead. This matters most at the top
+     * and bottom of the page, where the window can only extend to one side.
      */
     val minNeighboursForLocalBaseline: Int = 3,
     /**
@@ -70,6 +71,22 @@ data class StructuringConfig(
     val minSideMarginFraction: Float = 0.15f,
     /** A line ending this many median character widths short of its column's right margin is a paragraph end, not a wrap. */
     val lineEndToleranceFactor: Float = 3.0f,
+    /**
+     * How far ahead of the column's second-widest line (in page-wide median character
+     * widths - [PageStats.medianCharWidth], the same unit [lineEndToleranceFactor] uses)
+     * the single widest line must sit before [LineMerger.columnRightMargins] treats it as
+     * an outlier and reports the second-widest line as the column's right margin instead.
+     *
+     * This is a semantically distinct quantity from [lineEndToleranceFactor] - one
+     * measures a distance FROM a known margin to decide "did this line reach it", the
+     * other measures a gap BETWEEN two candidate margins to decide "which one is real" -
+     * even though both used to reuse the same field and the same (inconsistent) units
+     * before this was split out. A spanning line pinned into a column by [ColumnSegmenter]
+     * is the usual cause of such an outlier: it stretches far past every genuine line in
+     * the column and must not be allowed to inflate the margin every other line is judged
+     * against.
+     */
+    val marginOutlierFactor: Float = 3.0f,
     /** Two fragments on the same visual row join when their horizontal gap is below this many median character widths. */
     val rowFragmentGapFactor: Float = 2.5f,
     /** Two lines are on the same visual row when their vertical extents overlap by more than this fraction of the smaller height. */
