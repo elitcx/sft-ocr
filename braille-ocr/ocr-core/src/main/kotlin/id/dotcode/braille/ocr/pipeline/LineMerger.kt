@@ -78,6 +78,15 @@ class LineMerger(private val config: StructuringConfig) {
     ): Boolean {
         if (prev.columnIndex != next.columnIndex) return false
         if (MarkerParser.parse(next.line.text) != null) return false
+        // Two bare numbers stacked vertically - "18" then "19" - are almost always a
+        // table's row-number gutter, one cell per printed row. MarkerParser does not
+        // treat a bare number as a marker (there is no remainder text to split off), so
+        // without this check they satisfy every other paragraph-continuation test (same
+        // column, tight gap, aligned left edge) and merge into one block, "18 19",
+        // silently fusing two distinct rows' identifiers into a value that is neither.
+        if (BARE_NUMBER_REGEX.matches(prev.line.text.trim()) && BARE_NUMBER_REGEX.matches(next.line.text.trim())) {
+            return false
+        }
         if (TERMINAL_PUNCTUATION_REGEX.containsMatchIn(prev.line.text.trimEnd())) {
             val margin = columnRightMargins[prev.columnIndex] ?: prev.line.box.right
             val shortfall = margin - prev.line.box.right
@@ -103,6 +112,7 @@ class LineMerger(private val config: StructuringConfig) {
     companion object {
         private val TERMINAL_PUNCTUATION_REGEX = Regex("[.!?:;]$")
         private val HYPHEN_WRAP = Regex("[-‐‑]$")
+        private val BARE_NUMBER_REGEX = Regex("^\\d{1,4}$")
 
         /** Joins block lines into one string, collapsing hyphenated wraps. */
         fun reflow(lines: List<RawLine>): String {

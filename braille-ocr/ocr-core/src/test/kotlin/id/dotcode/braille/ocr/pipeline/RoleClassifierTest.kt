@@ -367,4 +367,17 @@ class RoleClassifierTest {
         )
         assertEquals(BlockRole.HEADING, classify(lines)[3])
     }
+
+    // --- Defect B: a bare table row-number never becomes CAPTION, HEADING or TITLE. It
+    // carries no size or position information a reader could trust as a structural label.
+
+    @Test
+    fun `a bare row number is a paragraph, not a caption`() {
+        val lines = listOf(
+            line("the act of supplying something needed for good health and growth", 244f, 300f, 700f, 40f),
+            line("a lack of important nutrients in the body", 244f, 400f, 700f, 40f),
+            line("22", 231f, 500f, 12f, 10f),
+        )
+        assertEquals(BlockRole.PARAGRAPH, classify(lines, pageHeight = 2000).last())
+    }
 }

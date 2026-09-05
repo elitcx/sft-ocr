@@ -516,5 +516,37 @@ class DocumentStructurerTest {
             "question 4's missing marker must not be compounded by mislabelling it a TITLE: " +
                 "${lastBlock.role}",
         )
+
+        // --- Defect B: the vocabulary table's row-number ("No.") column. Consecutive
+        // bare numbers used to merge into one block ("18 19", "20 21", "23 24") and a
+        // lone bare number ("22") was labelled CAPTION - neither is a defensible reading
+        // of a table row identifier. Every row number that ML Kit recognized as its own
+        // fragment (excludes 6 and 9, which the recognizer never produced as text at
+        // all - confirmed absent from the raw fixture - and 14 and 17, which
+        // RowFragmentJoiner fuses onto the following row's definition text because they
+        // sit on the same visual row as it - see the report for that separate,
+        // unfixed finding) must survive as its own PARAGRAPH block, textually unmerged
+        // with its neighbouring row numbers.
+        val rowNumberTexts = listOf(5, 7, 8, 10, 11, 12, 13, 15, 16, 18, 19, 20, 21, 22, 23, 24).map { it.toString() }
+        for (rowNumber in rowNumberTexts) {
+            val block = doc.blocks.firstOrNull { it.text == rowNumber }
+            assertTrue(
+                block != null,
+                "row number '$rowNumber' must appear as its own block, not merged with a " +
+                    "neighbouring number: ${doc.blocks.map { it.text }}",
+            )
+            assertEquals(
+                BlockRole.PARAGRAPH,
+                block!!.role,
+                "a bare row number must never be labelled CAPTION, HEADING or TITLE: $rowNumber",
+            )
+        }
+        val mergedNumberPairs = listOf("18 19", "20 21", "23 24")
+        for (merged in mergedNumberPairs) {
+            assertTrue(
+                doc.blocks.none { it.text == merged },
+                "row numbers must not merge into one block: found '$merged'",
+            )
+        }
     }
 }

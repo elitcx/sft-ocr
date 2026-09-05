@@ -226,4 +226,33 @@ class LineMergerTest {
         val margins = rightMargins(lines)
         assertEquals(1400f, margins.getValue(0), 0.01f, "two close wide lines both survive as legitimate")
     }
+
+    // --- Defect B: consecutive bare table row-numbers must not merge into one block.
+    // Real coordinates from real-worksheet-exercises.json: "18" and "19" are two separate
+    // rows of the vocabulary table's No. column, stacked with a tight leading gap and
+    // aligned left edges - the same shape as an ordinary paragraph wrap - but merging
+    // them produces "18 19", a value that identifies neither row.
+
+    @Test
+    fun `two stacked bare row numbers do not merge into one block (real worksheet regression)`() {
+        val lineEighteen = line("18", 226f, 920f, 240f - 226f, 933f - 920f)
+        val lineNineteen = line("19", 226f, 944f, 240f - 226f, 957f - 944f)
+        val result = groups(listOf(lineEighteen, lineNineteen))
+        assertEquals(2, result.size, "each row number must stand as its own block")
+        assertEquals("18", LineMerger.reflow(result[0].lines))
+        assertEquals("19", LineMerger.reflow(result[1].lines))
+    }
+
+    @Test
+    fun `a bare number followed by ordinary prose still merges normally`() {
+        // Proves the bare-number guard is specific to TWO bare numbers, not to any block
+        // that happens to start with digits - a numbered marker line like "1. Soal" is
+        // already excluded by the marker check above it, and ordinary text following a
+        // lone number (not itself bare-numeric) is unaffected.
+        val lines = listOf(
+            line("Sumber daya alam adalah kekayaan", 100f, 100f, 600f, 30f),
+            line("yang tersedia di alam sekitar kita", 100f, 136f, 600f, 30f),
+        )
+        assertEquals(1, groups(lines).size)
+    }
 }

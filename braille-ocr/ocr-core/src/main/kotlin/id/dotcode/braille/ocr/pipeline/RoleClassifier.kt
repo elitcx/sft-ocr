@@ -123,6 +123,15 @@ class RoleClassifier(private val config: StructuringConfig) {
 
         if (isPageNumber(group, text, pageHeight)) return BlockRole.PAGE_NUMBER
 
+        // A bare number that is not a page number is a table row-number gutter cell (a
+        // "No." column entry) that OCR happened to recognize on its own, separate from
+        // its row's other cells. It carries no size or position information a reader
+        // could trust: CAPTION, HEADING and TITLE all assert something specific about
+        // the text's role on the page, and "22" on its own asserts nothing. PARAGRAPH -
+        // plain, unlabelled text - is the honest fallback, exactly as for any other
+        // ambiguous block.
+        if (isBareNumericLabel(group, text)) return BlockRole.PARAGRAPH
+
         // A block with more than one line that wraps out to its column's right margin is
         // body text by construction — headings and captions do not wrap across multiple
         // full-width lines. This is decided before any height estimate is even
@@ -144,6 +153,9 @@ class RoleClassifier(private val config: StructuringConfig) {
         group.lines.size == 1 &&
             group.box.top >= pageHeight * config.bottomBandFraction &&
             text.trim().matches(PAGE_NUMBER_REGEX)
+
+    private fun isBareNumericLabel(group: LineGroup, text: String): Boolean =
+        group.lines.size == 1 && text.trim().matches(PAGE_NUMBER_REGEX)
 
     private fun isWrappedFullWidth(
         group: LineGroup,
