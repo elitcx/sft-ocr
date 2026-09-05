@@ -14,7 +14,7 @@ class RoleClassifierTest {
         val columns = ColumnSegmenter(config).segment(lines, stats, 1600)
         val ordered = ReadingOrderSorter(config).sort(lines, columns, stats)
         val lineMerger = LineMerger(config)
-        val columnRightMargins = lineMerger.columnRightMargins(ordered)
+        val columnRightMargins = lineMerger.columnRightMargins(ordered, stats)
         val groups = lineMerger.merge(ordered, stats)
         return classifier.classify(groups, stats, pageHeight, columnRightMargins)
     }
@@ -168,6 +168,93 @@ class RoleClassifierTest {
             line("Paragraf normal ketiga di sini saja", 100f, 550f, 700f, 30f),
         )
         assertEquals(BlockRole.PARAGRAPH, classify(lines)[2])
+    }
+
+    // --- The local window is one-sided at the very top and bottom of the page (there is
+    // nothing above block 0 or below the last block), and minNeighboursForLocalBaseline
+    // used to compare the window's raw SIZE (which includes the block itself) rather
+    // than its actual neighbour count, so the guard almost never triggered - a window
+    // holding only the block plus two same-side neighbours (size 3) satisfied a
+    // threshold of 3 even though "two neighbours, both on one side" is exactly the
+    // under-supported, most bias-prone case the guard exists to catch.
+
+    private val smallWindowConfig = StructuringConfig(localHeightWindowSize = 2, minNeighboursForLocalBaseline = 3)
+
+    private fun classifySmallWindow(lines: List<RawLine>, pageHeight: Int = 3000): List<BlockRole> {
+        val stats = PageStats.from(lines)
+        val columns = ColumnSegmenter(smallWindowConfig).segment(lines, stats, 1600)
+        val ordered = ReadingOrderSorter(smallWindowConfig).sort(lines, columns, stats)
+        val lineMerger = LineMerger(smallWindowConfig)
+        val columnRightMargins = lineMerger.columnRightMargins(ordered, stats)
+        val groups = lineMerger.merge(ordered, stats)
+        return RoleClassifier(smallWindowConfig).classify(groups, stats, pageHeight, columnRightMargins)
+    }
+
+    @Test
+    fun `the first block of a steep gradient falls back to the page median instead of a tiny one-sided window`() {
+        // A small window (2) makes the boundary effect easy to trigger. Block 0's true
+        // size (24) matches the rest of the page, but its two immediate FORWARD
+        // neighbours (indices 1 and 2 - the only neighbours it has, since nothing sits
+        // above the first block) dip to 10 as a local perspective/recognition wobble.
+        // Block 0's raw window is [0, 1, 2] - size 3, which the old buggy check
+        // (comparing window SIZE, not real neighbour count) accepted outright, so the
+        // local median (10) made block 0 look 2.4x its neighbours - comfortably past
+        // even titleHeightRatio. The page-wide median (dominated by the eight blocks
+        // that are genuinely 24) reports block 0's true size correctly.
+        val heights = List(10) { i -> if (i == 1 || i == 2) 10f else 24f }
+        val lines = heights.mapIndexed { i, h ->
+            line("Paragraf tubuh biasa nomor urut $i di halaman", 100f, 100f + i * 300f, 700f, h)
+        }
+        val roles = classifySmallWindow(lines)
+        assertEquals(
+            BlockRole.PARAGRAPH,
+            roles.first(),
+            "with too few real neighbours (both on one side, and locally anomalous) the " +
+                "classifier must fall back to the page median rather than trust a tiny " +
+                "biased local window: $roles",
+        )
+    }
+
+    @Test
+    fun `the last block of a steep gradient falls back to the page median instead of a tiny one-sided window`() {
+        // Mirror case at the page foot: the LAST block's true size (24) matches the
+        // rest of the page, but its two immediate BACKWARD neighbours (indices 7 and 8
+        // - the only neighbours it has, since nothing sits below the last block) dip
+        // to 10. The old buggy check trusted this tiny one-sided window and reported a
+        // false HEADING; the page-wide median correctly reflects block 9's true size.
+        val heights = List(10) { i -> if (i == 7 || i == 8) 10f else 24f }
+        val lines = heights.mapIndexed { i, h ->
+            line("Paragraf tubuh biasa nomor urut $i di halaman", 100f, 100f + i * 300f, 700f, h)
+        }
+        val roles = classifySmallWindow(lines)
+        assertEquals(
+            BlockRole.PARAGRAPH,
+            roles.last(),
+            "with too few real neighbours (both on one side, and locally anomalous) the " +
+                "classifier must fall back to the page median rather than trust a tiny " +
+                "biased local window: $roles",
+        )
+    }
+
+    @Test
+    fun `a two-block page falls back to the page median for both blocks`() {
+        // With the default config (window 5, minNeighboursForLocalBaseline 3) a page of
+        // only two blocks can never satisfy the neighbour-count guard for EITHER block
+        // (each has exactly one real neighbour), so both must fall back to the whole
+        // page's median line height rather than trust each other as a "local" baseline
+        // of one. A naive height-ratio comparison between just these two blocks would
+        // wrongly report whichever is taller as a HEADING relative to the other.
+        val lines = listOf(
+            line("Paragraf pendek pertama di halaman ini", 100f, 100f, 700f, 22f),
+            line("Paragraf kedua yang sedikit lebih tinggi di halaman", 100f, 400f, 700f, 26f),
+        )
+        val roles = classify(lines)
+        assertEquals(
+            listOf(BlockRole.PARAGRAPH, BlockRole.PARAGRAPH),
+            roles,
+            "a two-block page has too little local context to trust either block as the " +
+                "other's baseline: $roles",
+        )
     }
 
     @Test

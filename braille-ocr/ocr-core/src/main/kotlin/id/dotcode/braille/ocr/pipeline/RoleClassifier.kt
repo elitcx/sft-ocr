@@ -120,9 +120,22 @@ class RoleClassifier(private val config: StructuringConfig) {
      * For each block, the median line height of a window of [StructuringConfig
      * .localHeightWindowSize] neighbouring blocks on either side (in reading order),
      * including the block itself. Falls back to the whole page's median line height when
-     * the window holds fewer than [StructuringConfig.minNeighboursForLocalBaseline]
-     * blocks - too little local context to trust, e.g. a title alone at the top of an
+     * the block has fewer than [StructuringConfig.minNeighboursForLocalBaseline] actual
+     * NEIGHBOURS - too little local context to trust, e.g. a title alone at the top of an
      * otherwise single-block-per-side page.
+     *
+     * The neighbour count excludes the block itself ([window]`.size - 1`), not the raw
+     * window size. Comparing the window size directly against the threshold (the original
+     * bug) meant the check almost never failed: at [StructuringConfig.minNeighboursForLocalBaseline]
+     * `= 3` a window holding only the block plus ONE real neighbour (size 2) already fell
+     * below it, but a window holding the block plus two neighbours ALL ON ONE SIDE (size
+     * 3) satisfied it, even though "one side" is precisely the situation that matters
+     * most: the top and bottom of a photographed page, where a window can only look in one
+     * direction (there is nothing above the first block or below the last), and a
+     * perspective gradient makes every block on that one available side systematically
+     * shorter or taller than the block being judged. A one-sided window with too few real
+     * neighbours is the least trustworthy case of all, and is exactly what this guard
+     * exists to catch.
      */
     internal fun localBaselines(groups: List<LineGroup>, stats: PageStats): List<Float> {
         val groupHeights = groups.map { group ->
@@ -132,7 +145,8 @@ class RoleClassifier(private val config: StructuringConfig) {
             val lo = (index - config.localHeightWindowSize).coerceAtLeast(0)
             val hi = (index + config.localHeightWindowSize).coerceAtMost(groups.size - 1)
             val window = groupHeights.subList(lo, hi + 1)
-            if (window.size < config.minNeighboursForLocalBaseline) {
+            val neighbourCount = window.size - 1
+            if (neighbourCount < config.minNeighboursForLocalBaseline) {
                 stats.medianLineHeight
             } else {
                 PageStats.median(window) ?: stats.medianLineHeight
