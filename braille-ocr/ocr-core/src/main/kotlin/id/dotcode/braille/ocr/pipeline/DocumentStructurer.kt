@@ -7,7 +7,6 @@ import id.dotcode.braille.ocr.model.TextLine
 import id.dotcode.braille.ocr.model.Timings
 import id.dotcode.braille.ocr.raw.RawTextResult
 import kotlin.math.abs
-import kotlin.math.roundToInt
 
 /**
  * Runs the six structuring stages in order and assembles the output document.
@@ -60,7 +59,7 @@ class DocumentStructurer(private val config: StructuringConfig = StructuringConf
         val joined = rowFragmentJoiner.join(ordered, stats)
         val columnRightMargins = lineMerger.columnRightMargins(joined, stats)
         val groups = lineMerger.merge(joined, stats)
-        val roles = roleClassifier.classify(groups, stats, deskewed.result.imageHeight, columnRightMargins)
+        val roles = roleClassifier.classify(groups, stats, deskewed.result.imageHeight, columnRightMargins, columns.bounds)
         val localBaselines = roleClassifier.localBaselines(groups, stats)
 
         val blocks = groups.mapIndexed { index, group ->
@@ -72,7 +71,7 @@ class DocumentStructurer(private val config: StructuringConfig = StructuringConf
                 role = roles[index],
                 columnIndex = group.columnIndex,
                 marker = marker?.marker,
-                indentLevel = indentLevel(group, columnBounds.start, stats),
+                indentLevel = roleClassifier.indentLevelOf(group, columnBounds.start, stats),
                 alignment = alignment(group, columnBounds, stats),
                 relativeTextHeight = roleClassifier.relativeHeight(group, localBaselines[index]),
                 text = marker?.remainder ?: reflowed,
@@ -93,12 +92,6 @@ class DocumentStructurer(private val config: StructuringConfig = StructuringConf
             meanConfidence = averageConfidence(effectiveLines.mapNotNull { it.confidence }),
             timings = timings,
         )
-    }
-
-    private fun indentLevel(group: LineGroup, columnLeft: Float, stats: PageStats): Int {
-        val quantum = (stats.medianCharWidth * config.indentQuantumFactor).coerceAtLeast(1f)
-        val level = ((group.box.left - columnLeft) / quantum).roundToInt()
-        return level.coerceIn(0, config.maxIndentLevel)
     }
 
     /**

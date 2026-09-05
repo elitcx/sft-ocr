@@ -503,5 +503,18 @@ class DocumentStructurerTest {
                 "so there is nothing for MarkerParser to extract - if this ever starts " +
                 "finding a marker, ML Kit's output for this fixture changed upstream",
         )
+
+        // --- Defect A: question 4's missing marker must not be compounded by a false
+        // structural label. Its recognized height alone would promote it to TITLE (it
+        // did, before the fix) - the single most misleading label available for an exam
+        // question. Sitting immediately after question 3 (and its "Reason:" line) at the
+        // same indent, it must fall back to PARAGRAPH: honest "just text", not a false
+        // claim that this is the page's title.
+        assertEquals(
+            BlockRole.PARAGRAPH,
+            lastBlock.role,
+            "question 4's missing marker must not be compounded by mislabelling it a TITLE: " +
+                "${lastBlock.role}",
+        )
     }
 }

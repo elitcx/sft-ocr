@@ -142,4 +142,22 @@ data class StructuringConfig(
     val rowFragmentMaxHeightRatioFactor: Float = 2.0f,
     /** Two lines are on the same visual row when their vertical extents overlap by more than this fraction of the smaller height. */
     val rowOverlapFraction: Float = 0.5f,
+    /**
+     * How many blocks back, in reading order, [RoleClassifier] looks for a preceding
+     * QUESTION at the same indent level before letting a height-driven TITLE/HEADING
+     * promotion stand. A block sitting in an already-established run of numbered
+     * questions is itself body text (an exam question, or one OCR failed to recognize a
+     * marker for), never a document title or section heading, no matter how tall
+     * perspective or a recognizer quirk makes it measure.
+     *
+     * The window must be wider than 1: a "Reason: ______" answer line commonly sits
+     * between one question and the next, so the nearest QUESTION predecessor is often two
+     * blocks back, not one. A window of 2 reaches past exactly one such intervening block
+     * without reaching so far that it starts pulling in unrelated headings from a
+     * different section of the page. It is deliberately backward-only - see
+     * [RoleClassifier]'s use of it - so a worksheet's own title, sitting immediately
+     * above its first question, is never demoted merely because a question run starts
+     * right after it.
+     */
+    val questionRunAdjacencyWindow: Int = 2,
 )

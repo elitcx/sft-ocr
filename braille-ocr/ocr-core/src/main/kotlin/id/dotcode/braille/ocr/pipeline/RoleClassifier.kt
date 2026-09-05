@@ -1,6 +1,7 @@
 package id.dotcode.braille.ocr.pipeline
 
 import id.dotcode.braille.ocr.model.BlockRole
+import kotlin.math.roundToInt
 
 /**
  * Stage 6. Assigns a semantic role from relative text height, marker kind, and page position.
@@ -24,14 +25,82 @@ class RoleClassifier(private val config: StructuringConfig) {
         stats: PageStats,
         pageHeight: Int,
         columnRightMargins: Map<Int, Float>,
+        columnBounds: List<ClosedFloatingPointRange<Float>> = emptyList(),
     ): List<BlockRole> {
         val numericCount = groups.count { MarkerParser.parse(it.reflowed())?.kind == MarkerKind.NUMERIC }
         val questionsLikely = numericCount >= config.minNumberedBlocksForQuestions
         val baselines = localBaselines(groups, stats)
 
-        return groups.mapIndexed { index, group ->
+        val preliminary = groups.mapIndexed { index, group ->
             roleOf(group, stats, pageHeight, questionsLikely, baselines[index], columnRightMargins)
         }
+
+        // A large recognized height can promote an ordinary numbered question - or, on a
+        // real photo, one whose leading marker digit OCR simply failed to recognize - to
+        // TITLE or HEADING. See StructuringConfig.questionRunAdjacencyWindow: a block
+        // sitting among a run of QUESTION blocks at the same indent is demoted back to
+        // PARAGRAPH rather than trusted as a structural heading. This is a second pass
+        // because it needs every block's PRELIMINARY role decided first - the run a block
+        // belongs to must be judged by its neighbours' real roles, not by a partial
+        // classification still in progress.
+        val indentLevels = groups.map { group ->
+            val bounds = columnBounds.getOrElse(group.columnIndex) { columnBounds.firstOrNull() }
+            indentLevelOf(group, bounds?.start ?: 0f, stats)
+        }
+        return preliminary.mapIndexed { index, role ->
+            if ((role == BlockRole.TITLE || role == BlockRole.HEADING) &&
+                isAdjacentToQuestionRun(index, groups, preliminary, indentLevels)
+            ) {
+                BlockRole.PARAGRAPH
+            } else {
+                role
+            }
+        }
+    }
+
+    /**
+     * True when a QUESTION block sits within [StructuringConfig.questionRunAdjacencyWindow]
+     * blocks BEFORE [index] in reading order, in the same column, at the same indent
+     * level (see [indentLevelOf]) as the block being judged. A short "Reason: ______"
+     * answer line commonly sits between one question and the next, so the check looks
+     * past a fixed number of intervening blocks rather than requiring an immediate
+     * predecessor.
+     *
+     * Deliberately backward-only, not a symmetric neighbourhood. A worksheet's own TITLE
+     * commonly sits immediately ABOVE its first question, at the same indent - looking
+     * forward as well would demote that genuine title to PARAGRAPH the moment a question
+     * run starts right after it. "Sitting in a run of questions" means coming during or
+     * after the run has already been established, not merely sitting next to its start.
+     */
+    private fun isAdjacentToQuestionRun(
+        index: Int,
+        groups: List<LineGroup>,
+        roles: List<BlockRole>,
+        indentLevels: List<Int>,
+    ): Boolean {
+        val column = groups[index].columnIndex
+        val indent = indentLevels[index]
+        val lo = (index - config.questionRunAdjacencyWindow).coerceAtLeast(0)
+        for (j in lo until index) {
+            if (groups[j].columnIndex != column) continue
+            if (indentLevels[j] != indent) continue
+            if (roles[j] == BlockRole.QUESTION) return true
+        }
+        return false
+    }
+
+    /**
+     * The indent level (in [StructuringConfig.indentQuantumFactor]-sized steps, capped at
+     * [StructuringConfig.maxIndentLevel]) of [group]'s left edge relative to its column's
+     * left bound [columnLeft]. Shared with [id.dotcode.braille.ocr.pipeline
+     * .DocumentStructurer], which reports it on [id.dotcode.braille.ocr.model.TextBlock],
+     * so both places agree on what "the same indent" means rather than keeping two
+     * independent formulas in sync by hand.
+     */
+    internal fun indentLevelOf(group: LineGroup, columnLeft: Float, stats: PageStats): Int {
+        val quantum = (stats.medianCharWidth * config.indentQuantumFactor).coerceAtLeast(1f)
+        val level = ((group.box.left - columnLeft) / quantum).roundToInt()
+        return level.coerceIn(0, config.maxIndentLevel)
     }
 
     private fun roleOf(

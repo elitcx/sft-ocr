@@ -16,7 +16,7 @@ class RoleClassifierTest {
         val lineMerger = LineMerger(config)
         val columnRightMargins = lineMerger.columnRightMargins(ordered, stats)
         val groups = lineMerger.merge(ordered, stats)
-        return classifier.classify(groups, stats, pageHeight, columnRightMargins)
+        return classifier.classify(groups, stats, pageHeight, columnRightMargins, columns.bounds)
     }
 
     @Test
@@ -187,7 +187,7 @@ class RoleClassifierTest {
         val lineMerger = LineMerger(smallWindowConfig)
         val columnRightMargins = lineMerger.columnRightMargins(ordered, stats)
         val groups = lineMerger.merge(ordered, stats)
-        return RoleClassifier(smallWindowConfig).classify(groups, stats, pageHeight, columnRightMargins)
+        return RoleClassifier(smallWindowConfig).classify(groups, stats, pageHeight, columnRightMargins, columns.bounds)
     }
 
     @Test
@@ -305,5 +305,66 @@ class RoleClassifierTest {
             line("Gambar 1 rantai makanan", 100f, 1000f, 400f, 24f),
         )
         assertEquals(BlockRole.CAPTION, classify(lines, pageHeight = 2000).last())
+    }
+
+    // --- Defect A: a block sitting in a run of numbered questions must not be promoted
+    // to TITLE/HEADING by height alone, even when a short "Reason: ______" line - itself
+    // not a QUESTION - sits directly between it and the nearest recognized question. See
+    // real-worksheet-exercises.json block 40: OCR dropped question 4's "4." marker
+    // entirely, so it fails the marker branch and falls through to height-based
+    // classification, where its large recognized height would otherwise make it a TITLE -
+    // the single most misleading label available for an exam question.
+
+    @Test
+    fun `a tall block one Reason line past the last recognized question is not a title`() {
+        // Mirrors the real fixture's shape: each question wraps onto a short second line
+        // that ends in a period well short of the column's margin (a genuine paragraph
+        // end, per LineMerger), so it never accidentally merges with the "Reason:" line
+        // that follows it.
+        val lines = listOf(
+            // Establishes the column's left bound well to the left of the indented
+            // question block, exactly as the real fixture's essay-then-exercises layout
+            // does - without it, the question run and the candidate block would not
+            // share a saturated (capped) indent level to compare against each other.
+            line("Bacalah teks di atas dengan saksama sebelum menjawab soal berikut.", 100f, 100f, 900f, 30f),
+            line("1. Pertanyaan pertama yang cukup panjang untuk diuji ini", 240f, 300f, 700f, 30f),
+            line("dengan baik.", 240f, 332f, 200f, 30f),
+            line("Reason:", 240f, 372f, 100f, 20f),
+            line("2. Pertanyaan kedua yang cukup panjang untuk diuji ini", 240f, 412f, 700f, 30f),
+            line("dengan baik.", 240f, 444f, 200f, 30f),
+            line("Reason:", 240f, 484f, 100f, 20f),
+            line("3. Pertanyaan ketiga yang cukup panjang untuk diuji ini", 240f, 524f, 700f, 30f),
+            line("dengan baik.", 240f, 556f, 200f, 30f),
+            line("Reason:", 240f, 596f, 100f, 20f),
+            // No leading marker recognized (OCR data loss) - and tall enough to read as
+            // a TITLE by height alone, exactly like the real fixture's question 4.
+            line("Pertanyaan keempat tanpa penanda karena OCR gagal mengenalinya", 296f, 636f, 700f, 60f),
+        )
+        val roles = classify(lines)
+        assertEquals(BlockRole.QUESTION, roles[1], "roles: $roles")
+        assertEquals(BlockRole.QUESTION, roles[3], "roles: $roles")
+        assertEquals(BlockRole.QUESTION, roles[5], "roles: $roles")
+        assertEquals(
+            BlockRole.PARAGRAPH,
+            roles.last(),
+            "a block adjacent to a run of questions must not be promoted to a title: $roles",
+        )
+    }
+
+    @Test
+    fun `an unrelated tall heading far from any question is unaffected`() {
+        // Proves the question-run adjacency guard does not simply disable heading
+        // detection everywhere: a genuine heading sitting far from any numbered question
+        // (outside the adjacency window, and at a different indent) must still promote.
+        val lines = listOf(
+            line("Kalimat paragraf satu di sini", 100f, 100f, 700f, 30f),
+            line("Kalimat paragraf dua di sini", 100f, 250f, 700f, 30f),
+            line("Kalimat paragraf tiga di sini", 100f, 400f, 700f, 30f),
+            line("Bagian Kedua", 100f, 550f, 400f, 45f),
+            line("Kalimat paragraf lima di sini", 100f, 700f, 700f, 30f),
+            line("Kalimat paragraf enam di sini", 100f, 850f, 700f, 30f),
+            line("Kalimat paragraf tujuh di sini", 100f, 1000f, 700f, 30f),
+        )
+        assertEquals(BlockRole.HEADING, classify(lines)[3])
     }
 }
