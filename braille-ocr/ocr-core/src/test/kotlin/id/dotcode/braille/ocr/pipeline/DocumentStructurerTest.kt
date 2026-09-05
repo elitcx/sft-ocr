@@ -250,6 +250,167 @@ class DocumentStructurerTest {
     }
 
     @Test
+    fun `golden end-to-end fixture - a real photographed worksheet reads in true order with no false headings`() {
+        // 61 REAL RawLine records captured from an actual photographed page: an English
+        // essay titled "Should the Government Provide Free Nutritious Meals for
+        // Students?", preceded by two small worksheet header lines. This is the only
+        // test in the suite that measures the thing that actually matters: would a
+        // blind student reading this block-by-block get the same content, in the same
+        // order, that a sighted reader gets from the photo? The OCR itself made several
+        // errors ("sucha", "chitdren's", "acadernic", "heatth", "fo0ds") - those are ML
+        // Kit's and are pinned here VERBATIM. Correcting them would be a different bug:
+        // silently rewriting what the page actually says.
+        val json = checkNotNull(javaClass.getResourceAsStream("/fixtures/real-worksheet-reading.json"))
+            .bufferedReader().readText()
+        val raw = kotlinx.serialization.json.Json.decodeFromString(
+            id.dotcode.braille.ocr.raw.RawTextResult.serializer(), json,
+        )
+        val doc = DocumentStructurer().structure(raw)
+
+        assertEquals(1, doc.columnCount, "this page is a single column of prose")
+
+        val expectedTexts = listOf(
+            "Academic Reading and Comprehension Worksheet",
+            "Advanced English-TKA Practice, 9th Period - Second Meeting",
+            "Should the Government Provide Free Nutritious Meals for Students?",
+            "The provision of free nutritious meals for school students has become an " +
+                "important topic of public discussion. Supporters argue that sucha program " +
+                "could improve chitdren's health, support acadernic performance, and reduce " +
+                "inequality among students from different socioeconomic backgrounds. They " +
+                "contend that access to nutritious food is not onlya family responsibility " +
+                "but also an important component of educational development. Opponents, " +
+                "however, question whether governments can implement such a large-scale " +
+                "progran effectively and sustainably. They also raise Concerns about " +
+                "financialc cost, food waste, administrative complexity, and the challenge " +
+                "of maintaining food quality and safety. For these reasons, the provision " +
+                "of free nutritious meals deserves careful consideration from multiple " +
+                "perspectives.",
+            "One of the strongest arguments in favor of free nutritious meals is their " +
+                "potential to support students' overall health. Some children may arrive at " +
+                "school without an adequate breakfast or may consume meals that do not " +
+                "provide essential nutrients. A balanced meal containing protein, " +
+                "carbohydrates, healthy fats, vitamins, and minerals can contribute to " +
+                "physical growth and development. Adequate nutrition can also support " +
+                "immune function and help reduce the risk of nutritional deficiencies.",
+            "Furthermore, establishing healthy eating habits at an early age may influence " +
+                "students' lifestyle choices in the future. If schools consistently provide " +
+                "nutritious food, students may become more familiar with balanced diets and " +
+                "develop a greater appreciation of healthy eating. In the long term, such a " +
+                "program could contribute to a healthier population and may help reduce the " +
+                "prevalence of diet-related health problems.",
+            "Another important argument is that adequate nutrition can support students' " +
+                "cognitive functioning. Students who experience hunger during school hours " +
+                "may find it difficult to concentrate, may become fatigued, or may " +
+                "participate less actively in classroom activities. By contrast, students " +
+                "who receive sufficient nutrients may be more likely to have the energy and " +
+                "mental alertness required for learning.",
+            "Free nutritious meals could therefore contribute indirectly to improved " +
+                "educational outcomes. When students are physically comfortable and " +
+                "mentaly prepared, they may be more attentive during lessons, participate " +
+                "more activety in discussions, and complete academic tasks more " +
+                "effectively. Nutrition alone cannot guarantee academic success, but it can " +
+                "provide an important foundation for effective learning",
+            "A third argument in favor of the program is that it could help reduce " +
+                "socioeconomic disparities among students. Families have different " +
+                "financial circumstances, and some parents may find it difficult to " +
+                "provide nutritious meals regularby. As a result, students from " +
+                "low-income households mnay face nutritional disadvantages compared with " +
+                "their more affluent classmates.",
+            "A universal free-meal program could provide every student with access to at " +
+                "least one nutritious meal, regardless of family income. This approach " +
+                "could also reduce the stigma that might arise if assistance were provided " +
+                "only to students from disadvantaged households. More importantty, it " +
+                "could help ensure that poverty does not become a major barrier to " +
+                "students' health and educational opportunities.",
+            "Despite these potential benefits, a free nutritious meal program could impose " +
+                "a substantial financial burden on the government. Providing meals to " +
+                "large numbers of students would require continuing funding for food " +
+                "ingredients, kitchen facilities, transportation, storage, cooking staff, " +
+                "packaging, and waste management. These expenses would not be limited to " +
+                "the initiatl inplementation of the program but would continue from year " +
+                "to year.",
+            "Critics argue that public budgets are limited and must be allocated across " +
+                "sectors such as education, heatth care. infrastructure. and social " +
+                "welfare. If an excessive share of funding were directed toward free " +
+                "meals, other important educational programs might receive insufficient " +
+                "support. Policymakers would therefore need to conduct a thorough " +
+                "cost-benefit analysis before implementing sucha program on a national " +
+                "scale.",
+            "Another potential problem is food waste. Students have different " +
+                "preferences, dietary habits, and nutritional reguirements, Some may " +
+                "refuse certain fo0ds because of taste, while others may have allergies or " +
+                "other dietary restrictions. If meals are prepared in large quantities " +
+                "without considering these differences, significant amounts of food could " +
+                "remain uneaten.",
+            "In addition, distributing meals to schools in remote or geographically " +
+                "challenging areas could be difficult. Poor transportation " +
+                "infrastructure, inadequate storage facilities, or delivery delays could " +
+                "cause food to deteriorate before it reaches students. Without effective " +
+                "monitoring and distribution systems, the program could become " +
+                "inefficient and waste valuable resources.",
+            "Maintaining food safety and nutritional quality on a large scale could " +
+                "present another major challenge. Meals must be prepared under hygienic " +
+                "conditions, stored at appropriate temperatures, transported safely, and " +
+                "distributed within a suitable period. Failures in these procedures could " +
+                "lead to contamination and potentially cause illness among students.",
+            "Moreover, the program would require strong oversight and transparency to " +
+                "reduce the risk of mismanagement, Corruption, or misuse of public funds. " +
+                "Schools and government agencies would need qualified personnel to " +
+                "monitor suppliers, evaluate nutritional standards, and ensure that the " +
+                "allocated budget was used appropriately. Without effective supervision, " +
+                "the program might fail to achieve its intended objectives.",
+        )
+        assertEquals(
+            expectedTexts,
+            doc.blocks.map { it.text },
+            "reading order and/or content diverged from what a sighted reader sees on the page",
+        )
+
+        // Paragraph structure: 13 body paragraphs (block 3 is the essay's intro
+        // paragraph, blocks 4-15 are the following 12), each preceded by an indented
+        // opening line, plus the two-line worksheet header and the essay's own title
+        // question ahead of them. Lines 9 and 10 of the fixture ("Concerns about
+        // financialc" / "cost, food waste, ...") are one printed line a paper crease
+        // split into two ML Kit fragments on the same visual row: RowFragmentJoiner
+        // must fuse them back (9 raw lines -> 8 lines in block 3), left-to-right, with
+        // no duplication and no reordering - already confirmed above by the exact text
+        // match ("... They also raise Concerns about financialc cost, food waste, ...").
+        assertEquals(
+            listOf(1, 1, 1, 8, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4),
+            doc.blocks.map { it.lines.size },
+            "unexpected paragraph/line grouping",
+        )
+
+        // The regression that matters most: a top-to-bottom perspective gradient on a
+        // handheld photo used to manufacture false HEADINGs out of ordinary body text.
+        // Every one of the 13 body paragraphs (blocks 3-15) is ordinary prose and must
+        // never be promoted to HEADING, TITLE, CAPTION or any other non-paragraph role.
+        val bodyRoles = doc.blocks.drop(3).map { it.role }
+        assertTrue(
+            bodyRoles.all { it == BlockRole.PARAGRAPH },
+            "a body paragraph was misclassified: $bodyRoles",
+        )
+
+        // KNOWN DISCREPANCY (see docs/superpowers/plans/2026-08-30-test-hardening-report.md):
+        // block 0, "Academic Reading and Comprehension Worksheet", is the worksheet's
+        // own header line - a sighted reader would call it a title/header, never a
+        // caption. It is genuinely SHORTER (height ~14) than the surrounding essay body
+        // text (height ~20) on this fixture, an unusual but real layout, and
+        // RoleClassifier's CAPTION rule (short single line, stops well short of the
+        // column's right margin) has no exemption for a block sitting in the page's own
+        // top band - only the SYMMETRIC case (relative height ABOVE headingHeightRatio
+        // AND inTopBand) is special-cased to TITLE. This is pinned as a known bug
+        // rather than silently asserted away or silently "fixed" outside the five
+        // findings this task scoped; see the report for the recommended follow-up.
+        assertEquals(
+            BlockRole.CAPTION,
+            doc.blocks[0].role,
+            "if this now fails, RoleClassifier's top-of-page handling changed - update " +
+                "the report rather than this assertion",
+        )
+    }
+
+    @Test
     fun `mean confidence is null when no line reports confidence`() {
         val doc = structurer.structure(
             page(
