@@ -3,11 +3,17 @@ package id.dotcode.braille.ocr.app
 import android.content.Intent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.items
@@ -63,7 +69,7 @@ fun ResultScreen(
 
 @Composable
 private fun FailureView(reason: FailureReason, onRetake: () -> Unit) {
-    Column(Modifier.fillMaxSize().padding(24.dp)) {
+    Column(Modifier.fillMaxSize().safeDrawingPadding().padding(24.dp)) {
         Text(reason.toIndonesian(), style = MaterialTheme.typography.headlineSmall)
         Button(onClick = onRetake, modifier = Modifier.padding(top = 16.dp)) { Text("Coba Lagi") }
     }
@@ -89,82 +95,95 @@ private fun DocumentView(
     val context = LocalContext.current
     var isReadingView by remember { mutableStateOf(true) }
 
-    Column(Modifier.fillMaxSize().padding(16.dp)) {
-        // Timing HUD stays visible in both views: the measured per-stage numbers are what
-        // makes a slow run diagnosable, reading view or not.
-        Text(
-            "${document.timings.totalMs} ms  •  ${document.blocks.size} blok  •  " +
-                "${document.columnCount} kolom  •  skew ${"%.1f".format(document.skewDeg)}°",
-            style = MaterialTheme.typography.labelLarge,
-        )
-        Text(
-            "decode ${document.timings.decodeMs} / pre ${document.timings.preprocessMs} / " +
-                "ocr ${document.timings.recognizeMs} / struct ${document.timings.structureMs} ms",
-            style = MaterialTheme.typography.labelSmall,
-        )
+    // The header (HUD, actions, view toggle) is fixed chrome, so it gets statusBarsPadding
+    // to clear the status bar. The block list below scrolls under the nav bar (edge-to-edge
+    // looks intentional there) but carries matching bottom content padding via navBarsPadding
+    // so the last item is never left underneath it.
+    Column(Modifier.fillMaxSize()) {
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .statusBarsPadding()
+                .padding(horizontal = 16.dp, vertical = 16.dp),
+        ) {
+            // Timing HUD stays visible in both views: the measured per-stage numbers are
+            // what makes a slow run diagnosable, reading view or not.
+            Text(
+                "${document.timings.totalMs} ms  •  ${document.blocks.size} blok  •  " +
+                    "${document.columnCount} kolom  •  skew ${"%.1f".format(document.skewDeg)}°",
+                style = MaterialTheme.typography.labelLarge,
+            )
+            Text(
+                "decode ${document.timings.decodeMs} / pre ${document.timings.preprocessMs} / " +
+                    "ocr ${document.timings.recognizeMs} / struct ${document.timings.structureMs} ms",
+                style = MaterialTheme.typography.labelSmall,
+            )
 
-        Row(Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
-            Button(onClick = onRetake) { Text("Foto Lagi") }
-            Button(
-                onClick = {
-                    // The document travels as a file URI, not as EXTRA_TEXT: a non-text
-                    // MIME resolves to targets that expect a stream, and a page's JSON can
-                    // approach the Binder limit an intent extra has to fit inside.
-                    val file = JsonExport.write(context.cacheDir, document.toJson())
-                    val uri = FileProvider.getUriForFile(
-                        context,
-                        "${context.packageName}.fileprovider",
-                        file,
-                    )
-                    val share = Intent(Intent.ACTION_SEND).apply {
-                        type = "application/json"
-                        putExtra(Intent.EXTRA_STREAM, uri)
-                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                    }
-                    context.startActivity(Intent.createChooser(share, "Ekspor JSON"))
-                },
-                modifier = Modifier.padding(start = 8.dp),
-            ) { Text("Ekspor JSON") }
-            Button(
-                onClick = {
-                    val file = TextExport.write(context.cacheDir, document)
-                    val uri = FileProvider.getUriForFile(
-                        context,
-                        "${context.packageName}.fileprovider",
-                        file,
-                    )
-                    val share = Intent(Intent.ACTION_SEND).apply {
-                        type = "text/plain"
-                        putExtra(Intent.EXTRA_STREAM, uri)
-                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                    }
-                    context.startActivity(Intent.createChooser(share, "Ekspor Teks"))
-                },
-                modifier = Modifier.padding(start = 8.dp),
-            ) { Text("Ekspor Teks") }
-        }
+            Row(Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
+                Button(onClick = onRetake) { Text("Foto Lagi") }
+                Button(
+                    onClick = {
+                        // The document travels as a file URI, not as EXTRA_TEXT: a non-text
+                        // MIME resolves to targets that expect a stream, and a page's JSON
+                        // can approach the Binder limit an intent extra has to fit inside.
+                        val file = JsonExport.write(context.cacheDir, document.toJson())
+                        val uri = FileProvider.getUriForFile(
+                            context,
+                            "${context.packageName}.fileprovider",
+                            file,
+                        )
+                        val share = Intent(Intent.ACTION_SEND).apply {
+                            type = "application/json"
+                            putExtra(Intent.EXTRA_STREAM, uri)
+                            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                        }
+                        context.startActivity(Intent.createChooser(share, "Ekspor JSON"))
+                    },
+                    modifier = Modifier.padding(start = 8.dp),
+                ) { Text("Ekspor JSON") }
+                Button(
+                    onClick = {
+                        val file = TextExport.write(context.cacheDir, document)
+                        val uri = FileProvider.getUriForFile(
+                            context,
+                            "${context.packageName}.fileprovider",
+                            file,
+                        )
+                        val share = Intent(Intent.ACTION_SEND).apply {
+                            type = "text/plain"
+                            putExtra(Intent.EXTRA_STREAM, uri)
+                            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                        }
+                        context.startActivity(Intent.createChooser(share, "Ekspor Teks"))
+                    },
+                    modifier = Modifier.padding(start = 8.dp),
+                ) { Text("Ekspor Teks") }
+            }
 
-        if (trainingDataEnabled) {
-            Row(Modifier.fillMaxWidth().padding(bottom = 8.dp)) {
-                when (sampleSaveState) {
-                    SampleSaveState.Saved -> Text(
-                        "Tersimpan untuk membantu perbaikan akurasi.",
-                        style = MaterialTheme.typography.labelLarge,
-                    )
-                    SampleSaveState.Failed -> Text(
-                        "Gagal menyimpan sampel. Coba lagi.",
-                        style = MaterialTheme.typography.labelLarge,
-                    )
-                    SampleSaveState.Idle -> OutlinedButton(onClick = onSaveWrongResult) {
-                        Text("Tandai Hasil Salah & Simpan")
+            if (trainingDataEnabled) {
+                Row(Modifier.fillMaxWidth().padding(bottom = 8.dp)) {
+                    when (sampleSaveState) {
+                        SampleSaveState.Saved -> Text(
+                            "Tersimpan untuk membantu perbaikan akurasi.",
+                            style = MaterialTheme.typography.labelLarge,
+                        )
+                        SampleSaveState.Failed -> Text(
+                            "Gagal menyimpan sampel. Coba lagi.",
+                            style = MaterialTheme.typography.labelLarge,
+                        )
+                        SampleSaveState.Idle -> OutlinedButton(onClick = onSaveWrongResult) {
+                            Text("Tandai Hasil Salah & Simpan")
+                        }
                     }
                 }
             }
+
+            ViewToggle(isReadingView = isReadingView, onChange = { isReadingView = it })
         }
 
-        ViewToggle(isReadingView = isReadingView, onChange = { isReadingView = it })
-
-        if (isReadingView) ReadingView(document) else DebugView(document)
+        Box(Modifier.weight(1f)) {
+            if (isReadingView) ReadingView(document) else DebugView(document)
+        }
     }
 }
 
@@ -213,11 +232,22 @@ private fun ToggleOption(label: String, description: String, selected: Boolean, 
  */
 @Composable
 private fun ReadingView(document: OcrDocument) {
-    LazyColumn(Modifier.fillMaxSize()) {
+    LazyColumn(Modifier.fillMaxSize(), contentPadding = blockListContentPadding()) {
         itemsIndexed(document.blocks) { index, block ->
             ReadingBlock(block, isFirst = index == 0)
         }
     }
+}
+
+/**
+ * The block list is allowed to scroll under the navigation bar (edge-to-edge, matching the
+ * rest of the screen), so it needs bottom content padding of at least the nav bar's height -
+ * otherwise the last block ends up rendered partly underneath it and unreadable/untappable.
+ */
+@Composable
+private fun blockListContentPadding(): PaddingValues {
+    val navBarBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+    return PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = navBarBottom + 16.dp)
 }
 
 @Composable
@@ -286,7 +316,7 @@ private fun ReadingBlock(block: TextBlock, isFirst: Boolean) {
 /** The original per-block metadata dump: essential for diagnosing real defects. */
 @Composable
 private fun DebugView(document: OcrDocument) {
-    LazyColumn(Modifier.fillMaxSize()) {
+    LazyColumn(Modifier.fillMaxSize(), contentPadding = blockListContentPadding()) {
         items(document.blocks) { block -> BlockCard(block) }
     }
 }

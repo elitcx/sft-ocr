@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -65,6 +66,10 @@ fun CaptureScreen(onImage: (Uri) -> Unit) {
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
+                // The preview behind this row is meant to run edge-to-edge, but the
+                // buttons themselves must clear the gesture/navigation bar rather than
+                // sitting partly beneath it.
+                .navigationBarsPadding()
                 .padding(24.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
         ) {

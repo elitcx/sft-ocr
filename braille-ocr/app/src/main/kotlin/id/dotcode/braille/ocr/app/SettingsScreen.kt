@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
@@ -52,7 +52,7 @@ fun SettingsScreen(
         count = sampleCount()
     }
 
-    Column(Modifier.fillMaxSize().statusBarsPadding().padding(24.dp)) {
+    Column(Modifier.fillMaxSize().safeDrawingPadding().padding(24.dp)) {
         Text("Pengaturan", style = MaterialTheme.typography.headlineSmall)
         Spacer(Modifier.height(24.dp))
 

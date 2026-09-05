@@ -5,10 +5,12 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -29,6 +31,10 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // targetSdk 35 draws edge-to-edge unconditionally; this just opts into transparent
+        // system bar backgrounds so our own WindowInsets-based padding (below, per screen)
+        // is the only thing standing between content and the status/navigation bars.
+        enableEdgeToEdge()
         setContent {
             MaterialTheme {
                 val model: OcrViewModel = viewModel()
@@ -69,12 +75,11 @@ class MainActivity : ComponentActivity() {
                                         onClick = { showSettings = true },
                                         modifier = Modifier
                                             .align(Alignment.TopEnd)
-                                            // Target SDK 35 draws content edge-to-edge by
-                                            // default: without this, this button's tap
-                                            // target sits under the status bar / system
-                                            // gesture inset and is unreachable on a real
-                                            // device (confirmed on the emulator - a plain
-                                            // tap there never reaches the app).
+                                            // The camera preview behind this button is meant
+                                            // to bleed under the status bar, so this is the
+                                            // one control here that needs its own inset
+                                            // padding rather than inheriting it from a
+                                            // screen-level container.
                                             .statusBarsPadding()
                                             .padding(16.dp),
                                     ) { Text("Pengaturan") }
@@ -102,5 +107,8 @@ class MainActivity : ComponentActivity() {
 
 @androidx.compose.runtime.Composable
 private fun Centered(message: String) {
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { Text(message) }
+    Box(
+        Modifier.fillMaxSize().safeDrawingPadding(),
+        contentAlignment = Alignment.Center,
+    ) { Text(message) }
 }
