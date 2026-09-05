@@ -1,0 +1,4656 @@
+{
+    "imageWidth": 1600,
+    "imageHeight": 1200,
+    "lines": [
+        {
+            "text": "oman",
+            "box": {
+                "left": 5.0,
+                "top": 119.0,
+                "right": 74.0,
+                "bottom": 167.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 119.0,
+                    "y": 1187.0
+                },
+                {
+                    "x": 153.0,
+                    "y": 1126.0
+                },
+                {
+                    "x": 167.0,
+                    "y": 1134.0
+                },
+                {
+                    "x": 133.0,
+                    "y": 1195.0
+                }
+            ],
+            "angleDeg": -60.520535,
+            "recognizedLanguage": "und-Latn",
+            "confidence": 0.45898438,
+            "words": [
+                {
+                    "text": "oman",
+                    "box": {
+                        "left": 5.0,
+                        "top": 119.0,
+                        "right": 74.0,
+                        "bottom": 167.0
+                    },
+                    "confidence": 0.45898438
+                }
+            ]
+        },
+        {
+            "text": "sar ni",
+            "box": {
+                "left": 10.0,
+                "top": 157.0,
+                "right": 84.0,
+                "bottom": 209.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 157.0,
+                    "y": 1179.0
+                },
+                {
+                    "x": 186.0,
+                    "y": 1116.0
+                },
+                {
+                    "x": 209.0,
+                    "y": 1127.0
+                },
+                {
+                    "x": 180.0,
+                    "y": 1190.0
+                }
+            ],
+            "angleDeg": -64.3389,
+            "recognizedLanguage": "und-Latn",
+            "confidence": 0.4875,
+            "words": [
+                {
+                    "text": "sar",
+                    "box": {
+                        "left": 10.0,
+                        "top": 157.0,
+                        "right": 50.0,
+                        "bottom": 193.0
+                    },
+                    "confidence": 0.63932294
+                },
+                {
+                    "text": "ni",
+                    "box": {
+                        "left": 40.0,
+                        "top": 172.0,
+                        "right": 83.0,
+                        "bottom": 209.0
+                    },
+                    "confidence": 0.25976562
+                }
+            ]
+        },
+        {
+            "text": "terus-menerus,",
+            "box": {
+                "left": 917.0,
+                "top": 313.0,
+                "right": 1089.0,
+                "bottom": 340.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 313.0,
+                    "y": 283.0
+                },
+                {
+                    "x": 317.0,
+                    "y": 111.0
+                },
+                {
+                    "x": 340.0,
+                    "y": 111.0
+                },
+                {
+                    "x": 336.0,
+                    "y": 283.0
+                }
+            ],
+            "angleDeg": -88.594315,
+            "recognizedLanguage": "id",
+            "confidence": 0.7859933,
+            "words": [
+                {
+                    "text": "terus-menerus,",
+                    "box": {
+                        "left": 917.0,
+                        "top": 313.0,
+                        "right": 1089.0,
+                        "bottom": 340.0
+                    },
+                    "confidence": 0.7859933
+                }
+            ]
+        },
+        {
+            "text": "karakter",
+            "box": {
+                "left": 681.0,
+                "top": 300.0,
+                "right": 770.0,
+                "bottom": 330.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 300.0,
+                    "y": 519.0
+                },
+                {
+                    "x": 302.0,
+                    "y": 430.0
+                },
+                {
+                    "x": 330.0,
+                    "y": 430.0
+                },
+                {
+                    "x": 328.0,
+                    "y": 519.0
+                }
+            ],
+            "angleDeg": -88.223404,
+            "recognizedLanguage": "no",
+            "confidence": 0.8745117,
+            "words": [
+                {
+                    "text": "karakter",
+                    "box": {
+                        "left": 681.0,
+                        "top": 300.0,
+                        "right": 770.0,
+                        "bottom": 330.0
+                    },
+                    "confidence": 0.8745117
+                }
+            ]
+        },
+        {
+            "text": "menunjukkan bahwa bagi Santa Angela, integritas adalah dasar,",
+            "box": {
+                "left": 245.0,
+                "top": 179.0,
+                "right": 1090.0,
+                "bottom": 245.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 179.0,
+                    "y": 954.0
+                },
+                {
+                    "x": 216.0,
+                    "y": 110.0
+                },
+                {
+                    "x": 245.0,
+                    "y": 111.0
+                },
+                {
+                    "x": 208.0,
+                    "y": 955.0
+                }
+            ],
+            "angleDeg": -87.45811,
+            "recognizedLanguage": "id",
+            "confidence": 0.8836082,
+            "words": [
+                {
+                    "text": "menunjukkan",
+                    "box": {
+                        "left": 245.0,
+                        "top": 179.0,
+                        "right": 400.0,
+                        "bottom": 214.0
+                    },
+                    "confidence": 0.8597301
+                },
+                {
+                    "text": "bahwa",
+                    "box": {
+                        "left": 425.0,
+                        "top": 187.0,
+                        "right": 504.0,
+                        "bottom": 219.0
+                    },
+                    "confidence": 0.9234375
+                },
+                {
+                    "text": "bagi",
+                    "box": {
+                        "left": 523.0,
+                        "top": 192.0,
+                        "right": 575.0,
+                        "bottom": 222.0
+                    },
+                    "confidence": 0.9140625
+                },
+                {
+                    "text": "Santa",
+                    "box": {
+                        "left": 600.0,
+                        "top": 195.0,
+                        "right": 660.0,
+                        "bottom": 226.0
+                    },
+                    "confidence": 0.90546876
+                },
+                {
+                    "text": "Angela,",
+                    "box": {
+                        "left": 689.0,
+                        "top": 199.0,
+                        "right": 770.0,
+                        "bottom": 231.0
+                    },
+                    "confidence": 0.8426339
+                },
+                {
+                    "text": "integritas",
+                    "box": {
+                        "left": 794.0,
+                        "top": 203.0,
+                        "right": 900.0,
+                        "bottom": 236.0
+                    },
+                    "confidence": 0.9003906
+                },
+                {
+                    "text": "adalah",
+                    "box": {
+                        "left": 926.0,
+                        "top": 209.0,
+                        "right": 1000.0,
+                        "bottom": 241.0
+                    },
+                    "confidence": 0.89973956
+                },
+                {
+                    "text": "dasar,",
+                    "box": {
+                        "left": 1025.0,
+                        "top": 214.0,
+                        "right": 1089.0,
+                        "bottom": 245.0
+                    },
+                    "confidence": 0.859375
+                }
+            ]
+        },
+        {
+            "text": "pedoman hidup, terutama dalam menentukan pilihan-pilihan. Untuk",
+            "box": {
+                "left": 235.0,
+                "top": 211.0,
+                "right": 1093.0,
+                "bottom": 278.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 211.0,
+                    "y": 964.0
+                },
+                {
+                    "x": 249.0,
+                    "y": 107.0
+                },
+                {
+                    "x": 278.0,
+                    "y": 108.0
+                },
+                {
+                    "x": 240.0,
+                    "y": 965.0
+                }
+            ],
+            "angleDeg": -87.40488,
+            "recognizedLanguage": "ms",
+            "confidence": 0.84608006,
+            "words": [
+                {
+                    "text": "pedoman",
+                    "box": {
+                        "left": 235.0,
+                        "top": 211.0,
+                        "right": 345.0,
+                        "bottom": 244.0
+                    },
+                    "confidence": 0.84654015
+                },
+                {
+                    "text": "hidup,",
+                    "box": {
+                        "left": 363.0,
+                        "top": 217.0,
+                        "right": 437.0,
+                        "bottom": 249.0
+                    },
+                    "confidence": 0.87109375
+                },
+                {
+                    "text": "terutama",
+                    "box": {
+                        "left": 449.0,
+                        "top": 221.0,
+                        "right": 559.0,
+                        "bottom": 253.0
+                    },
+                    "confidence": 0.88183594
+                },
+                {
+                    "text": "dalam",
+                    "box": {
+                        "left": 574.0,
+                        "top": 226.0,
+                        "right": 643.0,
+                        "bottom": 258.0
+                    },
+                    "confidence": 0.90234375
+                },
+                {
+                    "text": "menentukan",
+                    "box": {
+                        "left": 667.0,
+                        "top": 231.0,
+                        "right": 804.0,
+                        "bottom": 266.0
+                    },
+                    "confidence": 0.85117185
+                },
+                {
+                    "text": "pilihan-pilihan.",
+                    "box": {
+                        "left": 822.0,
+                        "top": 238.0,
+                        "right": 1004.0,
+                        "bottom": 275.0
+                    },
+                    "confidence": 0.80444336
+                },
+                {
+                    "text": "Untuk",
+                    "box": {
+                        "left": 1022.0,
+                        "top": 247.0,
+                        "right": 1092.0,
+                        "bottom": 279.0
+                    },
+                    "confidence": 0.825
+                }
+            ]
+        },
+        {
+            "text": "menjadi pribadi yang berintegritas perlu dikembangkaň sejak usia dini",
+            "box": {
+                "left": 236.0,
+                "top": 243.0,
+                "right": 1094.0,
+                "bottom": 312.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 243.0,
+                    "y": 963.0
+                },
+                {
+                    "x": 281.0,
+                    "y": 106.0
+                },
+                {
+                    "x": 312.0,
+                    "y": 107.0
+                },
+                {
+                    "x": 274.0,
+                    "y": 964.0
+                }
+            ],
+            "angleDeg": -87.412186,
+            "recognizedLanguage": "id",
+            "confidence": 0.86296105,
+            "words": [
+                {
+                    "text": "menjadi",
+                    "box": {
+                        "left": 236.0,
+                        "top": 243.0,
+                        "right": 332.0,
+                        "bottom": 278.0
+                    },
+                    "confidence": 0.83314735
+                },
+                {
+                    "text": "pribadi",
+                    "box": {
+                        "left": 341.0,
+                        "top": 248.0,
+                        "right": 428.0,
+                        "bottom": 282.0
+                    },
+                    "confidence": 0.88560265
+                },
+                {
+                    "text": "yang",
+                    "box": {
+                        "left": 443.0,
+                        "top": 253.0,
+                        "right": 498.0,
+                        "bottom": 285.0
+                    },
+                    "confidence": 0.94433594
+                },
+                {
+                    "text": "berintegritas",
+                    "box": {
+                        "left": 507.0,
+                        "top": 255.0,
+                        "right": 653.0,
+                        "bottom": 292.0
+                    },
+                    "confidence": 0.89242786
+                },
+                {
+                    "text": "perlu",
+                    "box": {
+                        "left": 667.0,
+                        "top": 263.0,
+                        "right": 728.0,
+                        "bottom": 295.0
+                    },
+                    "confidence": 0.8515625
+                },
+                {
+                    "text": "dikembangkaň",
+                    "box": {
+                        "left": 743.0,
+                        "top": 266.0,
+                        "right": 910.0,
+                        "bottom": 304.0
+                    },
+                    "confidence": 0.8652344
+                },
+                {
+                    "text": "sejak",
+                    "box": {
+                        "left": 924.0,
+                        "top": 275.0,
+                        "right": 985.0,
+                        "bottom": 307.0
+                    },
+                    "confidence": 0.8890625
+                },
+                {
+                    "text": "usia",
+                    "box": {
+                        "left": 997.0,
+                        "top": 278.0,
+                        "right": 1040.0,
+                        "bottom": 309.0
+                    },
+                    "confidence": 0.85253906
+                },
+                {
+                    "text": "dini",
+                    "box": {
+                        "left": 1048.0,
+                        "top": 280.0,
+                        "right": 1093.0,
+                        "bottom": 311.0
+                    },
+                    "confidence": 0.68359375
+                }
+            ]
+        },
+        {
+            "text": "nilai",
+            "box": {
+                "left": 541.0,
+                "top": 295.0,
+                "right": 588.0,
+                "bottom": 323.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 295.0,
+                    "y": 659.0
+                },
+                {
+                    "x": 295.0,
+                    "y": 612.0
+                },
+                {
+                    "x": 323.0,
+                    "y": 612.0
+                },
+                {
+                    "x": 323.0,
+                    "y": 659.0
+                }
+            ],
+            "angleDeg": -90.0,
+            "recognizedLanguage": "und-Latn",
+            "confidence": 0.86796874,
+            "words": [
+                {
+                    "text": "nilai",
+                    "box": {
+                        "left": 541.0,
+                        "top": 295.0,
+                        "right": 588.0,
+                        "bottom": 323.0
+                    },
+                    "confidence": 0.86796874
+                }
+            ]
+        },
+        {
+            "text": "pendidikan",
+            "box": {
+                "left": 369.0,
+                "top": 283.0,
+                "right": 493.0,
+                "bottom": 317.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 283.0,
+                    "y": 830.0
+                },
+                {
+                    "x": 288.0,
+                    "y": 707.0
+                },
+                {
+                    "x": 317.0,
+                    "y": 708.0
+                },
+                {
+                    "x": 312.0,
+                    "y": 831.0
+                }
+            ],
+            "angleDeg": -87.21462,
+            "recognizedLanguage": "id",
+            "confidence": 0.8703125,
+            "words": [
+                {
+                    "text": "pendidikan",
+                    "box": {
+                        "left": 369.0,
+                        "top": 283.0,
+                        "right": 493.0,
+                        "bottom": 317.0
+                    },
+                    "confidence": 0.8703125
+                }
+            ]
+        },
+        {
+            "text": "berkesinambungan.",
+            "box": {
+                "left": 224.0,
+                "top": 302.0,
+                "right": 462.0,
+                "bottom": 355.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 302.0,
+                    "y": 974.0
+                },
+                {
+                    "x": 322.0,
+                    "y": 738.0
+                },
+                {
+                    "x": 355.0,
+                    "y": 740.0
+                },
+                {
+                    "x": 335.0,
+                    "y": 976.0
+                }
+            ],
+            "angleDeg": -85.03197,
+            "recognizedLanguage": "id",
+            "confidence": 0.8993566,
+            "words": [
+                {
+                    "text": "berkesinambungan.",
+                    "box": {
+                        "left": 224.0,
+                        "top": 302.0,
+                        "right": 462.0,
+                        "bottom": 355.0
+                    },
+                    "confidence": 0.8993566
+                }
+            ]
+        },
+        {
+            "text": "melalui",
+            "box": {
+                "left": 231.0,
+                "top": 271.0,
+                "right": 321.0,
+                "bottom": 304.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 271.0,
+                    "y": 968.0
+                },
+                {
+                    "x": 276.0,
+                    "y": 879.0
+                },
+                {
+                    "x": 304.0,
+                    "y": 880.0
+                },
+                {
+                    "x": 299.0,
+                    "y": 969.0
+                }
+            ],
+            "angleDeg": -86.157394,
+            "recognizedLanguage": "ms",
+            "confidence": 0.86439735,
+            "words": [
+                {
+                    "text": "melalui",
+                    "box": {
+                        "left": 231.0,
+                        "top": 271.0,
+                        "right": 321.0,
+                        "bottom": 304.0
+                    },
+                    "confidence": 0.86439735
+                }
+            ]
+        },
+        {
+            "text": "yang",
+            "box": {
+                "left": 817.0,
+                "top": 313.0,
+                "right": 873.0,
+                "bottom": 340.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 313.0,
+                    "y": 383.0
+                },
+                {
+                    "x": 313.0,
+                    "y": 327.0
+                },
+                {
+                    "x": 340.0,
+                    "y": 327.0
+                },
+                {
+                    "x": 340.0,
+                    "y": 383.0
+                }
+            ],
+            "angleDeg": -90.0,
+            "recognizedLanguage": "und-Latn",
+            "confidence": 0.8496094,
+            "words": [
+                {
+                    "text": "yang",
+                    "box": {
+                        "left": 817.0,
+                        "top": 313.0,
+                        "right": 873.0,
+                        "bottom": 340.0
+                    },
+                    "confidence": 0.8496094
+                }
+            ]
+        },
+        {
+            "text": "3. Keberanian - Ketangguhan",
+            "box": {
+                "left": 192.0,
+                "top": 373.0,
+                "right": 608.0,
+                "bottom": 432.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 373.0,
+                    "y": 1006.0
+                },
+                {
+                    "x": 401.0,
+                    "y": 592.0
+                },
+                {
+                    "x": 432.0,
+                    "y": 594.0
+                },
+                {
+                    "x": 404.0,
+                    "y": 1008.0
+                }
+            ],
+            "angleDeg": -86.07158,
+            "recognizedLanguage": "ms",
+            "confidence": 0.86035156,
+            "words": [
+                {
+                    "text": "3.",
+                    "box": {
+                        "left": 192.0,
+                        "top": 373.0,
+                        "right": 212.0,
+                        "bottom": 405.0
+                    },
+                    "confidence": 0.76953125
+                },
+                {
+                    "text": "Keberanian",
+                    "box": {
+                        "left": 248.0,
+                        "top": 377.0,
+                        "right": 398.0,
+                        "bottom": 418.0
+                    },
+                    "confidence": 0.9007813
+                },
+                {
+                    "text": "-",
+                    "box": {
+                        "left": 408.0,
+                        "top": 388.0,
+                        "right": 418.0,
+                        "bottom": 418.0
+                    },
+                    "confidence": 0.328125
+                },
+                {
+                    "text": "Ketangguhan",
+                    "box": {
+                        "left": 446.0,
+                        "top": 390.0,
+                        "right": 607.0,
+                        "bottom": 431.0
+                    },
+                    "confidence": 0.8884943
+                }
+            ]
+        },
+        {
+            "text": "takut serta teguh",
+            "box": {
+                "left": 872.0,
+                "top": 478.0,
+                "right": 1097.0,
+                "bottom": 510.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 478.0,
+                    "y": 328.0
+                },
+                {
+                    "x": 484.0,
+                    "y": 103.0
+                },
+                {
+                    "x": 510.0,
+                    "y": 103.0
+                },
+                {
+                    "x": 504.0,
+                    "y": 328.0
+                }
+            ],
+            "angleDeg": -88.227425,
+            "recognizedLanguage": "id",
+            "confidence": 0.9065104,
+            "words": [
+                {
+                    "text": "takut",
+                    "box": {
+                        "left": 872.0,
+                        "top": 478.0,
+                        "right": 937.0,
+                        "bottom": 506.0
+                    },
+                    "confidence": 0.9140625
+                },
+                {
+                    "text": "serta",
+                    "box": {
+                        "left": 956.0,
+                        "top": 481.0,
+                        "right": 1014.0,
+                        "bottom": 508.0
+                    },
+                    "confidence": 0.9085938
+                },
+                {
+                    "text": "teguh",
+                    "box": {
+                        "left": 1026.0,
+                        "top": 483.0,
+                        "right": 1097.0,
+                        "bottom": 511.0
+                    },
+                    "confidence": 0.896875
+                }
+            ]
+        },
+        {
+            "text": "Keberanian dan Ketangguhan memiliki pengertian nilai yang",
+            "box": {
+                "left": 340.0,
+                "top": 420.0,
+                "right": 1095.0,
+                "bottom": 483.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 420.0,
+                    "y": 859.0
+                },
+                {
+                    "x": 451.0,
+                    "y": 105.0
+                },
+                {
+                    "x": 483.0,
+                    "y": 106.0
+                },
+                {
+                    "x": 452.0,
+                    "y": 860.0
+                }
+            ],
+            "angleDeg": -87.60284,
+            "recognizedLanguage": "id",
+            "confidence": 0.8756893,
+            "words": [
+                {
+                    "text": "Keberanian",
+                    "box": {
+                        "left": 340.0,
+                        "top": 420.0,
+                        "right": 472.0,
+                        "bottom": 457.0
+                    },
+                    "confidence": 0.8808594
+                },
+                {
+                    "text": "dan",
+                    "box": {
+                        "left": 489.0,
+                        "top": 426.0,
+                        "right": 530.0,
+                        "bottom": 459.0
+                    },
+                    "confidence": 0.90494794
+                },
+                {
+                    "text": "Ketangguhan",
+                    "box": {
+                        "left": 547.0,
+                        "top": 429.0,
+                        "right": 704.0,
+                        "bottom": 467.0
+                    },
+                    "confidence": 0.90447444
+                },
+                {
+                    "text": "memiliki",
+                    "box": {
+                        "left": 726.0,
+                        "top": 436.0,
+                        "right": 822.0,
+                        "bottom": 471.0
+                    },
+                    "confidence": 0.88427734
+                },
+                {
+                    "text": "pengertian",
+                    "box": {
+                        "left": 837.0,
+                        "top": 441.0,
+                        "right": 960.0,
+                        "bottom": 478.0
+                    },
+                    "confidence": 0.8863281
+                },
+                {
+                    "text": "nilai",
+                    "box": {
+                        "left": 973.0,
+                        "top": 447.0,
+                        "right": 1025.0,
+                        "bottom": 480.0
+                    },
+                    "confidence": 0.7765625
+                },
+                {
+                    "text": "yang",
+                    "box": {
+                        "left": 1038.0,
+                        "top": 449.0,
+                        "right": 1094.0,
+                        "bottom": 483.0
+                    },
+                    "confidence": 0.8417969
+                }
+            ]
+        },
+        {
+            "text": "sikap dan perilaku tanpa",
+            "box": {
+                "left": 498.0,
+                "top": 463.0,
+                "right": 839.0,
+                "bottom": 510.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 463.0,
+                    "y": 701.0
+                },
+                {
+                    "x": 480.0,
+                    "y": 361.0
+                },
+                {
+                    "x": 510.0,
+                    "y": 362.0
+                },
+                {
+                    "x": 493.0,
+                    "y": 702.0
+                }
+            ],
+            "angleDeg": -87.015755,
+            "recognizedLanguage": "ms",
+            "confidence": 0.87220985,
+            "words": [
+                {
+                    "text": "sikap",
+                    "box": {
+                        "left": 498.0,
+                        "top": 463.0,
+                        "right": 561.0,
+                        "bottom": 496.0
+                    },
+                    "confidence": 0.9078125
+                },
+                {
+                    "text": "dan",
+                    "box": {
+                        "left": 583.0,
+                        "top": 467.0,
+                        "right": 623.0,
+                        "bottom": 499.0
+                    },
+                    "confidence": 0.875
+                },
+                {
+                    "text": "perilaku",
+                    "box": {
+                        "left": 645.0,
+                        "top": 471.0,
+                        "right": 738.0,
+                        "bottom": 504.0
+                    },
+                    "confidence": 0.86083984
+                },
+                {
+                    "text": "tanpa",
+                    "box": {
+                        "left": 769.0,
+                        "top": 477.0,
+                        "right": 839.0,
+                        "bottom": 510.0
+                    },
+                    "confidence": 0.853125
+                }
+            ]
+        },
+        {
+            "text": "memegang prinsip untuk bertindak benar secara bijaksana dalam",
+            "box": {
+                "left": 247.0,
+                "top": 492.0,
+                "right": 1096.0,
+                "bottom": 548.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 492.0,
+                    "y": 953.0
+                },
+                {
+                    "x": 519.0,
+                    "y": 104.0
+                },
+                {
+                    "x": 548.0,
+                    "y": 104.0
+                },
+                {
+                    "x": 521.0,
+                    "y": 953.0
+                }
+            ],
+            "angleDeg": -88.12056,
+            "recognizedLanguage": "id",
+            "confidence": 0.8885995,
+            "words": [
+                {
+                    "text": "memegang",
+                    "box": {
+                        "left": 247.0,
+                        "top": 492.0,
+                        "right": 376.0,
+                        "bottom": 525.0
+                    },
+                    "confidence": 0.8515625
+                },
+                {
+                    "text": "prinsip",
+                    "box": {
+                        "left": 398.0,
+                        "top": 497.0,
+                        "right": 479.0,
+                        "bottom": 528.0
+                    },
+                    "confidence": 0.8688616
+                },
+                {
+                    "text": "untuk",
+                    "box": {
+                        "left": 514.0,
+                        "top": 501.0,
+                        "right": 579.0,
+                        "bottom": 532.0
+                    },
+                    "confidence": 0.9007813
+                },
+                {
+                    "text": "bertindak",
+                    "box": {
+                        "left": 595.0,
+                        "top": 503.0,
+                        "right": 710.0,
+                        "bottom": 535.0
+                    },
+                    "confidence": 0.9201389
+                },
+                {
+                    "text": "benar",
+                    "box": {
+                        "left": 724.0,
+                        "top": 508.0,
+                        "right": 783.0,
+                        "bottom": 538.0
+                    },
+                    "confidence": 0.909375
+                },
+                {
+                    "text": "secara",
+                    "box": {
+                        "left": 805.0,
+                        "top": 511.0,
+                        "right": 879.0,
+                        "bottom": 541.0
+                    },
+                    "confidence": 0.9173177
+                },
+                {
+                    "text": "bijaksana",
+                    "box": {
+                        "left": 892.0,
+                        "top": 513.0,
+                        "right": 1011.0,
+                        "bottom": 545.0
+                    },
+                    "confidence": 0.8862847
+                },
+                {
+                    "text": "dalam",
+                    "box": {
+                        "left": 1027.0,
+                        "top": 518.0,
+                        "right": 1096.0,
+                        "bottom": 549.0
+                    },
+                    "confidence": 0.85546875
+                }
+            ]
+        },
+        {
+            "text": "menghadapi risiko dan tantangan yang mendesak, dilematis, dan",
+            "box": {
+                "left": 246.0,
+                "top": 523.0,
+                "right": 1096.0,
+                "bottom": 584.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 523.0,
+                    "y": 953.0
+                },
+                {
+                    "x": 553.0,
+                    "y": 104.0
+                },
+                {
+                    "x": 584.0,
+                    "y": 105.0
+                },
+                {
+                    "x": 554.0,
+                    "y": 954.0
+                }
+            ],
+            "angleDeg": -87.97143,
+            "recognizedLanguage": "ms",
+            "confidence": 0.8824508,
+            "words": [
+                {
+                    "text": "menghadapi",
+                    "box": {
+                        "left": 246.0,
+                        "top": 523.0,
+                        "right": 392.0,
+                        "bottom": 559.0
+                    },
+                    "confidence": 0.8203125
+                },
+                {
+                    "text": "risiko",
+                    "box": {
+                        "left": 407.0,
+                        "top": 529.0,
+                        "right": 477.0,
+                        "bottom": 562.0
+                    },
+                    "confidence": 0.8535156
+                },
+                {
+                    "text": "dan",
+                    "box": {
+                        "left": 502.0,
+                        "top": 532.0,
+                        "right": 538.0,
+                        "bottom": 564.0
+                    },
+                    "confidence": 0.8932292
+                },
+                {
+                    "text": "tantangan",
+                    "box": {
+                        "left": 557.0,
+                        "top": 534.0,
+                        "right": 676.0,
+                        "bottom": 569.0
+                    },
+                    "confidence": 0.92404515
+                },
+                {
+                    "text": "yang",
+                    "box": {
+                        "left": 694.0,
+                        "top": 539.0,
+                        "right": 745.0,
+                        "bottom": 571.0
+                    },
+                    "confidence": 0.9199219
+                },
+                {
+                    "text": "mendesak,",
+                    "box": {
+                        "left": 779.0,
+                        "top": 542.0,
+                        "right": 902.0,
+                        "bottom": 577.0
+                    },
+                    "confidence": 0.91970485
+                },
+                {
+                    "text": "dilematis,",
+                    "box": {
+                        "left": 923.0,
+                        "top": 547.0,
+                        "right": 1033.0,
+                        "bottom": 581.0
+                    },
+                    "confidence": 0.89023435
+                },
+                {
+                    "text": "dan",
+                    "box": {
+                        "left": 1059.0,
+                        "top": 552.0,
+                        "right": 1095.0,
+                        "bottom": 584.0
+                    },
+                    "confidence": 0.82421875
+                }
+            ]
+        },
+        {
+            "text": "terwujud dalam",
+            "box": {
+                "left": 234.0,
+                "top": 452.0,
+                "right": 461.0,
+                "bottom": 487.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 452.0,
+                    "y": 966.0
+                },
+                {
+                    "x": 458.0,
+                    "y": 739.0
+                },
+                {
+                    "x": 487.0,
+                    "y": 739.0
+                },
+                {
+                    "x": 481.0,
+                    "y": 966.0
+                }
+            ],
+            "angleDeg": -88.23693,
+            "recognizedLanguage": "id",
+            "confidence": 0.8704928,
+            "words": [
+                {
+                    "text": "terwujud",
+                    "box": {
+                        "left": 234.0,
+                        "top": 452.0,
+                        "right": 346.0,
+                        "bottom": 484.0
+                    },
+                    "confidence": 0.87158203
+                },
+                {
+                    "text": "dalam",
+                    "box": {
+                        "left": 387.0,
+                        "top": 457.0,
+                        "right": 461.0,
+                        "bottom": 488.0
+                    },
+                    "confidence": 0.86875
+                }
+            ]
+        },
+        {
+            "text": "kritis.",
+            "box": {
+                "left": 235.0,
+                "top": 558.0,
+                "right": 305.0,
+                "bottom": 588.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 558.0,
+                    "y": 964.0
+                },
+                {
+                    "x": 560.0,
+                    "y": 895.0
+                },
+                {
+                    "x": 588.0,
+                    "y": 896.0
+                },
+                {
+                    "x": 586.0,
+                    "y": 965.0
+                }
+            ],
+            "angleDeg": -87.52443,
+            "recognizedLanguage": "en",
+            "confidence": 0.8660714,
+            "words": [
+                {
+                    "text": "kritis.",
+                    "box": {
+                        "left": 235.0,
+                        "top": 558.0,
+                        "right": 305.0,
+                        "bottom": 588.0
+                    },
+                    "confidence": 0.8660714
+                }
+            ]
+        },
+        {
+            "text": "terwujud",
+            "box": {
+                "left": 9.0,
+                "top": 353.0,
+                "right": 98.0,
+                "bottom": 408.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 353.0,
+                    "y": 1182.0
+                },
+                {
+                    "x": 378.0,
+                    "y": 1102.0
+                },
+                {
+                    "x": 408.0,
+                    "y": 1111.0
+                },
+                {
+                    "x": 383.0,
+                    "y": 1191.0
+                }
+            ],
+            "angleDeg": -72.34506,
+            "recognizedLanguage": "cy",
+            "confidence": 0.3828125,
+            "words": [
+                {
+                    "text": "terwujud",
+                    "box": {
+                        "left": 9.0,
+                        "top": 353.0,
+                        "right": 98.0,
+                        "bottom": 408.0
+                    },
+                    "confidence": 0.3828125
+                }
+            ]
+        },
+        {
+            "text": "gnitif dan",
+            "box": {
+                "left": 15.0,
+                "top": 394.0,
+                "right": 102.0,
+                "bottom": 446.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 394.0,
+                    "y": 1176.0
+                },
+                {
+                    "x": 417.0,
+                    "y": 1098.0
+                },
+                {
+                    "x": 446.0,
+                    "y": 1107.0
+                },
+                {
+                    "x": 423.0,
+                    "y": 1185.0
+                }
+            ],
+            "angleDeg": -72.897285,
+            "recognizedLanguage": "id",
+            "confidence": 0.36979166,
+            "words": [
+                {
+                    "text": "gnitif",
+                    "box": {
+                        "left": 15.0,
+                        "top": 394.0,
+                        "right": 75.0,
+                        "bottom": 438.0
+                    },
+                    "confidence": 0.36002603
+                },
+                {
+                    "text": "dan",
+                    "box": {
+                        "left": 64.0,
+                        "top": 409.0,
+                        "right": 102.0,
+                        "bottom": 446.0
+                    },
+                    "confidence": 0.3893229
+                }
+            ]
+        },
+        {
+            "text": "Seperti teladan Santa Angela, yang tidak pernah menyerah",
+            "box": {
+                "left": 329.0,
+                "top": 597.0,
+                "right": 1096.0,
+                "bottom": 656.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 597.0,
+                    "y": 870.0
+                },
+                {
+                    "x": 624.0,
+                    "y": 104.0
+                },
+                {
+                    "x": 656.0,
+                    "y": 105.0
+                },
+                {
+                    "x": 629.0,
+                    "y": 871.0
+                }
+            ],
+            "angleDeg": -87.96955,
+            "recognizedLanguage": "id",
+            "confidence": 0.8810587,
+            "words": [
+                {
+                    "text": "Seperti",
+                    "box": {
+                        "left": 329.0,
+                        "top": 597.0,
+                        "right": 417.0,
+                        "bottom": 632.0
+                    },
+                    "confidence": 0.86997765
+                },
+                {
+                    "text": "teladan",
+                    "box": {
+                        "left": 424.0,
+                        "top": 600.0,
+                        "right": 513.0,
+                        "bottom": 635.0
+                    },
+                    "confidence": 0.8922991
+                },
+                {
+                    "text": "Santa",
+                    "box": {
+                        "left": 540.0,
+                        "top": 605.0,
+                        "right": 601.0,
+                        "bottom": 638.0
+                    },
+                    "confidence": 0.87578124
+                },
+                {
+                    "text": "Angela,",
+                    "box": {
+                        "left": 628.0,
+                        "top": 608.0,
+                        "right": 716.0,
+                        "bottom": 643.0
+                    },
+                    "confidence": 0.8811384
+                },
+                {
+                    "text": "yang",
+                    "box": {
+                        "left": 728.0,
+                        "top": 611.0,
+                        "right": 785.0,
+                        "bottom": 644.0
+                    },
+                    "confidence": 0.92285156
+                },
+                {
+                    "text": "tidak",
+                    "box": {
+                        "left": 800.0,
+                        "top": 614.0,
+                        "right": 861.0,
+                        "bottom": 648.0
+                    },
+                    "confidence": 0.8882812
+                },
+                {
+                    "text": "pernah",
+                    "box": {
+                        "left": 878.0,
+                        "top": 617.0,
+                        "right": 959.0,
+                        "bottom": 650.0
+                    },
+                    "confidence": 0.8984375
+                },
+                {
+                    "text": "menyerah",
+                    "box": {
+                        "left": 980.0,
+                        "top": 620.0,
+                        "right": 1096.0,
+                        "bottom": 656.0
+                    },
+                    "confidence": 0.8457031
+                }
+            ]
+        },
+        {
+            "text": "terhadap berbagai tantangan dan kesulitan hidup, para penerusnya",
+            "box": {
+                "left": 233.0,
+                "top": 630.0,
+                "right": 1093.0,
+                "bottom": 690.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 630.0,
+                    "y": 966.0
+                },
+                {
+                    "x": 658.0,
+                    "y": 107.0
+                },
+                {
+                    "x": 690.0,
+                    "y": 108.0
+                },
+                {
+                    "x": 662.0,
+                    "y": 967.0
+                }
+            ],
+            "angleDeg": -88.0809,
+            "recognizedLanguage": "id",
+            "confidence": 0.86328125,
+            "words": [
+                {
+                    "text": "terhadap",
+                    "box": {
+                        "left": 233.0,
+                        "top": 630.0,
+                        "right": 338.0,
+                        "bottom": 665.0
+                    },
+                    "confidence": 0.8520508
+                },
+                {
+                    "text": "berbagai",
+                    "box": {
+                        "left": 355.0,
+                        "top": 634.0,
+                        "right": 461.0,
+                        "bottom": 669.0
+                    },
+                    "confidence": 0.91503906
+                },
+                {
+                    "text": "tantangan",
+                    "box": {
+                        "left": 475.0,
+                        "top": 638.0,
+                        "right": 597.0,
+                        "bottom": 674.0
+                    },
+                    "confidence": 0.90407985
+                },
+                {
+                    "text": "dan",
+                    "box": {
+                        "left": 620.0,
+                        "top": 643.0,
+                        "right": 657.0,
+                        "bottom": 676.0
+                    },
+                    "confidence": 0.8880208
+                },
+                {
+                    "text": "kesulitan",
+                    "box": {
+                        "left": 674.0,
+                        "top": 645.0,
+                        "right": 780.0,
+                        "bottom": 680.0
+                    },
+                    "confidence": 0.8680556
+                },
+                {
+                    "text": "hidup,",
+                    "box": {
+                        "left": 800.0,
+                        "top": 649.0,
+                        "right": 873.0,
+                        "bottom": 683.0
+                    },
+                    "confidence": 0.8014323
+                },
+                {
+                    "text": "para",
+                    "box": {
+                        "left": 888.0,
+                        "top": 652.0,
+                        "right": 941.0,
+                        "bottom": 685.0
+                    },
+                    "confidence": 0.8457031
+                },
+                {
+                    "text": "penerusnya",
+                    "box": {
+                        "left": 958.0,
+                        "top": 654.0,
+                        "right": 1093.0,
+                        "bottom": 690.0
+                    },
+                    "confidence": 0.8265625
+                }
+            ]
+        },
+        {
+            "text": "ditempa dan dilatih melalui berbagai bentuk atau cara dalam proses",
+            "box": {
+                "left": 239.0,
+                "top": 668.0,
+                "right": 1088.0,
+                "bottom": 722.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 668.0,
+                    "y": 961.0
+                },
+                {
+                    "x": 693.0,
+                    "y": 112.0
+                },
+                {
+                    "x": 722.0,
+                    "y": 112.0
+                },
+                {
+                    "x": 697.0,
+                    "y": 961.0
+                }
+            ],
+            "angleDeg": -88.263916,
+            "recognizedLanguage": "id",
+            "confidence": 0.8937089,
+            "words": [
+                {
+                    "text": "ditempa",
+                    "box": {
+                        "left": 239.0,
+                        "top": 668.0,
+                        "right": 331.0,
+                        "bottom": 699.0
+                    },
+                    "confidence": 0.88504463
+                },
+                {
+                    "text": "dan",
+                    "box": {
+                        "left": 348.0,
+                        "top": 672.0,
+                        "right": 387.0,
+                        "bottom": 701.0
+                    },
+                    "confidence": 0.875
+                },
+                {
+                    "text": "dilatih",
+                    "box": {
+                        "left": 406.0,
+                        "top": 673.0,
+                        "right": 480.0,
+                        "bottom": 704.0
+                    },
+                    "confidence": 0.87834823
+                },
+                {
+                    "text": "melalui",
+                    "box": {
+                        "left": 507.0,
+                        "top": 676.0,
+                        "right": 588.0,
+                        "bottom": 707.0
+                    },
+                    "confidence": 0.88504463
+                },
+                {
+                    "text": "berbagai",
+                    "box": {
+                        "left": 600.0,
+                        "top": 679.0,
+                        "right": 704.0,
+                        "bottom": 711.0
+                    },
+                    "confidence": 0.8769531
+                },
+                {
+                    "text": "bentuk",
+                    "box": {
+                        "left": 716.0,
+                        "top": 683.0,
+                        "right": 799.0,
+                        "bottom": 713.0
+                    },
+                    "confidence": 0.921875
+                },
+                {
+                    "text": "atau",
+                    "box": {
+                        "left": 811.0,
+                        "top": 686.0,
+                        "right": 858.0,
+                        "bottom": 715.0
+                    },
+                    "confidence": 0.9111328
+                },
+                {
+                    "text": "cara",
+                    "box": {
+                        "left": 877.0,
+                        "top": 687.0,
+                        "right": 918.0,
+                        "bottom": 717.0
+                    },
+                    "confidence": 0.93847656
+                },
+                {
+                    "text": "dalam",
+                    "box": {
+                        "left": 935.0,
+                        "top": 689.0,
+                        "right": 1004.0,
+                        "bottom": 720.0
+                    },
+                    "confidence": 0.8859375
+                },
+                {
+                    "text": "proses",
+                    "box": {
+                        "left": 1019.0,
+                        "top": 692.0,
+                        "right": 1088.0,
+                        "bottom": 723.0
+                    },
+                    "confidence": 0.9003906
+                }
+            ]
+        },
+        {
+            "text": "pendidikan yang berkesinambungan untuk menjadi pribadi yang",
+            "box": {
+                "left": 241.0,
+                "top": 705.0,
+                "right": 1096.0,
+                "bottom": 759.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 705.0,
+                    "y": 959.0
+                },
+                {
+                    "x": 728.0,
+                    "y": 104.0
+                },
+                {
+                    "x": 759.0,
+                    "y": 104.0
+                },
+                {
+                    "x": 736.0,
+                    "y": 959.0
+                }
+            ],
+            "angleDeg": -88.42217,
+            "recognizedLanguage": "id",
+            "confidence": 0.90499705,
+            "words": [
+                {
+                    "text": "pendidikan",
+                    "box": {
+                        "left": 241.0,
+                        "top": 705.0,
+                        "right": 371.0,
+                        "bottom": 739.0
+                    },
+                    "confidence": 0.9015625
+                },
+                {
+                    "text": "yang",
+                    "box": {
+                        "left": 394.0,
+                        "top": 710.0,
+                        "right": 455.0,
+                        "bottom": 741.0
+                    },
+                    "confidence": 0.9042969
+                },
+                {
+                    "text": "berkesinambungan",
+                    "box": {
+                        "left": 476.0,
+                        "top": 712.0,
+                        "right": 704.0,
+                        "bottom": 748.0
+                    },
+                    "confidence": 0.91503906
+                },
+                {
+                    "text": "untuk",
+                    "box": {
+                        "left": 732.0,
+                        "top": 719.0,
+                        "right": 796.0,
+                        "bottom": 750.0
+                    },
+                    "confidence": 0.9125
+                },
+                {
+                    "text": "menjadi",
+                    "box": {
+                        "left": 822.0,
+                        "top": 721.0,
+                        "right": 917.0,
+                        "bottom": 754.0
+                    },
+                    "confidence": 0.8978795
+                },
+                {
+                    "text": "pribadi",
+                    "box": {
+                        "left": 937.0,
+                        "top": 724.0,
+                        "right": 1023.0,
+                        "bottom": 757.0
+                    },
+                    "confidence": 0.891183
+                },
+                {
+                    "text": "yang",
+                    "box": {
+                        "left": 1041.0,
+                        "top": 727.0,
+                        "right": 1096.0,
+                        "bottom": 759.0
+                    },
+                    "confidence": 0.9013672
+                }
+            ]
+        },
+        {
+            "text": "berani dan tangguh menjalani kehidupan secara positif atas dasar",
+            "box": {
+                "left": 238.0,
+                "top": 741.0,
+                "right": 1091.0,
+                "bottom": 793.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 741.0,
+                    "y": 962.0
+                },
+                {
+                    "x": 762.0,
+                    "y": 109.0
+                },
+                {
+                    "x": 793.0,
+                    "y": 109.0
+                },
+                {
+                    "x": 772.0,
+                    "y": 962.0
+                }
+            ],
+            "angleDeg": -88.587395,
+            "recognizedLanguage": "ms",
+            "confidence": 0.88623047,
+            "words": [
+                {
+                    "text": "berani",
+                    "box": {
+                        "left": 238.0,
+                        "top": 741.0,
+                        "right": 310.0,
+                        "bottom": 773.0
+                    },
+                    "confidence": 0.9029948
+                },
+                {
+                    "text": "dan",
+                    "box": {
+                        "left": 330.0,
+                        "top": 743.0,
+                        "right": 370.0,
+                        "bottom": 774.0
+                    },
+                    "confidence": 0.84765625
+                },
+                {
+                    "text": "tangguh",
+                    "box": {
+                        "left": 381.0,
+                        "top": 745.0,
+                        "right": 484.0,
+                        "bottom": 777.0
+                    },
+                    "confidence": 0.91629463
+                },
+                {
+                    "text": "menjalani",
+                    "box": {
+                        "left": 510.0,
+                        "top": 748.0,
+                        "right": 622.0,
+                        "bottom": 781.0
+                    },
+                    "confidence": 0.88151044
+                },
+                {
+                    "text": "kehidupan",
+                    "box": {
+                        "left": 642.0,
+                        "top": 751.0,
+                        "right": 770.0,
+                        "bottom": 785.0
+                    },
+                    "confidence": 0.8967014
+                },
+                {
+                    "text": "secara",
+                    "box": {
+                        "left": 790.0,
+                        "top": 755.0,
+                        "right": 861.0,
+                        "bottom": 786.0
+                    },
+                    "confidence": 0.90494794
+                },
+                {
+                    "text": "positif",
+                    "box": {
+                        "left": 879.0,
+                        "top": 757.0,
+                        "right": 952.0,
+                        "bottom": 789.0
+                    },
+                    "confidence": 0.85602677
+                },
+                {
+                    "text": "atas",
+                    "box": {
+                        "left": 973.0,
+                        "top": 759.0,
+                        "right": 1015.0,
+                        "bottom": 791.0
+                    },
+                    "confidence": 0.921875
+                },
+                {
+                    "text": "dasar",
+                    "box": {
+                        "left": 1041.0,
+                        "top": 761.0,
+                        "right": 1091.0,
+                        "bottom": 793.0
+                    },
+                    "confidence": 0.828125
+                }
+            ]
+        },
+        {
+            "text": "iman akan Allah yang Maha Rahim demi kesejahteraan dan kebaikan",
+            "box": {
+                "left": 230.0,
+                "top": 778.0,
+                "right": 1094.0,
+                "bottom": 826.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 778.0,
+                    "y": 970.0
+                },
+                {
+                    "x": 796.0,
+                    "y": 106.0
+                },
+                {
+                    "x": 826.0,
+                    "y": 106.0
+                },
+                {
+                    "x": 808.0,
+                    "y": 970.0
+                }
+            ],
+            "angleDeg": -88.7639,
+            "recognizedLanguage": "ms",
+            "confidence": 0.8927228,
+            "words": [
+                {
+                    "text": "iman",
+                    "box": {
+                        "left": 230.0,
+                        "top": 778.0,
+                        "right": 289.0,
+                        "bottom": 809.0
+                    },
+                    "confidence": 0.87402344
+                },
+                {
+                    "text": "akan",
+                    "box": {
+                        "left": 302.0,
+                        "top": 780.0,
+                        "right": 355.0,
+                        "bottom": 810.0
+                    },
+                    "confidence": 0.92285156
+                },
+                {
+                    "text": "Allah",
+                    "box": {
+                        "left": 378.0,
+                        "top": 781.0,
+                        "right": 434.0,
+                        "bottom": 812.0
+                    },
+                    "confidence": 0.8929688
+                },
+                {
+                    "text": "yang",
+                    "box": {
+                        "left": 445.0,
+                        "top": 783.0,
+                        "right": 503.0,
+                        "bottom": 814.0
+                    },
+                    "confidence": 0.9433594
+                },
+                {
+                    "text": "Maha",
+                    "box": {
+                        "left": 530.0,
+                        "top": 785.0,
+                        "right": 589.0,
+                        "bottom": 815.0
+                    },
+                    "confidence": 0.8925781
+                },
+                {
+                    "text": "Rahim",
+                    "box": {
+                        "left": 597.0,
+                        "top": 786.0,
+                        "right": 678.0,
+                        "bottom": 817.0
+                    },
+                    "confidence": 0.8929688
+                },
+                {
+                    "text": "demi",
+                    "box": {
+                        "left": 688.0,
+                        "top": 788.0,
+                        "right": 743.0,
+                        "bottom": 819.0
+                    },
+                    "confidence": 0.84765625
+                },
+                {
+                    "text": "kesejahteraan",
+                    "box": {
+                        "left": 757.0,
+                        "top": 790.0,
+                        "right": 915.0,
+                        "bottom": 822.0
+                    },
+                    "confidence": 0.89242786
+                },
+                {
+                    "text": "dan",
+                    "box": {
+                        "left": 934.0,
+                        "top": 793.0,
+                        "right": 973.0,
+                        "bottom": 823.0
+                    },
+                    "confidence": 0.84765625
+                },
+                {
+                    "text": "kebaikan",
+                    "box": {
+                        "left": 985.0,
+                        "top": 794.0,
+                        "right": 1094.0,
+                        "bottom": 826.0
+                    },
+                    "confidence": 0.9013672
+                }
+            ]
+        },
+        {
+            "text": "keluarga, bangsa, negara, dan komunitas beriman. Keberanian",
+            "box": {
+                "left": 236.0,
+                "top": 816.0,
+                "right": 1095.0,
+                "bottom": 861.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 816.0,
+                    "y": 964.0
+                },
+                {
+                    "x": 831.0,
+                    "y": 105.0
+                },
+                {
+                    "x": 861.0,
+                    "y": 105.0
+                },
+                {
+                    "x": 846.0,
+                    "y": 964.0
+                }
+            ],
+            "angleDeg": -88.94745,
+            "recognizedLanguage": "id",
+            "confidence": 0.884434,
+            "words": [
+                {
+                    "text": "keluarga,",
+                    "box": {
+                        "left": 236.0,
+                        "top": 816.0,
+                        "right": 337.0,
+                        "bottom": 847.0
+                    },
+                    "confidence": 0.85633683
+                },
+                {
+                    "text": "bangsa,",
+                    "box": {
+                        "left": 370.0,
+                        "top": 818.0,
+                        "right": 463.0,
+                        "bottom": 849.0
+                    },
+                    "confidence": 0.89285713
+                },
+                {
+                    "text": "negara,",
+                    "box": {
+                        "left": 491.0,
+                        "top": 821.0,
+                        "right": 579.0,
+                        "bottom": 852.0
+                    },
+                    "confidence": 0.8833705
+                },
+                {
+                    "text": "dan",
+                    "box": {
+                        "left": 606.0,
+                        "top": 823.0,
+                        "right": 646.0,
+                        "bottom": 853.0
+                    },
+                    "confidence": 0.87369794
+                },
+                {
+                    "text": "komunitas",
+                    "box": {
+                        "left": 673.0,
+                        "top": 824.0,
+                        "right": 794.0,
+                        "bottom": 856.0
+                    },
+                    "confidence": 0.91970485
+                },
+                {
+                    "text": "beriman.",
+                    "box": {
+                        "left": 823.0,
+                        "top": 827.0,
+                        "right": 932.0,
+                        "bottom": 859.0
+                    },
+                    "confidence": 0.8828125
+                },
+                {
+                    "text": "Keberanian",
+                    "box": {
+                        "left": 963.0,
+                        "top": 829.0,
+                        "right": 1095.0,
+                        "bottom": 861.0
+                    },
+                    "confidence": 0.8773438
+                }
+            ]
+        },
+        {
+            "text": "menjalani hidup ditujukan untuk menegakkan Kerajaan Allah di",
+            "box": {
+                "left": 244.0,
+                "top": 851.0,
+                "right": 1096.0,
+                "bottom": 899.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 851.0,
+                    "y": 956.0
+                },
+                {
+                    "x": 867.0,
+                    "y": 104.0
+                },
+                {
+                    "x": 899.0,
+                    "y": 104.0
+                },
+                {
+                    "x": 883.0,
+                    "y": 956.0
+                }
+            ],
+            "angleDeg": -88.885506,
+            "recognizedLanguage": "ms",
+            "confidence": 0.8810436,
+            "words": [
+                {
+                    "text": "menjalani",
+                    "box": {
+                        "left": 244.0,
+                        "top": 851.0,
+                        "right": 353.0,
+                        "bottom": 885.0
+                    },
+                    "confidence": 0.87890625
+                },
+                {
+                    "text": "hidup",
+                    "box": {
+                        "left": 374.0,
+                        "top": 854.0,
+                        "right": 441.0,
+                        "bottom": 886.0
+                    },
+                    "confidence": 0.85
+                },
+                {
+                    "text": "ditujukan",
+                    "box": {
+                        "left": 462.0,
+                        "top": 855.0,
+                        "right": 573.0,
+                        "bottom": 889.0
+                    },
+                    "confidence": 0.8854167
+                },
+                {
+                    "text": "untuk",
+                    "box": {
+                        "left": 600.0,
+                        "top": 858.0,
+                        "right": 669.0,
+                        "bottom": 891.0
+                    },
+                    "confidence": 0.8960937
+                },
+                {
+                    "text": "menegakkan",
+                    "box": {
+                        "left": 698.0,
+                        "top": 860.0,
+                        "right": 837.0,
+                        "bottom": 894.0
+                    },
+                    "confidence": 0.89804685
+                },
+                {
+                    "text": "Kerajaan",
+                    "box": {
+                        "left": 861.0,
+                        "top": 863.0,
+                        "right": 966.0,
+                        "bottom": 897.0
+                    },
+                    "confidence": 0.88720703
+                },
+                {
+                    "text": "Allah",
+                    "box": {
+                        "left": 1000.0,
+                        "top": 866.0,
+                        "right": 1056.0,
+                        "bottom": 899.0
+                    },
+                    "confidence": 0.8734375
+                },
+                {
+                    "text": "di",
+                    "box": {
+                        "left": 1087.0,
+                        "top": 868.0,
+                        "right": 1096.0,
+                        "bottom": 899.0
+                    },
+                    "confidence": 0.8203125
+                }
+            ]
+        },
+        {
+            "text": "dunia dalam bimbingan Roh Kudus: \"Semangat keterbukaan",
+            "box": {
+                "left": 238.0,
+                "top": 887.0,
+                "right": 1095.0,
+                "bottom": 934.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 887.0,
+                    "y": 962.0
+                },
+                {
+                    "x": 903.0,
+                    "y": 105.0
+                },
+                {
+                    "x": 934.0,
+                    "y": 105.0
+                },
+                {
+                    "x": 918.0,
+                    "y": 962.0
+                }
+            ],
+            "angleDeg": -88.86635,
+            "recognizedLanguage": "ms",
+            "confidence": 0.8708496,
+            "words": [
+                {
+                    "text": "dunia",
+                    "box": {
+                        "left": 238.0,
+                        "top": 887.0,
+                        "right": 299.0,
+                        "bottom": 919.0
+                    },
+                    "confidence": 0.83515626
+                },
+                {
+                    "text": "dalam",
+                    "box": {
+                        "left": 329.0,
+                        "top": 889.0,
+                        "right": 394.0,
+                        "bottom": 921.0
+                    },
+                    "confidence": 0.89375
+                },
+                {
+                    "text": "bimbingan",
+                    "box": {
+                        "left": 426.0,
+                        "top": 891.0,
+                        "right": 557.0,
+                        "bottom": 924.0
+                    },
+                    "confidence": 0.91449654
+                },
+                {
+                    "text": "Roh",
+                    "box": {
+                        "left": 589.0,
+                        "top": 894.0,
+                        "right": 637.0,
+                        "bottom": 925.0
+                    },
+                    "confidence": 0.9270833
+                },
+                {
+                    "text": "Kudus:",
+                    "box": {
+                        "left": 673.0,
+                        "top": 896.0,
+                        "right": 756.0,
+                        "bottom": 928.0
+                    },
+                    "confidence": 0.84244794
+                },
+                {
+                    "text": "\"Semangat",
+                    "box": {
+                        "left": 785.0,
+                        "top": 898.0,
+                        "right": 915.0,
+                        "bottom": 931.0
+                    },
+                    "confidence": 0.8211806
+                },
+                {
+                    "text": "keterbukaan",
+                    "box": {
+                        "left": 951.0,
+                        "top": 901.0,
+                        "right": 1095.0,
+                        "bottom": 934.0
+                    },
+                    "confidence": 0.8817472
+                }
+            ]
+        },
+        {
+            "text": "terhadap ilham Roh Kudus dan panggilan Gereja serta dunia.",
+            "box": {
+                "left": 234.0,
+                "top": 924.0,
+                "right": 1087.0,
+                "bottom": 972.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 924.0,
+                    "y": 966.0
+                },
+                {
+                    "x": 940.0,
+                    "y": 113.0
+                },
+                {
+                    "x": 972.0,
+                    "y": 113.0
+                },
+                {
+                    "x": 956.0,
+                    "y": 966.0
+                }
+            ],
+            "angleDeg": -88.90626,
+            "recognizedLanguage": "ms",
+            "confidence": 0.86140627,
+            "words": [
+                {
+                    "text": "terhadap",
+                    "box": {
+                        "left": 234.0,
+                        "top": 924.0,
+                        "right": 327.0,
+                        "bottom": 957.0
+                    },
+                    "confidence": 0.8203125
+                },
+                {
+                    "text": "ilham",
+                    "box": {
+                        "left": 355.0,
+                        "top": 926.0,
+                        "right": 424.0,
+                        "bottom": 959.0
+                    },
+                    "confidence": 0.8375
+                },
+                {
+                    "text": "Roh",
+                    "box": {
+                        "left": 456.0,
+                        "top": 928.0,
+                        "right": 497.0,
+                        "bottom": 960.0
+                    },
+                    "confidence": 0.86848956
+                },
+                {
+                    "text": "Kudus",
+                    "box": {
+                        "left": 529.0,
+                        "top": 930.0,
+                        "right": 600.0,
+                        "bottom": 963.0
+                    },
+                    "confidence": 0.87109375
+                },
+                {
+                    "text": "dan",
+                    "box": {
+                        "left": 630.0,
+                        "top": 932.0,
+                        "right": 671.0,
+                        "bottom": 963.0
+                    },
+                    "confidence": 0.8854167
+                },
+                {
+                    "text": "panggilan",
+                    "box": {
+                        "left": 695.0,
+                        "top": 933.0,
+                        "right": 809.0,
+                        "bottom": 967.0
+                    },
+                    "confidence": 0.9105903
+                },
+                {
+                    "text": "Gereja",
+                    "box": {
+                        "left": 851.0,
+                        "top": 936.0,
+                        "right": 921.0,
+                        "bottom": 969.0
+                    },
+                    "confidence": 0.89778644
+                },
+                {
+                    "text": "serta",
+                    "box": {
+                        "left": 946.0,
+                        "top": 938.0,
+                        "right": 999.0,
+                        "bottom": 970.0
+                    },
+                    "confidence": 0.8148438
+                },
+                {
+                    "text": "dunia.",
+                    "box": {
+                        "left": 1023.0,
+                        "top": 939.0,
+                        "right": 1087.0,
+                        "bottom": 972.0
+                    },
+                    "confidence": 0.8411458
+                }
+            ]
+        },
+        {
+            "text": "Semangat keterbukaan ini hendaknya disertai keberanian untuk",
+            "box": {
+                "left": 238.0,
+                "top": 961.0,
+                "right": 1095.0,
+                "bottom": 1008.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 961.0,
+                    "y": 962.0
+                },
+                {
+                    "x": 976.0,
+                    "y": 105.0
+                },
+                {
+                    "x": 1008.0,
+                    "y": 105.0
+                },
+                {
+                    "x": 993.0,
+                    "y": 962.0
+                }
+            ],
+            "angleDeg": -88.98773,
+            "recognizedLanguage": "ms",
+            "confidence": 0.8880208,
+            "words": [
+                {
+                    "text": "Semangat",
+                    "box": {
+                        "left": 238.0,
+                        "top": 961.0,
+                        "right": 346.0,
+                        "bottom": 994.0
+                    },
+                    "confidence": 0.8701172
+                },
+                {
+                    "text": "keterbukaan",
+                    "box": {
+                        "left": 371.0,
+                        "top": 964.0,
+                        "right": 522.0,
+                        "bottom": 997.0
+                    },
+                    "confidence": 0.90767044
+                },
+                {
+                    "text": "ini",
+                    "box": {
+                        "left": 548.0,
+                        "top": 967.0,
+                        "right": 583.0,
+                        "bottom": 998.0
+                    },
+                    "confidence": 0.890625
+                },
+                {
+                    "text": "hendaknya",
+                    "box": {
+                        "left": 606.0,
+                        "top": 968.0,
+                        "right": 739.0,
+                        "bottom": 1001.0
+                    },
+                    "confidence": 0.8706597
+                },
+                {
+                    "text": "disertai",
+                    "box": {
+                        "left": 763.0,
+                        "top": 970.0,
+                        "right": 845.0,
+                        "bottom": 1003.0
+                    },
+                    "confidence": 0.89990234
+                },
+                {
+                    "text": "keberanian",
+                    "box": {
+                        "left": 876.0,
+                        "top": 972.0,
+                        "right": 1008.0,
+                        "bottom": 1006.0
+                    },
+                    "confidence": 0.8917969
+                },
+                {
+                    "text": "untuk",
+                    "box": {
+                        "left": 1036.0,
+                        "top": 975.0,
+                        "right": 1095.0,
+                        "bottom": 1008.0
+                    },
+                    "confidence": 0.8765625
+                }
+            ]
+        },
+        {
+            "text": "mengambil resiko demi Kerajaan Allah.\" (Konstitusi OSU, Art. 155:",
+            "box": {
+                "left": 243.0,
+                "top": 1000.0,
+                "right": 1099.0,
+                "bottom": 1046.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 1000.0,
+                    "y": 957.0
+                },
+                {
+                    "x": 1015.0,
+                    "y": 101.0
+                },
+                {
+                    "x": 1046.0,
+                    "y": 101.0
+                },
+                {
+                    "x": 1031.0,
+                    "y": 957.0
+                }
+            ],
+            "angleDeg": -88.97398,
+            "recognizedLanguage": "id",
+            "confidence": 0.8684211,
+            "words": [
+                {
+                    "text": "mengambil",
+                    "box": {
+                        "left": 243.0,
+                        "top": 1000.0,
+                        "right": 368.0,
+                        "bottom": 1033.0
+                    },
+                    "confidence": 0.875
+                },
+                {
+                    "text": "resiko",
+                    "box": {
+                        "left": 371.0,
+                        "top": 1002.0,
+                        "right": 454.0,
+                        "bottom": 1034.0
+                    },
+                    "confidence": 0.92252606
+                },
+                {
+                    "text": "demi",
+                    "box": {
+                        "left": 461.0,
+                        "top": 1004.0,
+                        "right": 520.0,
+                        "bottom": 1036.0
+                    },
+                    "confidence": 0.86621094
+                },
+                {
+                    "text": "Kerajaan",
+                    "box": {
+                        "left": 541.0,
+                        "top": 1006.0,
+                        "right": 646.0,
+                        "bottom": 1037.0
+                    },
+                    "confidence": 0.8828125
+                },
+                {
+                    "text": "Allah.\"",
+                    "box": {
+                        "left": 667.0,
+                        "top": 1008.0,
+                        "right": 747.0,
+                        "bottom": 1039.0
+                    },
+                    "confidence": 0.83816963
+                },
+                {
+                    "text": "(Konstitusi",
+                    "box": {
+                        "left": 753.0,
+                        "top": 1009.0,
+                        "right": 902.0,
+                        "bottom": 1042.0
+                    },
+                    "confidence": 0.91335225
+                },
+                {
+                    "text": "OSU,",
+                    "box": {
+                        "left": 920.0,
+                        "top": 1012.0,
+                        "right": 973.0,
+                        "bottom": 1043.0
+                    },
+                    "confidence": 0.6875
+                },
+                {
+                    "text": "Art.",
+                    "box": {
+                        "left": 996.0,
+                        "top": 1014.0,
+                        "right": 1033.0,
+                        "bottom": 1044.0
+                    },
+                    "confidence": 0.90527344
+                },
+                {
+                    "text": "155:",
+                    "box": {
+                        "left": 1049.0,
+                        "top": 1014.0,
+                        "right": 1099.0,
+                        "bottom": 1045.0
+                    },
+                    "confidence": 0.81933594
+                }
+            ]
+        },
+        {
+            "text": "3).",
+            "box": {
+                "left": 229.0,
+                "top": 1030.0,
+                "right": 262.0,
+                "bottom": 1067.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 1030.0,
+                    "y": 965.0
+                },
+                {
+                    "x": 1035.0,
+                    "y": 938.0
+                },
+                {
+                    "x": 1067.0,
+                    "y": 944.0
+                },
+                {
+                    "x": 1062.0,
+                    "y": 971.0
+                }
+            ],
+            "angleDeg": -78.69005,
+            "recognizedLanguage": "und-Latn",
+            "confidence": 0.6796875,
+            "words": [
+                {
+                    "text": "3).",
+                    "box": {
+                        "left": 229.0,
+                        "top": 1030.0,
+                        "right": 262.0,
+                        "bottom": 1067.0
+                    },
+                    "confidence": 0.6796875
+                }
+            ]
+        },
+        {
+            "text": "A00a",
+            "box": {
+                "left": 1.0,
+                "top": 433.0,
+                "right": 47.0,
+                "bottom": 467.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 433.0,
+                    "y": 1192.0
+                },
+                {
+                    "x": 444.0,
+                    "y": 1153.0
+                },
+                {
+                    "x": 467.0,
+                    "y": 1160.0
+                },
+                {
+                    "x": 456.0,
+                    "y": 1199.0
+                }
+            ],
+            "angleDeg": -73.524124,
+            "recognizedLanguage": "pt",
+            "confidence": 0.32910156,
+            "words": [
+                {
+                    "text": "A00a",
+                    "box": {
+                        "left": 1.0,
+                        "top": 433.0,
+                        "right": 47.0,
+                        "bottom": 467.0
+                    },
+                    "confidence": 0.32910156
+                }
+            ]
+        },
+        {
+            "text": "serta",
+            "box": {
+                "left": 58.0,
+                "top": 450.0,
+                "right": 101.0,
+                "bottom": 483.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 450.0,
+                    "y": 1136.0
+                },
+                {
+                    "x": 460.0,
+                    "y": 1099.0
+                },
+                {
+                    "x": 483.0,
+                    "y": 1105.0
+                },
+                {
+                    "x": 473.0,
+                    "y": 1142.0
+                }
+            ],
+            "angleDeg": -73.524124,
+            "recognizedLanguage": "pt",
+            "confidence": 0.37890625,
+            "words": [
+                {
+                    "text": "serta",
+                    "box": {
+                        "left": 58.0,
+                        "top": 450.0,
+                        "right": 101.0,
+                        "bottom": 483.0
+                    },
+                    "confidence": 0.37890625
+                }
+            ]
+        },
+        {
+            "text": "leks",
+            "box": {
+                "left": 7.0,
+                "top": 470.0,
+                "right": 61.0,
+                "bottom": 512.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 470.0,
+                    "y": 1185.0
+                },
+                {
+                    "x": 484.0,
+                    "y": 1139.0
+                },
+                {
+                    "x": 512.0,
+                    "y": 1147.0
+                },
+                {
+                    "x": 498.0,
+                    "y": 1193.0
+                }
+            ],
+            "angleDeg": -72.761505,
+            "recognizedLanguage": "et",
+            "confidence": 0.45117188,
+            "words": [
+                {
+                    "text": "leks",
+                    "box": {
+                        "left": 7.0,
+                        "top": 470.0,
+                        "right": 61.0,
+                        "bottom": 512.0
+                    },
+                    "confidence": 0.45117188
+                }
+            ]
+        },
+        {
+            "text": "iman",
+            "box": {
+                "left": 57.0,
+                "top": 486.0,
+                "right": 106.0,
+                "bottom": 525.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 486.0,
+                    "y": 1135.0
+                },
+                {
+                    "x": 498.0,
+                    "y": 1094.0
+                },
+                {
+                    "x": 525.0,
+                    "y": 1102.0
+                },
+                {
+                    "x": 513.0,
+                    "y": 1143.0
+                }
+            ],
+            "angleDeg": -72.761505,
+            "recognizedLanguage": "et",
+            "confidence": 0.34570312,
+            "words": [
+                {
+                    "text": "iman",
+                    "box": {
+                        "left": 57.0,
+                        "top": 486.0,
+                        "right": 106.0,
+                        "bottom": 525.0
+                    },
+                    "confidence": 0.34570312
+                }
+            ]
+        },
+        {
+            "text": "eniadi",
+            "box": {
+                "left": -5.0,
+                "top": 554.0,
+                "right": 59.0,
+                "bottom": 594.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 554.0,
+                    "y": 1201.0
+                },
+                {
+                    "x": 562.0,
+                    "y": 1141.0
+                },
+                {
+                    "x": 594.0,
+                    "y": 1145.0
+                },
+                {
+                    "x": 586.0,
+                    "y": 1205.0
+                }
+            ],
+            "angleDeg": -81.546974,
+            "recognizedLanguage": "und-Latn",
+            "confidence": 0.6354167,
+            "words": [
+                {
+                    "text": "eniadi",
+                    "box": {
+                        "left": -5.0,
+                        "top": 554.0,
+                        "right": 59.0,
+                        "bottom": 594.0
+                    },
+                    "confidence": 0.6354167
+                }
+            ]
+        },
+        {
+            "text": "mota",
+            "box": {
+                "left": 60.0,
+                "top": 564.0,
+                "right": 105.0,
+                "bottom": 602.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 564.0,
+                    "y": 1136.0
+                },
+                {
+                    "x": 570.0,
+                    "y": 1095.0
+                },
+                {
+                    "x": 602.0,
+                    "y": 1099.0
+                },
+                {
+                    "x": 596.0,
+                    "y": 1140.0
+                }
+            ],
+            "angleDeg": -81.546974,
+            "recognizedLanguage": "und-Latn",
+            "confidence": 0.5341797,
+            "words": [
+                {
+                    "text": "mota",
+                    "box": {
+                        "left": 60.0,
+                        "top": 564.0,
+                        "right": 105.0,
+                        "bottom": 602.0
+                    },
+                    "confidence": 0.5341797
+                }
+            ]
+        },
+        {
+            "text": "tur",
+            "box": {
+                "left": 3.0,
+                "top": 602.0,
+                "right": 32.0,
+                "bottom": 633.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 602.0,
+                    "y": 1196.0
+                },
+                {
+                    "x": 603.0,
+                    "y": 1168.0
+                },
+                {
+                    "x": 633.0,
+                    "y": 1169.0
+                },
+                {
+                    "x": 632.0,
+                    "y": 1197.0
+                }
+            ],
+            "angleDeg": -86.328285,
+            "recognizedLanguage": "und-Latn",
+            "confidence": 0.5494792,
+            "words": [
+                {
+                    "text": "tur",
+                    "box": {
+                        "left": 3.0,
+                        "top": 602.0,
+                        "right": 32.0,
+                        "bottom": 633.0
+                    },
+                    "confidence": 0.5494792
+                }
+            ]
+        },
+        {
+            "text": "kata,",
+            "box": {
+                "left": 43.0,
+                "top": 604.0,
+                "right": 79.0,
+                "bottom": 636.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 604.0,
+                    "y": 1156.0
+                },
+                {
+                    "x": 606.0,
+                    "y": 1121.0
+                },
+                {
+                    "x": 636.0,
+                    "y": 1122.0
+                },
+                {
+                    "x": 634.0,
+                    "y": 1157.0
+                }
+            ],
+            "angleDeg": -86.328285,
+            "recognizedLanguage": "und-Latn",
+            "confidence": 0.78515625,
+            "words": [
+                {
+                    "text": "kata,",
+                    "box": {
+                        "left": 43.0,
+                        "top": 604.0,
+                        "right": 79.0,
+                        "bottom": 636.0
+                    },
+                    "confidence": 0.78515625
+                }
+            ]
+        },
+        {
+            "text": "dan",
+            "box": {
+                "left": 84.0,
+                "top": 607.0,
+                "right": 108.0,
+                "bottom": 638.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 607.0,
+                    "y": 1115.0
+                },
+                {
+                    "x": 608.0,
+                    "y": 1092.0
+                },
+                {
+                    "x": 638.0,
+                    "y": 1093.0
+                },
+                {
+                    "x": 637.0,
+                    "y": 1116.0
+                }
+            ],
+            "angleDeg": -86.328285,
+            "recognizedLanguage": "und-Latn",
+            "confidence": 0.546875,
+            "words": [
+                {
+                    "text": "dan",
+                    "box": {
+                        "left": 84.0,
+                        "top": 607.0,
+                        "right": 108.0,
+                        "bottom": 638.0
+                    },
+                    "confidence": 0.546875
+                }
+            ]
+        },
+        {
+            "text": "Allah,",
+            "box": {
+                "left": 16.0,
+                "top": 642.0,
+                "right": 69.0,
+                "bottom": 681.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 642.0,
+                    "y": 1180.0
+                },
+                {
+                    "x": 648.0,
+                    "y": 1131.0
+                },
+                {
+                    "x": 681.0,
+                    "y": 1135.0
+                },
+                {
+                    "x": 675.0,
+                    "y": 1184.0
+                }
+            ],
+            "angleDeg": -82.88969,
+            "recognizedLanguage": "und-Latn",
+            "confidence": 0.66536456,
+            "words": [
+                {
+                    "text": "Allah,",
+                    "box": {
+                        "left": 16.0,
+                        "top": 642.0,
+                        "right": 69.0,
+                        "bottom": 681.0
+                    },
+                    "confidence": 0.66536456
+                }
+            ]
+        },
+        {
+            "text": "warg",
+            "box": {
+                "left": 72.0,
+                "top": 649.0,
+                "right": 104.0,
+                "bottom": 685.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 649.0,
+                    "y": 1124.0
+                },
+                {
+                    "x": 652.0,
+                    "y": 1096.0
+                },
+                {
+                    "x": 685.0,
+                    "y": 1100.0
+                },
+                {
+                    "x": 682.0,
+                    "y": 1128.0
+                }
+            ],
+            "angleDeg": -82.88969,
+            "recognizedLanguage": "und-Latn",
+            "confidence": 0.4560547,
+            "words": [
+                {
+                    "text": "warg",
+                    "box": {
+                        "left": 72.0,
+                        "top": 649.0,
+                        "right": 104.0,
+                        "bottom": 685.0
+                    },
+                    "confidence": 0.4560547
+                }
+            ]
+        },
+        {
+            "text": "man, apapu",
+            "box": {
+                "left": 15.0,
+                "top": 695.0,
+                "right": 106.0,
+                "bottom": 719.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 695.0,
+                    "y": 1185.0
+                },
+                {
+                    "x": 695.0,
+                    "y": 1094.0
+                },
+                {
+                    "x": 719.0,
+                    "y": 1094.0
+                },
+                {
+                    "x": 719.0,
+                    "y": 1185.0
+                }
+            ],
+            "angleDeg": -89.729416,
+            "recognizedLanguage": "id",
+            "confidence": 0.58550346,
+            "words": [
+                {
+                    "text": "man,",
+                    "box": {
+                        "left": 15.0,
+                        "top": 695.0,
+                        "right": 57.0,
+                        "bottom": 719.0
+                    },
+                    "confidence": 0.59472656
+                },
+                {
+                    "text": "apapu",
+                    "box": {
+                        "left": 70.0,
+                        "top": 695.0,
+                        "right": 106.0,
+                        "bottom": 719.0
+                    },
+                    "confidence": 0.578125
+                }
+            ]
+        },
+        {
+            "text": "usi Uni Roma",
+            "box": {
+                "left": 7.0,
+                "top": 726.0,
+                "right": 114.0,
+                "bottom": 764.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 736.0,
+                    "y": 1193.0
+                },
+                {
+                    "x": 726.0,
+                    "y": 1089.0
+                },
+                {
+                    "x": 754.0,
+                    "y": 1086.0
+                },
+                {
+                    "x": 764.0,
+                    "y": 1190.0
+                }
+            ],
+            "angleDeg": -95.305214,
+            "recognizedLanguage": "hr",
+            "confidence": 0.60195315,
+            "words": [
+                {
+                    "text": "usi",
+                    "box": {
+                        "left": 7.0,
+                        "top": 734.0,
+                        "right": 34.0,
+                        "bottom": 764.0
+                    },
+                    "confidence": 0.5598958
+                },
+                {
+                    "text": "Uni",
+                    "box": {
+                        "left": 43.0,
+                        "top": 730.0,
+                        "right": 71.0,
+                        "bottom": 760.0
+                    },
+                    "confidence": 0.7057292
+                },
+                {
+                    "text": "Roma",
+                    "box": {
+                        "left": 80.0,
+                        "top": 727.0,
+                        "right": 114.0,
+                        "bottom": 757.0
+                    },
+                    "confidence": 0.55566406
+                }
+            ]
+        },
+        {
+            "text": "Kepada karsma",
+            "box": {
+                "left": -7.0,
+                "top": 761.0,
+                "right": 118.0,
+                "bottom": 818.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 785.0,
+                    "y": 1207.0
+                },
+                {
+                    "x": 761.0,
+                    "y": 1089.0
+                },
+                {
+                    "x": 794.0,
+                    "y": 1082.0
+                },
+                {
+                    "x": 818.0,
+                    "y": 1200.0
+                }
+            ],
+            "angleDeg": -101.08039,
+            "recognizedLanguage": "id",
+            "confidence": 0.6305339,
+            "words": [
+                {
+                    "text": "Kepada",
+                    "box": {
+                        "left": -7.0,
+                        "top": 772.0,
+                        "right": 65.0,
+                        "bottom": 818.0
+                    },
+                    "confidence": 0.7532552
+                },
+                {
+                    "text": "karsma",
+                    "box": {
+                        "left": 69.0,
+                        "top": 761.0,
+                        "right": 119.0,
+                        "bottom": 803.0
+                    },
+                    "confidence": 0.5078125
+                }
+            ]
+        },
+        {
+            "text": "asih ganda dn",
+            "box": {
+                "left": 4.0,
+                "top": 803.0,
+                "right": 123.0,
+                "bottom": 858.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 826.0,
+                    "y": 1196.0
+                },
+                {
+                    "x": 803.0,
+                    "y": 1084.0
+                },
+                {
+                    "x": 835.0,
+                    "y": 1077.0
+                },
+                {
+                    "x": 858.0,
+                    "y": 1189.0
+                }
+            ],
+            "angleDeg": -101.2567,
+            "recognizedLanguage": "ms",
+            "confidence": 0.6871449,
+            "words": [
+                {
+                    "text": "asih",
+                    "box": {
+                        "left": 4.0,
+                        "top": 818.0,
+                        "right": 49.0,
+                        "bottom": 858.0
+                    },
+                    "confidence": 0.74902344
+                },
+                {
+                    "text": "ganda",
+                    "box": {
+                        "left": 48.0,
+                        "top": 809.0,
+                        "right": 97.0,
+                        "bottom": 849.0
+                    },
+                    "confidence": 0.80625
+                },
+                {
+                    "text": "dn",
+                    "box": {
+                        "left": 90.0,
+                        "top": 803.0,
+                        "right": 123.0,
+                        "bottom": 840.0
+                    },
+                    "confidence": 0.265625
+                }
+            ]
+        },
+        {
+            "text": "ang utuh unzk",
+            "box": {
+                "left": 1.0,
+                "top": 841.0,
+                "right": 124.0,
+                "bottom": 906.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 879.0,
+                    "y": 1199.0
+                },
+                {
+                    "x": 841.0,
+                    "y": 1086.0
+                },
+                {
+                    "x": 868.0,
+                    "y": 1076.0
+                },
+                {
+                    "x": 906.0,
+                    "y": 1189.0
+                }
+            ],
+            "angleDeg": -108.59814,
+            "recognizedLanguage": "hu",
+            "confidence": 0.55752844,
+            "words": [
+                {
+                    "text": "ang",
+                    "box": {
+                        "left": 1.0,
+                        "top": 866.0,
+                        "right": 48.0,
+                        "bottom": 906.0
+                    },
+                    "confidence": 0.6171875
+                },
+                {
+                    "text": "utuh",
+                    "box": {
+                        "left": 46.0,
+                        "top": 852.0,
+                        "right": 90.0,
+                        "bottom": 891.0
+                    },
+                    "confidence": 0.6904297
+                },
+                {
+                    "text": "unzk",
+                    "box": {
+                        "left": 82.0,
+                        "top": 841.0,
+                        "right": 124.0,
+                        "bottom": 878.0
+                    },
+                    "confidence": 0.3798828
+                }
+            ]
+        },
+        {
+            "text": "dunia dengu",
+            "box": {
+                "left": 21.0,
+                "top": 881.0,
+                "right": 129.0,
+                "bottom": 941.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 913.0,
+                    "y": 1179.0
+                },
+                {
+                    "x": 881.0,
+                    "y": 1081.0
+                },
+                {
+                    "x": 909.0,
+                    "y": 1071.0
+                },
+                {
+                    "x": 941.0,
+                    "y": 1169.0
+                }
+            ],
+            "angleDeg": -107.82853,
+            "recognizedLanguage": "id",
+            "confidence": 0.59648436,
+            "words": [
+                {
+                    "text": "dunia",
+                    "box": {
+                        "left": 21.0,
+                        "top": 898.0,
+                        "right": 75.0,
+                        "bottom": 941.0
+                    },
+                    "confidence": 0.70234376
+                },
+                {
+                    "text": "dengu",
+                    "box": {
+                        "left": 77.0,
+                        "top": 881.0,
+                        "right": 128.0,
+                        "bottom": 923.0
+                    },
+                    "confidence": 0.490625
+                }
+            ]
+        },
+        {
+            "text": "ebahagiaan jm",
+            "box": {
+                "left": 1.0,
+                "top": 923.0,
+                "right": 121.0,
+                "bottom": 996.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 966.0,
+                    "y": 1199.0
+                },
+                {
+                    "x": 923.0,
+                    "y": 1092.0
+                },
+                {
+                    "x": 953.0,
+                    "y": 1079.0
+                },
+                {
+                    "x": 996.0,
+                    "y": 1186.0
+                }
+            ],
+            "angleDeg": -111.499794,
+            "recognizedLanguage": "und-Latn",
+            "confidence": 0.54622394,
+            "words": [
+                {
+                    "text": "ebahagiaan",
+                    "box": {
+                        "left": 1.0,
+                        "top": 933.0,
+                        "right": 97.0,
+                        "bottom": 996.0
+                    },
+                    "confidence": 0.6148437
+                },
+                {
+                    "text": "jm",
+                    "box": {
+                        "left": 91.0,
+                        "top": 924.0,
+                        "right": 120.0,
+                        "bottom": 960.0
+                    },
+                    "confidence": 0.203125
+                }
+            ]
+        },
+        {
+            "text": "4. Semangat Persatuan (Insieme)",
+            "box": {
+                "left": 203.0,
+                "top": 1102.0,
+                "right": 634.0,
+                "bottom": 1157.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 1102.0,
+                    "y": 996.0
+                },
+                {
+                    "x": 1127.0,
+                    "y": 566.0
+                },
+                {
+                    "x": 1157.0,
+                    "y": 567.0
+                },
+                {
+                    "x": 1132.0,
+                    "y": 997.0
+                }
+            ],
+            "angleDeg": -86.636696,
+            "recognizedLanguage": "ms",
+            "confidence": 0.8049665,
+            "words": [
+                {
+                    "text": "4.",
+                    "box": {
+                        "left": 203.0,
+                        "top": 1103.0,
+                        "right": 214.0,
+                        "bottom": 1132.0
+                    },
+                    "confidence": 0.24023438
+                },
+                {
+                    "text": "Semangat",
+                    "box": {
+                        "left": 240.0,
+                        "top": 1104.0,
+                        "right": 356.0,
+                        "bottom": 1140.0
+                    },
+                    "confidence": 0.8666992
+                },
+                {
+                    "text": "Persatuan",
+                    "box": {
+                        "left": 368.0,
+                        "top": 1112.0,
+                        "right": 495.0,
+                        "bottom": 1149.0
+                    },
+                    "confidence": 0.9244792
+                },
+                {
+                    "text": "(Insieme)",
+                    "box": {
+                        "left": 503.0,
+                        "top": 1120.0,
+                        "right": 633.0,
+                        "bottom": 1156.0
+                    },
+                    "confidence": 0.7560764
+                }
+            ]
+        },
+        {
+            "text": "Persatuan memiliki pengertian nilai yang terwujud dalam",
+            "box": {
+                "left": 320.0,
+                "top": 1151.0,
+                "right": 1101.0,
+                "bottom": 1197.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 1151.0,
+                    "y": 880.0
+                },
+                {
+                    "x": 1166.0,
+                    "y": 99.0
+                },
+                {
+                    "x": 1197.0,
+                    "y": 99.0
+                },
+                {
+                    "x": 1182.0,
+                    "y": 880.0
+                }
+            ],
+            "angleDeg": -88.84632,
+            "recognizedLanguage": "id",
+            "confidence": 0.89716196,
+            "words": [
+                {
+                    "text": "Persatuan",
+                    "box": {
+                        "left": 320.0,
+                        "top": 1151.0,
+                        "right": 430.0,
+                        "bottom": 1184.0
+                    },
+                    "confidence": 0.9123264
+                },
+                {
+                    "text": "memiliki",
+                    "box": {
+                        "left": 464.0,
+                        "top": 1154.0,
+                        "right": 566.0,
+                        "bottom": 1187.0
+                    },
+                    "confidence": 0.89697266
+                },
+                {
+                    "text": "pengertian",
+                    "box": {
+                        "left": 589.0,
+                        "top": 1157.0,
+                        "right": 719.0,
+                        "bottom": 1189.0
+                    },
+                    "confidence": 0.9109375
+                },
+                {
+                    "text": "nilai",
+                    "box": {
+                        "left": 745.0,
+                        "top": 1160.0,
+                        "right": 793.0,
+                        "bottom": 1190.0
+                    },
+                    "confidence": 0.8804687
+                },
+                {
+                    "text": "yang",
+                    "box": {
+                        "left": 817.0,
+                        "top": 1161.0,
+                        "right": 874.0,
+                        "bottom": 1193.0
+                    },
+                    "confidence": 0.9267578
+                },
+                {
+                    "text": "terwujud",
+                    "box": {
+                        "left": 895.0,
+                        "top": 1163.0,
+                        "right": 1009.0,
+                        "bottom": 1196.0
+                    },
+                    "confidence": 0.88427734
+                },
+                {
+                    "text": "dalam",
+                    "box": {
+                        "left": 1028.0,
+                        "top": 1165.0,
+                        "right": 1101.0,
+                        "bottom": 1197.0
+                    },
+                    "confidence": 0.85625
+                }
+            ]
+        },
+        {
+            "text": "sikap dan perilaku hidup",
+            "box": {
+                "left": 235.0,
+                "top": 1176.0,
+                "right": 545.0,
+                "bottom": 1229.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 1176.0,
+                    "y": 963.0
+                },
+                {
+                    "x": 1198.0,
+                    "y": 655.0
+                },
+                {
+                    "x": 1229.0,
+                    "y": 657.0
+                },
+                {
+                    "x": 1207.0,
+                    "y": 965.0
+                }
+            ],
+            "angleDeg": -85.75685,
+            "recognizedLanguage": "ms",
+            "confidence": 0.85026044,
+            "words": [
+                {
+                    "text": "sikap",
+                    "box": {
+                        "left": 235.0,
+                        "top": 1176.0,
+                        "right": 289.0,
+                        "bottom": 1210.0
+                    },
+                    "confidence": 0.78125
+                },
+                {
+                    "text": "dan",
+                    "box": {
+                        "left": 305.0,
+                        "top": 1181.0,
+                        "right": 342.0,
+                        "bottom": 1213.0
+                    },
+                    "confidence": 0.85546875
+                },
+                {
+                    "text": "perilaku",
+                    "box": {
+                        "left": 354.0,
+                        "top": 1185.0,
+                        "right": 454.0,
+                        "bottom": 1223.0
+                    },
+                    "confidence": 0.89404297
+                },
+                {
+                    "text": "hidup",
+                    "box": {
+                        "left": 477.0,
+                        "top": 1194.0,
+                        "right": 544.0,
+                        "bottom": 1229.0
+                    },
+                    "confidence": 0.8460938
+                }
+            ]
+        },
+        {
+            "text": "bersama mengutamakan keserasian, yang",
+            "box": {
+                "left": 567.0,
+                "top": 1194.0,
+                "right": 1101.0,
+                "bottom": 1233.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 1195.0,
+                    "y": 633.0
+                },
+                {
+                    "x": 1194.0,
+                    "y": 100.0
+                },
+                {
+                    "x": 1232.0,
+                    "y": 99.0
+                },
+                {
+                    "x": 1233.0,
+                    "y": 632.0
+                }
+            ],
+            "angleDeg": -90.00127,
+            "recognizedLanguage": "ms",
+            "confidence": 0.890625,
+            "words": [
+                {
+                    "text": "bersama",
+                    "box": {
+                        "left": 568.0,
+                        "top": 1195.0,
+                        "right": 666.0,
+                        "bottom": 1228.0
+                    },
+                    "confidence": 0.8989955
+                },
+                {
+                    "text": "mengutamakan",
+                    "box": {
+                        "left": 765.0,
+                        "top": 1200.0,
+                        "right": 946.0,
+                        "bottom": 1233.0
+                    },
+                    "confidence": 0.8876953
+                },
+                {
+                    "text": "keserasian,",
+                    "box": {
+                        "left": 965.0,
+                        "top": 1200.0,
+                        "right": 1101.0,
+                        "bottom": 1232.0
+                    },
+                    "confidence": 0.88139206
+                },
+                {
+                    "text": "yang",
+                    "box": {
+                        "left": 683.0,
+                        "top": 1202.0,
+                        "right": 743.0,
+                        "bottom": 1233.0
+                    },
+                    "confidence": 0.91015625
+                }
+            ]
+        },
+        {
+            "text": "sehati, sekehendak dan terikat kasih cinta dalam lain satu",
+            "box": {
+                "left": 234.0,
+                "top": 1209.0,
+                "right": 1018.0,
+                "bottom": 1285.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 1209.0,
+                    "y": 965.0
+                },
+                {
+                    "x": 1237.0,
+                    "y": 182.0
+                },
+                {
+                    "x": 1285.0,
+                    "y": 183.0
+                },
+                {
+                    "x": 1257.0,
+                    "y": 966.0
+                }
+            ],
+            "angleDeg": -87.921745,
+            "recognizedLanguage": "id",
+            "confidence": 0.8670313,
+            "words": [
+                {
+                    "text": "sehati,",
+                    "box": {
+                        "left": 235.0,
+                        "top": 1209.0,
+                        "right": 301.0,
+                        "bottom": 1246.0
+                    },
+                    "confidence": 0.7578125
+                },
+                {
+                    "text": "sekehendak",
+                    "box": {
+                        "left": 314.0,
+                        "top": 1221.0,
+                        "right": 450.0,
+                        "bottom": 1257.0
+                    },
+                    "confidence": 0.9019531
+                },
+                {
+                    "text": "dan",
+                    "box": {
+                        "left": 466.0,
+                        "top": 1230.0,
+                        "right": 506.0,
+                        "bottom": 1260.0
+                    },
+                    "confidence": 0.91015625
+                },
+                {
+                    "text": "terikat",
+                    "box": {
+                        "left": 514.0,
+                        "top": 1233.0,
+                        "right": 598.0,
+                        "bottom": 1265.0
+                    },
+                    "confidence": 0.9157366
+                },
+                {
+                    "text": "kasih",
+                    "box": {
+                        "left": 953.0,
+                        "top": 1237.0,
+                        "right": 1017.0,
+                        "bottom": 1265.0
+                    },
+                    "confidence": 0.8492187
+                },
+                {
+                    "text": "cinta",
+                    "box": {
+                        "left": 890.0,
+                        "top": 1238.0,
+                        "right": 945.0,
+                        "bottom": 1266.0
+                    },
+                    "confidence": 0.9125
+                },
+                {
+                    "text": "dalam",
+                    "box": {
+                        "left": 803.0,
+                        "top": 1239.0,
+                        "right": 875.0,
+                        "bottom": 1266.0
+                    },
+                    "confidence": 0.884375
+                },
+                {
+                    "text": "lain",
+                    "box": {
+                        "left": 740.0,
+                        "top": 1238.0,
+                        "right": 789.0,
+                        "bottom": 1266.0
+                    },
+                    "confidence": 0.82910156
+                },
+                {
+                    "text": "satu",
+                    "box": {
+                        "left": 611.0,
+                        "top": 1238.0,
+                        "right": 661.0,
+                        "bottom": 1269.0
+                    },
+                    "confidence": 0.83496094
+                }
+            ]
+        },
+        {
+            "text": "sama",
+            "box": {
+                "left": 668.0,
+                "top": 1240.0,
+                "right": 734.0,
+                "bottom": 1267.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 1241.0,
+                    "y": 532.0
+                },
+                {
+                    "x": 1240.0,
+                    "y": 467.0
+                },
+                {
+                    "x": 1266.0,
+                    "y": 466.0
+                },
+                {
+                    "x": 1267.0,
+                    "y": 531.0
+                }
+            ],
+            "angleDeg": -90.322136,
+            "recognizedLanguage": "id",
+            "confidence": 0.9003906,
+            "words": [
+                {
+                    "text": "sama",
+                    "box": {
+                        "left": 668.0,
+                        "top": 1240.0,
+                        "right": 734.0,
+                        "bottom": 1267.0
+                    },
+                    "confidence": 0.9003906
+                }
+            ]
+        },
+        {
+            "text": "Seperti yang dipesankan Santa Angela dalam semangat Injil,",
+            "box": {
+                "left": 317.0,
+                "top": 1263.0,
+                "right": 1102.0,
+                "bottom": 1312.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 1263.0,
+                    "y": 883.0
+                },
+                {
+                    "x": 1279.0,
+                    "y": 98.0
+                },
+                {
+                    "x": 1312.0,
+                    "y": 98.0
+                },
+                {
+                    "x": 1296.0,
+                    "y": 883.0
+                }
+            ],
+            "angleDeg": -88.81201,
+            "recognizedLanguage": "id",
+            "confidence": 0.84535843,
+            "words": [
+                {
+                    "text": "Seperti",
+                    "box": {
+                        "left": 317.0,
+                        "top": 1263.0,
+                        "right": 401.0,
+                        "bottom": 1297.0
+                    },
+                    "confidence": 0.72154015
+                },
+                {
+                    "text": "yang",
+                    "box": {
+                        "left": 412.0,
+                        "top": 1265.0,
+                        "right": 467.0,
+                        "bottom": 1299.0
+                    },
+                    "confidence": 0.92578125
+                },
+                {
+                    "text": "dipesankan",
+                    "box": {
+                        "left": 484.0,
+                        "top": 1267.0,
+                        "right": 623.0,
+                        "bottom": 1301.0
+                    },
+                    "confidence": 0.8941406
+                },
+                {
+                    "text": "Santa",
+                    "box": {
+                        "left": 642.0,
+                        "top": 1270.0,
+                        "right": 711.0,
+                        "bottom": 1304.0
+                    },
+                    "confidence": 0.9007813
+                },
+                {
+                    "text": "Angela",
+                    "box": {
+                        "left": 729.0,
+                        "top": 1272.0,
+                        "right": 814.0,
+                        "bottom": 1305.0
+                    },
+                    "confidence": 0.9010417
+                },
+                {
+                    "text": "dalam",
+                    "box": {
+                        "left": 830.0,
+                        "top": 1274.0,
+                        "right": 904.0,
+                        "bottom": 1308.0
+                    },
+                    "confidence": 0.8984375
+                },
+                {
+                    "text": "semangat",
+                    "box": {
+                        "left": 917.0,
+                        "top": 1276.0,
+                        "right": 1028.0,
+                        "bottom": 1310.0
+                    },
+                    "confidence": 0.9091797
+                },
+                {
+                    "text": "Injil,",
+                    "box": {
+                        "left": 1039.0,
+                        "top": 1278.0,
+                        "right": 1102.0,
+                        "bottom": 1312.0
+                    },
+                    "confidence": 0.62369794
+                }
+            ]
+        },
+        {
+            "text": "\"Hiduplah dalam keserasian,",
+            "box": {
+                "left": 232.0,
+                "top": 1273.0,
+                "right": 607.0,
+                "bottom": 1353.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 1273.0,
+                    "y": 964.0
+                },
+                {
+                    "x": 1310.0,
+                    "y": 593.0
+                },
+                {
+                    "x": 1353.0,
+                    "y": 597.0
+                },
+                {
+                    "x": 1316.0,
+                    "y": 968.0
+                }
+            ],
+            "angleDeg": -84.25864,
+            "recognizedLanguage": "ms",
+            "confidence": 0.8335937,
+            "words": [
+                {
+                    "text": "\"Hiduplah",
+                    "box": {
+                        "left": 233.0,
+                        "top": 1273.0,
+                        "right": 346.0,
+                        "bottom": 1325.0
+                    },
+                    "confidence": 0.74348956
+                },
+                {
+                    "text": "dalam",
+                    "box": {
+                        "left": 369.0,
+                        "top": 1300.0,
+                        "right": 442.0,
+                        "bottom": 1334.0
+                    },
+                    "confidence": 0.8773438
+                },
+                {
+                    "text": "keserasian,",
+                    "box": {
+                        "left": 468.0,
+                        "top": 1306.0,
+                        "right": 605.0,
+                        "bottom": 1344.0
+                    },
+                    "confidence": 0.887429
+                }
+            ]
+        },
+        {
+            "text": "sekehendak dalam sehati, bersatu,",
+            "box": {
+                "left": 630.0,
+                "top": 1310.0,
+                "right": 1095.0,
+                "bottom": 1344.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 1312.0,
+                    "y": 570.0
+                },
+                {
+                    "x": 1310.0,
+                    "y": 106.0
+                },
+                {
+                    "x": 1342.0,
+                    "y": 105.0
+                },
+                {
+                    "x": 1344.0,
+                    "y": 569.0
+                }
+            ],
+            "angleDeg": -90.1837,
+            "recognizedLanguage": "id",
+            "confidence": 0.8932292,
+            "words": [
+                {
+                    "text": "sekehendak",
+                    "box": {
+                        "left": 857.0,
+                        "top": 1311.0,
+                        "right": 1001.0,
+                        "bottom": 1343.0
+                    },
+                    "confidence": 0.9042969
+                },
+                {
+                    "text": "dalam",
+                    "box": {
+                        "left": 1025.0,
+                        "top": 1311.0,
+                        "right": 1095.0,
+                        "bottom": 1343.0
+                    },
+                    "confidence": 0.8695313
+                },
+                {
+                    "text": "sehati,",
+                    "box": {
+                        "left": 755.0,
+                        "top": 1312.0,
+                        "right": 831.0,
+                        "bottom": 1344.0
+                    },
+                    "confidence": 0.87165177
+                },
+                {
+                    "text": "bersatu,",
+                    "box": {
+                        "left": 630.0,
+                        "top": 1312.0,
+                        "right": 728.0,
+                        "bottom": 1344.0
+                    },
+                    "confidence": 0.91308594
+                }
+            ]
+        },
+        {
+            "text": "ikatan cinta kasih... Maka akan yang kuat...\" (Nas. menjadi",
+            "box": {
+                "left": 233.0,
+                "top": 1291.0,
+                "right": 1092.0,
+                "bottom": 1415.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 1291.0,
+                    "y": 963.0
+                },
+                {
+                    "x": 1352.0,
+                    "y": 108.0
+                },
+                {
+                    "x": 1415.0,
+                    "y": 112.0
+                },
+                {
+                    "x": 1354.0,
+                    "y": 967.0
+                }
+            ],
+            "angleDeg": -85.897675,
+            "recognizedLanguage": "ms",
+            "confidence": 0.8505668,
+            "words": [
+                {
+                    "text": "ikatan",
+                    "box": {
+                        "left": 234.0,
+                        "top": 1311.0,
+                        "right": 301.0,
+                        "bottom": 1348.0
+                    },
+                    "confidence": 0.8333333
+                },
+                {
+                    "text": "cinta",
+                    "box": {
+                        "left": 307.0,
+                        "top": 1327.0,
+                        "right": 362.0,
+                        "bottom": 1361.0
+                    },
+                    "confidence": 0.87890625
+                },
+                {
+                    "text": "kasih...",
+                    "box": {
+                        "left": 373.0,
+                        "top": 1336.0,
+                        "right": 470.0,
+                        "bottom": 1371.0
+                    },
+                    "confidence": 0.79296875
+                },
+                {
+                    "text": "Maka",
+                    "box": {
+                        "left": 487.0,
+                        "top": 1343.0,
+                        "right": 553.0,
+                        "bottom": 1375.0
+                    },
+                    "confidence": 0.921875
+                },
+                {
+                    "text": "akan",
+                    "box": {
+                        "left": 558.0,
+                        "top": 1349.0,
+                        "right": 611.0,
+                        "bottom": 1380.0
+                    },
+                    "confidence": 0.90234375
+                },
+                {
+                    "text": "yang",
+                    "box": {
+                        "left": 861.0,
+                        "top": 1351.0,
+                        "right": 914.0,
+                        "bottom": 1382.0
+                    },
+                    "confidence": 0.9345703
+                },
+                {
+                    "text": "kuat...\"",
+                    "box": {
+                        "left": 926.0,
+                        "top": 1350.0,
+                        "right": 1028.0,
+                        "bottom": 1382.0
+                    },
+                    "confidence": 0.7426758
+                },
+                {
+                    "text": "(Nas.",
+                    "box": {
+                        "left": 1033.0,
+                        "top": 1351.0,
+                        "right": 1091.0,
+                        "bottom": 1382.0
+                    },
+                    "confidence": 0.89140624
+                },
+                {
+                    "text": "menjadi",
+                    "box": {
+                        "left": 642.0,
+                        "top": 1352.0,
+                        "right": 731.0,
+                        "bottom": 1383.0
+                    },
+                    "confidence": 0.88671875
+                }
+            ]
+        },
+        {
+            "text": "benteng",
+            "box": {
+                "left": 745.0,
+                "top": 1350.0,
+                "right": 847.0,
+                "bottom": 1383.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 1351.0,
+                    "y": 455.0
+                },
+                {
+                    "x": 1350.0,
+                    "y": 354.0
+                },
+                {
+                    "x": 1382.0,
+                    "y": 353.0
+                },
+                {
+                    "x": 1383.0,
+                    "y": 454.0
+                }
+            ],
+            "angleDeg": -90.17437,
+            "recognizedLanguage": "ms",
+            "confidence": 0.92466515,
+            "words": [
+                {
+                    "text": "benteng",
+                    "box": {
+                        "left": 745.0,
+                        "top": 1350.0,
+                        "right": 847.0,
+                        "bottom": 1383.0
+                    },
+                    "confidence": 0.92466515
+                }
+            ]
+        },
+        {
+            "text": "[17]",
+            "box": {
+                "left": 581.0,
+                "top": 1428.0,
+                "right": 636.0,
+                "bottom": 1467.0
+            },
+            "cornerPoints": [
+                {
+                    "x": 1428.0,
+                    "y": 619.0
+                },
+                {
+                    "x": 1428.0,
+                    "y": 564.0
+                },
+                {
+                    "x": 1467.0,
+                    "y": 564.0
+                },
+                {
+                    "x": 1467.0,
+                    "y": 619.0
+                }
+            ],
+            "angleDeg": -90.0,
+            "recognizedLanguage": "und-Latn",
+            "confidence": 0.56640625,
+            "words": [
+                {
+                    "text": "[17]",
+                    "box": {
+                        "left": 581.0,
+                        "top": 1428.0,
+                        "right": 636.0,
+                        "bottom": 1467.0
+                    },
+                    "confidence": 0.56640625
+                }
+            ]
+        }
+    ]
+}

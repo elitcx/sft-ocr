@@ -726,4 +726,68 @@ class DocumentStructurerTest {
         assertTrue(allText.contains("bermacam-macam pekerjaan tangan dan pekerjaan"))
         assertTrue(allText.contains("belajar mengurus dirinya sendiri. Pada waktu itu"))
     }
+
+    @Test
+    fun `an open book's facing page is discarded, not read as a second column`() {
+        // Real corpus photo 20260731_231108.jpg: a bound handbook photographed open. The
+        // RIGHT page (items 3-4 of a values list, "Keberanian - Ketangguhan" and
+        // "Semangat Persatuan") is flat and in focus; the LEFT page curves steeply away
+        // toward the spine, its text rotated and foreshortened relative to the right -
+        // ML Kit still recognizes real, well-formed-looking (but wrong-page and partly
+        // garbled) fragments from it: "A00a", "Kepada karsma", "asih ganda dn". Before
+        // this fix, ColumnSegmenter's line-count/share checks alone saw two plausible
+        // columns (22 vs 43 lines, both well above the floors) and kept both, so
+        // ReadingOrderSorter interleaved the curved page's garbage into the real reading
+        // order - exactly the defect the user reported: a blind student hears a page of
+        // distorted text before the page they actually pointed the camera at.
+        val json = checkNotNull(javaClass.getResourceAsStream("/fixtures/real-facing-page-231108-raw.json"))
+            .bufferedReader().readText()
+        val raw = id.dotcode.braille.ocr.raw.RawTextResult.fromJson(json)
+
+        val doc = structurer.structure(raw, rotationDegrees = 90)
+
+        assertEquals(
+            1,
+            doc.columnCount,
+            "the intruding facing page must be dropped entirely, not kept as a second column",
+        )
+        val allText = doc.blocks.joinToString(" ") { it.text }
+        assertTrue(
+            allText.contains("Keberanian dan Ketangguhan memiliki pengertian nilai"),
+            "the real (dominant) page's content must survive intact: $allText",
+        )
+        assertTrue(
+            allText.contains("Persatuan memiliki pengertian nilai yang terwujud"),
+            "the real page's second section must also survive: $allText",
+        )
+        val facingPageFragments = setOf("A00a", "Kepada karsma", "asih ganda dn", "usi Uni Roma", "eniadi")
+        for (fragment in facingPageFragments) {
+            assertTrue(
+                fragment !in doc.blocks.map { it.text.trim() },
+                "the facing page's fragment \"$fragment\" must not survive as its own block",
+            )
+            assertTrue(
+                !allText.contains(fragment),
+                "the facing page's fragment \"$fragment\" must not survive anywhere in the reading order: $allText",
+            )
+        }
+    }
+
+    @Test
+    fun `the two-column worksheet golden fixture is unaffected by the facing-page check`() {
+        // Regression guard for the facing-page discard added above: a genuine two-column
+        // worksheet on ONE flat sheet must keep both columns, all six questions, in
+        // order. This fixture's lines carry no cornerPoints (a synthetic page, angleDeg
+        // and height both identical across columns), so the facing-page check's angle
+        // and height-ratio signals are both zero/one and must never trigger.
+        val json = checkNotNull(javaClass.getResourceAsStream("/fixtures/worksheet-two-column.json"))
+            .bufferedReader().readText()
+        val raw = id.dotcode.braille.ocr.raw.RawTextResult.fromJson(json)
+
+        val doc = structurer.structure(raw)
+
+        assertEquals(2, doc.columnCount, "a genuine two-column single sheet must keep both columns")
+        val markers = doc.blocks.filter { it.role == BlockRole.QUESTION }.mapNotNull { it.marker }
+        assertEquals(listOf("1.", "2.", "3.", "4.", "5.", "6."), markers)
+    }
 }

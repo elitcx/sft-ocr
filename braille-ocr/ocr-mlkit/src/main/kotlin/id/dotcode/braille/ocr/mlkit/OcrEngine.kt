@@ -11,6 +11,7 @@ import id.dotcode.braille.ocr.model.OcrResult
 import id.dotcode.braille.ocr.model.Timings
 import id.dotcode.braille.ocr.pipeline.DocumentStructurer
 import id.dotcode.braille.ocr.pipeline.StructuringConfig
+import id.dotcode.braille.ocr.raw.RawTextResult
 import java.io.ByteArrayInputStream
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.coroutines.resume
@@ -54,6 +55,35 @@ class OcrEngine(
         }
         val decoded = bitmap ?: return OcrResult.Failure(FailureReason.NoTextFound, "could not decode image")
         return recognize(decoded, rotation, decodeMs)
+    }
+
+    /**
+     * Debug/fixture-capture only: returns the recognizer's raw output (before
+     * [DocumentStructurer] ever sees it) together with the EXIF rotation, bypassing
+     * [CaptureQualityGate] entirely. Used to capture real on-device recognizer output as a
+     * JVM test fixture under `ocr-core/src/test/resources/fixtures/` via
+     * [RawTextResult.toJson] — see that class's KDoc. Not used by [recognize] or by any
+     * production path.
+     */
+    suspend fun recognizeRawDebug(uri: Uri): Pair<RawTextResult, Int>? {
+        if (closed.get()) return null
+        val bytes = runCatching {
+            context.contentResolver.openInputStream(uri)!!.use { it.readBytes() }
+        }.getOrNull() ?: return null
+        val rotation = runCatching {
+            ImagePreprocessor.rotationDegrees(ByteArrayInputStream(bytes))
+        }.getOrDefault(0)
+        val bitmap = runCatching { ImagePreprocessor.decodeSampled(bytes) }.getOrNull() ?: return null
+        val scaled = ImagePreprocessor.downscale(bitmap)
+        val input = InputImage.fromBitmap(scaled, rotation)
+        val outcome = suspendCancellableCoroutine { continuation ->
+            recognizer.process(input)
+                .addOnSuccessListener { if (continuation.isActive) continuation.resume(RecognitionOutcome.Success(it)) }
+                .addOnFailureListener { if (continuation.isActive) continuation.resume(RecognitionOutcome.Failed(it)) }
+                .addOnCanceledListener { if (continuation.isActive) continuation.resume(RecognitionOutcome.Cancelled) }
+        }
+        val text = (outcome as? RecognitionOutcome.Success)?.text ?: return null
+        return MlKitAdapter.toRawTextResult(text, scaled.width, scaled.height) to rotation
     }
 
     suspend fun recognize(bitmap: Bitmap, rotationDegrees: Int = 0): OcrResult =

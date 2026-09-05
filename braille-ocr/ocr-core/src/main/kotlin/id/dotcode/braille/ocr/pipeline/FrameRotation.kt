@@ -4,7 +4,6 @@ import id.dotcode.braille.ocr.geometry.BoxF
 import id.dotcode.braille.ocr.geometry.PointF
 import id.dotcode.braille.ocr.raw.RawLine
 import id.dotcode.braille.ocr.raw.RawTextResult
-import kotlin.math.atan2
 
 /**
  * Corrects a recognizer's EXIF-driven capture rotation before anything else in the
@@ -83,17 +82,6 @@ object FrameRotation {
             )
         }
         return RawTextResult(imageWidth = newWidth, imageHeight = newHeight, lines = rotatedLines)
-    }
-
-    /** The tilt of the line's top edge, matching how a recognizer derives its own angle. */
-    private fun angleFromCorners(corners: List<PointF>): Float? {
-        if (corners.size < 2) return null
-        val topLeft = corners[0]
-        val topRight = corners[1]
-        val dx = topRight.x - topLeft.x
-        val dy = topRight.y - topLeft.y
-        if (dx == 0f && dy == 0f) return null
-        return Math.toDegrees(atan2(dy.toDouble(), dx.toDouble())).toFloat()
     }
 
     private fun BoxF.corners(): List<PointF> =

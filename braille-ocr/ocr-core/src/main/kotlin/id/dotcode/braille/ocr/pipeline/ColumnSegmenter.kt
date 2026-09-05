@@ -1,6 +1,7 @@
 package id.dotcode.braille.ocr.pipeline
 
 import id.dotcode.braille.ocr.raw.RawLine
+import kotlin.math.abs
 
 /**
  * Stage 2. Finds column gutters with a vertical projection profile over line x-ranges.
@@ -18,6 +19,12 @@ import id.dotcode.braille.ocr.raw.RawLine
  * used to happen on essentially every real worksheet (they all have a full-width title).
  * Spanning lines are excluded from gutter detection and then assigned to the leftmost
  * column they overlap.
+ *
+ * It also tells apart two columns of one flat sheet from two DIFFERENT physical surfaces
+ * caught in the same frame - most commonly an open book's facing page, which reads as a
+ * second "column" full of real, well-formed (but wrong-page) text that the line-count and
+ * share checks above cannot catch. See [StructuringConfig.facingPageMaxAngleDiffDeg]'s
+ * KDoc for the geometric signal and the real-corpus evidence behind it.
  */
 class ColumnSegmenter(private val config: StructuringConfig) {
 
@@ -102,6 +109,37 @@ class ColumnSegmenter(private val config: StructuringConfig) {
                 }
             }
             return single
+        }
+
+        // Two populated, well-shared columns can still be two DIFFERENT physical surfaces
+        // caught in one frame - most commonly an open book's facing page - rather than two
+        // columns of the same flat sheet. Line count and share alone cannot tell these
+        // apart (both surfaces can easily carry plenty of text), so this checks the one
+        // thing a facing page cannot fake: its lines were photographed at a different
+        // angle than the intended page. See StructuringConfig.facingPageMaxAngleDiffDeg's
+        // KDoc for the real-corpus evidence behind this signal, and for why a matching
+        // text-scale (line height) signal was tried and dropped rather than required
+        // alongside it.
+        if (columnCount == 2) {
+            val angles = (0 until columnCount).map { c ->
+                val columnLines = columnBound.filterIndexed { i, _ -> boundAssignment[i] == c }
+                PageStats.median(columnLines.mapNotNull { angleFromCorners(it.cornerPoints) }) ?: 0f
+            }
+            // "Dominant" is decided by weight of text (line count), not position - the
+            // facing page is not always on the same side of the frame.
+            val dominant = if (counts[0] >= counts[1]) 0 else 1
+            val other = 1 - dominant
+            val angleDiff = abs(angles[dominant] - angles[other])
+            if (angleDiff > config.facingPageMaxAngleDiffDeg) {
+                val keptIndices = lines.indices.filter { i -> assignment[i] == dominant }
+                val keptLines = keptIndices.map { lines[it] }
+                if (keptLines.isNotEmpty() && keptLines.size < lines.size) {
+                    val columnIndexOut = MutableList(lines.size) { -1 }
+                    keptIndices.forEach { columnIndexOut[it] = 0 }
+                    val bounds = listOf(keptLines.minOf { it.box.left }..keptLines.maxOf { it.box.right })
+                    return ColumnAssignment(columnIndexOut, 1, bounds)
+                }
+            }
         }
 
         // Column extents come from the column-bound lines too, so a spanning title does

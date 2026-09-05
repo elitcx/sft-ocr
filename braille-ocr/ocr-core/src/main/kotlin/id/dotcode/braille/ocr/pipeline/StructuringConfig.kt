@@ -242,4 +242,44 @@ data class StructuringConfig(
      * for example a short-lined table cell that never reaches the margin at all.
      */
     val headingMaxLineCount: Int = 2,
+    /**
+     * The most two columns' median line angle may differ, in degrees, and still be treated
+     * by [ColumnSegmenter] as two columns of ONE photographed sheet rather than two
+     * different physical surfaces (an open book's facing page caught in the same frame).
+     * Measured from each line's own recognizer-reported quadrilateral (see
+     * [angleFromCorners]) AFTER [SkewEstimator.deskew] — which corrects the whole page by
+     * ONE shared angle, so a genuine second column of the same flat sheet returns to
+     * (near) zero along with the rest of the page, while a facing page that was tilted
+     * differently before capture keeps whatever residual angle that one shared correction
+     * did not remove.
+     *
+     * Evidence, real corpus photos run through the FULL pipeline (FrameRotation,
+     * SkewEstimator and MarginFragmentFilter all applied first, exactly as production
+     * does), dominant column vs the other: the ONE real photo whose two surfaces both
+     * survive to this check, `20260731_231108` (an open handbook; the facing page is
+     * curved and clearly wrong), measured 5.01 degrees apart. The synthetic two-column
+     * worksheet fixture (one flat sheet) measures 0. 4.0 sits with margin between those
+     * two points and, per this project's governing priority, leans toward the higher
+     * (more conservative) side: a borderline page keeps both columns rather than wrongly
+     * discarding real content.
+     *
+     * This evidence base is thin (one real positive case) because most other real
+     * facing-page photos in the corpus never reach this check at all: MarginFragmentFilter
+     * and [ColumnSegmenter]'s own line-count/share floor already reduce them to a single
+     * column beforehand (`20260731_230929`, `20260731_231146`), or produce three columns
+     * this check does not examine (`20260731_232336`, a same-page multi-column table).
+     * This check exists for the case those cannot catch: a facing page substantial enough
+     * to look like a legitimate second column.
+     *
+     * A matching text-SCALE signal (median line height ratio between the two columns) was
+     * tried and dropped: measured after the full pipeline, `20260731_231108`'s real
+     * facing-page case showed a height ratio of only 1.02 — indistinguishable from the
+     * synthetic same-sheet control's 1.00. [SkewEstimator.deskew] re-encloses each line's
+     * ROTATED corners (see its KDoc on why: an already-tight box, not the inflated AABB of
+     * a rotated AABB), and that re-enclosure evidently absorbs most of the scale
+     * difference a facing page's greater distance/angle would otherwise leave in the
+     * axis-aligned box height, unlike the angle signal, which survives the shared
+     * rotation intact. Angle alone is used.
+     */
+    val facingPageMaxAngleDiffDeg: Float = 4.0f,
 )
