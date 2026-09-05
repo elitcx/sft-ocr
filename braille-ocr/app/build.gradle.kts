@@ -21,8 +21,13 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
     sourceSets["main"].kotlin.srcDir("src/main/kotlin")
+    sourceSets["test"].kotlin.srcDir("src/test/kotlin")
     buildTypes {
         release { isMinifyEnabled = false }
+    }
+
+    testOptions {
+        unitTests.all { it.useJUnitPlatform() }
     }
 
     // The bundled ML Kit model ships native libraries for four ABIs, and a universal APK
@@ -58,4 +63,7 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.compose.ui.tooling.preview)
     debugImplementation(libs.compose.ui.tooling)
+    testImplementation(libs.junit.jupiter)
+    testImplementation(kotlin("test"))
+    testRuntimeOnly(libs.junit.platform.launcher)
 }

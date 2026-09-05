@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Grants share targets read access to exported documents and nothing else. The path must
+  stay in step with JsonExport.DIR; FileProvider refuses a URI outside what is declared here.
+-->
+<paths>
+    <cache-path name="export" path="export/" />
+</paths>
