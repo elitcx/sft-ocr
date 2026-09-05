@@ -33,7 +33,7 @@ class DocumentStructurer(private val config: StructuringConfig = StructuringConf
      * [FrameRotation]'s KDoc for the bug this separation fixes.
      */
     fun structure(raw: RawTextResult, timings: Timings = Timings(), rotationDegrees: Int = 0): OcrDocument {
-        val uprightRaw = FrameRotation.apply(raw, rotationDegrees)
+        val uprightRaw = RotationPlausibilityGuard.correct(FrameRotation.apply(raw, rotationDegrees), config)
         val usable = uprightRaw.copy(lines = uprightRaw.lines.filter { it.text.isNotBlank() })
         if (usable.lines.isEmpty()) {
             return OcrDocument(

@@ -628,4 +628,64 @@ class DocumentStructurerTest {
         assertTrue(questions[1].text.startsWith("Sebagai Sekolah Ursulin"))
         assertTrue(questions[2].text.startsWith("Sebagai bagian dari Ursulin"))
     }
+
+    @Test
+    fun `a real EXIF-3 (180-degree-tagged) capture whose true rotation is 90 degrees deskews to near-zero`() {
+        // Real corpus photo 20260731_230941.jpg (a curved book page). Its EXIF
+        // orientation tag says 3 (ROTATE_180, confirmed independently by reading the
+        // tag with a plain EXIF reader), but the raw physical pixels — visually
+        // inspected with EXIF ignored — show a page that must be rotated 90 degrees
+        // clockwise to read upright, not 180. FrameRotation applies the DECLARED
+        // rotation (180) correctly and its geometry was independently verified against
+        // this exact fixture; the remaining ~90-degree post-correction tilt is entirely
+        // explained by the source photo's own wrong EXIF metadata, not by a pipeline
+        // bug. Measured directly from this fixture: applying 180 (the declared value)
+        // leaves a median line angle of ~93.4 degrees; applying 90 MORE (net 270)
+        // leaves ~3.4 degrees; applying 90 LESS (net 90) leaves ~-175.3 degrees
+        // (upside down) — proof the correction is direction-sensitive, not just a tilt
+        // magnitude problem, and that RotationPlausibilityGuard must pick the signed
+        // angle closest to zero, not merely the smallest folded tilt.
+        val json = checkNotNull(javaClass.getResourceAsStream("/fixtures/real-rotated-230941-raw.json"))
+            .bufferedReader().readText()
+        val raw = id.dotcode.braille.ocr.raw.RawTextResult.fromJson(json)
+        assertEquals(1600, raw.imageWidth, "fixture precondition: captured in the raw, un-rotated frame")
+        assertEquals(1200, raw.imageHeight, "fixture precondition: captured in the raw, un-rotated frame")
+
+        val doc = structurer.structure(raw, rotationDegrees = 180)
+
+        assertTrue(
+            abs(doc.skewDeg) < 15f,
+            "a wrongly-tagged EXIF-180 photo whose true rotation is 90 degrees must not " +
+                "report ~90 degrees of residual skew after correction; got ${doc.skewDeg}",
+        )
+        // A few-pixel tolerance (rather than the +-1px used for the already-correctly-
+        // tagged 90-degree fixture) accounts for SkewEstimator's own small residual-tilt
+        // rotation on top of this guard's quarter-turn correction, over many real body
+        // lines spanning close to the page edge - the same rotate-about-center-inflates-
+        // near-edge-boxes effect documented on SkewEstimator itself, not new corruption.
+        for (block in doc.blocks) {
+            assertTrue(
+                block.box.left >= -5f && block.box.right <= doc.pageWidth + 5f,
+                "block box must lie within the declared page width: ${block.box} vs pageWidth=${doc.pageWidth}",
+            )
+            assertTrue(
+                block.box.top >= -5f && block.box.bottom <= doc.pageHeight + 5f,
+                "block box must lie within the declared page height: ${block.box} vs pageHeight=${doc.pageHeight}",
+            )
+        }
+
+        // Reading order and content must still be correct: the real paragraph text
+        // about Santa Angela's biography, in order, not scrambled or upside down.
+        val allText = doc.blocks.joinToString(" ") { it.text }
+        assertTrue(
+            allText.contains("Santa Angela lahir pada tanggal 21 Maret"),
+            "real paragraph text must survive the corrected rotation intact: $allText",
+        )
+        val firstPhrasePosition = allText.indexOf("Santa Angela lahir pada tanggal 21 Maret")
+        val lastPhrasePosition = allText.indexOf("Dalam penampakan itu, saudarinya menyampaikan")
+        assertTrue(
+            firstPhrasePosition >= 0 && lastPhrasePosition > firstPhrasePosition,
+            "paragraphs must stay in the original top-to-bottom reading order: $allText",
+        )
+    }
 }

@@ -7,6 +7,19 @@ package id.dotcode.braille.ocr.pipeline
 data class StructuringConfig(
     /** Below this many degrees, skew correction is skipped as noise. */
     val minSkewDeg: Float = 0.5f,
+    /**
+     * A page's median line angle beyond this many degrees, measured right after the
+     * EXIF-declared rotation is applied, is not genuine camera tilt — no handheld
+     * worksheet or book-page photo tilts anywhere near this far — and instead means the
+     * EXIF orientation tag itself was wrong by a quarter turn. See
+     * [RotationPlausibilityGuard]. Evidence: 5 real corpus photos tagged EXIF
+     * orientation 3 (180 degrees) measured ~83-93 degrees of residual angle after that
+     * declared rotation was applied; their true physical rotation, confirmed by
+     * inspecting the raw pixels, was 90 degrees. 45 sits well below that evidenced
+     * failure range and well above [minSkewDeg]'s few-degrees noise floor and any
+     * plausible genuine camera tilt.
+     */
+    val maxPlausibleSkewDeg: Float = 45f,
     /** A gutter wider than this many median character widths splits a column. */
     val columnGutterFactor: Float = 3.0f,
     /**
