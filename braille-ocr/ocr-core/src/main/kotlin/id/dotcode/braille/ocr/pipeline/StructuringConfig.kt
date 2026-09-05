@@ -282,4 +282,44 @@ data class StructuringConfig(
      * rotation intact. Angle alone is used.
      */
     val facingPageMaxAngleDiffDeg: Float = 4.0f,
+    /**
+     * How far a single line's own post-deskew corner angle (see [angleFromCorners]) may
+     * disagree with the page's dominant (median) line angle, in degrees, before
+     * [FoldedPageAngleFilter] drops it as text from a different physical surface - a
+     * folded or curved open-book facing page whose lines scatter across many angles
+     * rather than forming one coherent second column. See [FoldedPageAngleFilter]'s KDoc
+     * for why this is a distinct, earlier mechanism from [facingPageMaxAngleDiffDeg]
+     * above, and for the full reconciliation between the two.
+     *
+     * Evidence, both measured post-deskew (the same signal [ColumnSegmenter]'s own
+     * facing-page check uses):
+     * - `real-worksheet-exercises.json`, a real single page with no facing page at all,
+     *   measures a maximum genuine per-line deviation from its own median angle of ~13.5
+     *   degrees - the widest legitimate single-page spread found in the corpus so far, and
+     *   the floor this threshold must clear without cutting into it.
+     * - `real-facing-page-231108-raw.json`'s scattered facing-page outliers reach 19.95,
+     *   20.45, 22.85, 23.76 and 27.27 degrees away from the dominant page's median.
+     *
+     * 20 sits just above the worksheet-exercises ceiling - the higher, more conservative
+     * side, per this project's governing priority - while still catching the widest
+     * folded-page outliers. It is deliberately not tuned to catch every scattered
+     * fragment in that one fixture; the residual is left to [facingPageMaxAngleDiffDeg]'s
+     * complementary column-based check.
+     */
+    val foldedPageAngleToleranceDeg: Float = 20.0f,
+    /**
+     * [FoldedPageAngleFilter] must never discard more than this fraction of a page's
+     * lines. If the "dominant" angle cluster it finds retains fewer lines than this, that
+     * is a sign the clustering itself failed - for example a genuinely, uniformly
+     * skewed real photo unlike anything in the corpus this threshold was tuned against -
+     * rather than genuine evidence of an intruding facing page. The safer failure, per
+     * this project's governing priority, is to keep every line rather than risk gutting
+     * the document. 0.5 (never discard a majority of the page) is a wide, deliberately
+     * conservative floor: on the one real fixture with a genuine scattered intruder
+     * (`real-facing-page-231108-raw.json`), the filter retains ~94% of lines - far above
+     * this floor - so 0.5 only ever engages as a backstop against a future, more
+     * aggressive tolerance or an unanticipated real photo, never in the corpus evidence
+     * gathered so far.
+     */
+    val minFoldedPageRetainedLineShareFraction: Float = 0.5f,
 )

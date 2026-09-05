@@ -57,7 +57,11 @@ class DocumentStructurer(private val config: StructuringConfig = StructuringConf
         // including the fragments this drops, matching the existing precedent below
         // where ColumnSegmenter's own line drops likewise do not trigger a stats
         // recompute.
-        val lines = MarginFragmentFilter.filter(allLines, stats, config)
+        val marginFiltered = MarginFragmentFilter.filter(allLines, stats, config)
+        // Drop text from a folded/curved facing page BEFORE column detection ever sees
+        // it - see FoldedPageAngleFilter's KDoc for why this must run earlier than, and
+        // separately from, ColumnSegmenter's own facing-page check.
+        val lines = FoldedPageAngleFilter.filter(marginFiltered, config)
         val columns = columnSegmenter.segment(lines, stats, deskewed.result.imageWidth)
 
         // A -1 entry marks a line ColumnSegmenter identified as clutter from outside the

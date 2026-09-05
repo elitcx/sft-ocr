@@ -414,6 +414,52 @@ class DocumentStructurerTest {
     }
 
     @Test
+    fun `a real curved single page loses no lines to the folded-page angle filter`() {
+        // OVER-CORRECTION CANARY for FoldedPageAngleFilter. real-rotated-231023-raw.json
+        // is a single genuinely-curved book page with NO facing page in frame - its
+        // per-line angles spread naturally as the paper curves, which is exactly the
+        // shape of noise this filter must NOT mistake for an intruding second surface.
+        // Every one of its 18 real (non-blank) lines must survive into the document.
+        val json = checkNotNull(javaClass.getResourceAsStream("/fixtures/real-rotated-231023-raw.json"))
+            .bufferedReader().readText()
+        val raw = id.dotcode.braille.ocr.raw.RawTextResult.fromJson(json)
+        val expectedTexts = raw.lines.map { it.text }.filter { it.isNotBlank() }
+        assertEquals(18, expectedTexts.size, "fixture precondition")
+
+        val doc = structurer.structure(raw, rotationDegrees = 90)
+
+        // 18 raw lines come out as 16 output TextLines even with FoldedPageAngleFilter
+        // disabled entirely (verified directly against this fixture): RowFragmentJoiner
+        // legitimately fuses 2 crease-split row pairs into 1 printed row each, which is
+        // NOT a drop - the content of both fragments survives, concatenated. This test
+        // pins that pre-existing baseline so a REAL regression (this filter dropping a
+        // line outright) is distinguishable from that unrelated, already-correct join
+        // behaviour.
+        val totalOutputLines = doc.blocks.sumOf { it.lines.size }
+        assertEquals(
+            16,
+            totalOutputLines,
+            "expected only the 2 pre-existing RowFragmentJoiner crease-joins to reduce the " +
+                "line count (18 -> 16); a different count means the folded-page angle filter " +
+                "is now dropping (or no longer dropping) something",
+        )
+
+        // Word-level content check: every word ML Kit recognized on this real curved page
+        // must survive somewhere in the output, whether as its own line or fused into a
+        // crease-joined one.
+        val allOutputWords = doc.blocks.flatMap { it.lines }.joinToString(" ") { it.text }.split(Regex("\\s+")).toSet()
+        for (text in expectedTexts) {
+            for (word in text.split(Regex("\\s+")).filter { it.length > 2 }) {
+                assertTrue(
+                    word in allOutputWords,
+                    "word \"$word\" from curved single-page line \"$text\" must not be dropped " +
+                        "as a false facing-page match",
+                )
+            }
+        }
+    }
+
+    @Test
     fun `mean confidence is null when no line reports confidence`() {
         val doc = structurer.structure(
             page(
