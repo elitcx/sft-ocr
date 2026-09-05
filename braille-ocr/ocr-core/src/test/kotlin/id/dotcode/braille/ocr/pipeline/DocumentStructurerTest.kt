@@ -391,22 +391,25 @@ class DocumentStructurerTest {
             "a body paragraph was misclassified: $bodyRoles",
         )
 
-        // KNOWN DISCREPANCY (see docs/superpowers/plans/2026-08-30-test-hardening-report.md):
-        // block 0, "Academic Reading and Comprehension Worksheet", is the worksheet's
-        // own header line - a sighted reader would call it a title/header, never a
-        // caption. It is genuinely SHORTER (height ~14) than the surrounding essay body
-        // text (height ~20) on this fixture, an unusual but real layout, and
-        // RoleClassifier's CAPTION rule (short single line, stops well short of the
-        // column's right margin) has no exemption for a block sitting in the page's own
-        // top band - only the SYMMETRIC case (relative height ABOVE headingHeightRatio
-        // AND inTopBand) is special-cased to TITLE. This is pinned as a known bug
-        // rather than silently asserted away or silently "fixed" outside the five
-        // findings this task scoped; see the report for the recommended follow-up.
+        // FIXED (see docs/superpowers/plans/2026-08-30-caption-fix-report.md): block 0,
+        // "Academic Reading and Comprehension Worksheet", is the worksheet's own header
+        // line - a sighted reader would call it a title/header, never a caption. It is
+        // genuinely SHORTER (height ~14) than the surrounding essay body text (height
+        // ~20) on this fixture, an unusual but real layout, driven by a smaller print
+        // face plus perspective shrinkage at the extreme top of an angled photo.
+        // RoleClassifier's CAPTION rule now exempts any block in the page's own top
+        // band, on the reasoning that a caption is subordinate text belonging to
+        // something ABOVE it - implausible at the very top of the page, where there is
+        // nothing above. PARAGRAPH is the honest fallback here rather than TITLE: this
+        // line's height alone does not distinguish a true title from a course code or
+        // page header that might sit in the same top band on a different page, and
+        // guessing TITLE would repeat the same false-confidence error in the other
+        // direction.
         assertEquals(
-            BlockRole.CAPTION,
+            BlockRole.PARAGRAPH,
             doc.blocks[0].role,
-            "if this now fails, RoleClassifier's top-of-page handling changed - update " +
-                "the report rather than this assertion",
+            "if this now fails, RoleClassifier's top-of-page handling changed again - " +
+                "update the report rather than this assertion",
         )
     }
 

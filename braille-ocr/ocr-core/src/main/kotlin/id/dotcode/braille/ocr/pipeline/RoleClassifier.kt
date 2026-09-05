@@ -66,7 +66,7 @@ class RoleClassifier(private val config: StructuringConfig) {
             relativeHeight >= config.titleHeightRatio -> BlockRole.TITLE
             relativeHeight >= config.headingHeightRatio && inTopBand -> BlockRole.TITLE
             relativeHeight >= config.headingHeightRatio -> BlockRole.HEADING
-            isCaption(group, relativeHeight, columnRightMargins, stats) -> BlockRole.CAPTION
+            isCaption(group, relativeHeight, columnRightMargins, stats, inTopBand) -> BlockRole.CAPTION
             else -> BlockRole.PARAGRAPH
         }
     }
@@ -92,17 +92,25 @@ class RoleClassifier(private val config: StructuringConfig) {
     }
 
     /**
-     * A CAPTION requires all three of: shorter than the local baseline, a single line,
-     * and stopping well short of its column's right margin. A short block that still
-     * reaches the margin, or that wraps, is body text that merely happens to be brief -
-     * calling it a caption would be a false, misleading label.
+     * A CAPTION requires all four of: shorter than the local baseline, a single line,
+     * stopping well short of its column's right margin, and NOT sitting in the page's
+     * own top band. A short block that still reaches the margin, or that wraps, is body
+     * text that merely happens to be brief - calling it a caption would be a false,
+     * misleading label. The top-band exemption exists because a caption is subordinate
+     * text that belongs to something ABOVE it; at the very top of the page there is
+     * nothing for it to be subordinate to, so CAPTION there is never plausible - the
+     * same [StructuringConfig.topBandFraction] the TITLE branch above already uses for
+     * the mirror-image reasoning (a large block up there is promoted to TITLE rather
+     * than HEADING).
      */
     private fun isCaption(
         group: LineGroup,
         relativeHeight: Float,
         columnRightMargins: Map<Int, Float>,
         stats: PageStats,
+        inTopBand: Boolean,
     ): Boolean {
+        if (inTopBand) return false
         if (relativeHeight > config.captionHeightRatio) return false
         if (group.lines.size != 1) return false
         val margin = columnRightMargins[group.columnIndex] ?: return false

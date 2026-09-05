@@ -266,4 +266,44 @@ class RoleClassifierTest {
         )
         assertEquals(BlockRole.CAPTION, classify(lines).last())
     }
+
+    // --- The bug behind the golden fixture's block 0: a document TITLE, set in a
+    // smaller face than the body and further shrunk by perspective at the extreme top
+    // of an angled photo, measured shorter than the body text below it and was
+    // classified CAPTION - the single most misleading label available for a document's
+    // own title, since a caption tells the reader "this is subordinate to something
+    // else" when the truth is the opposite. A caption is inherently subordinate text
+    // that belongs to something ABOVE it, so it is implausible at the very top of the
+    // page, where nothing is above it. See docs/superpowers/plans/2026-08-30-caption-fix-report.md.
+
+    @Test
+    fun `a short block in the top band is not a caption`() {
+        // Block 0's real geometry from the golden fixture (real-worksheet-reading.json):
+        // box left 400.85, top 130.66, right 728.71, bottom 144.67 (height ~14.0), on a
+        // 1200x1600 page, sitting above taller body lines (height 18-24). Before the
+        // fix this classified CAPTION purely because it is short and stops well short
+        // of the column's right margin - both true, but irrelevant at the top of a page
+        // with nothing for it to caption.
+        val lines = listOf(
+            line("Academic Reading and Comprehension Worksheet", 400.85f, 130.66f, 327.86f, 14.01f),
+            line("Should the Government Provide Free Nutritious Meals for Students", 200f, 300f, 800f, 20f),
+            line("The provision of free nutritious meals for school students has become", 200f, 400f, 800f, 22f),
+            line("an important topic of public discussion in many countries around", 200f, 440f, 800f, 24f),
+            line("the world today for a variety of interconnected reasons", 200f, 480f, 800f, 18f),
+        )
+        assertEquals(BlockRole.PARAGRAPH, classify(lines, pageHeight = 1600).first())
+    }
+
+    @Test
+    fun `a genuinely small block in the middle of the page is still a caption after the top-band fix`() {
+        // Proves the top-band exemption did not simply delete caption detection: the
+        // same short, single-line, margin-shortfall shape as above, but positioned well
+        // clear of the top band, must still classify CAPTION.
+        val lines = listOf(
+            line("Paragraf normal pertama di sini saja", 100f, 700f, 700f, 30f),
+            line("Paragraf normal kedua di sini saja juga", 100f, 850f, 700f, 30f),
+            line("Gambar 1 rantai makanan", 100f, 1000f, 400f, 24f),
+        )
+        assertEquals(BlockRole.CAPTION, classify(lines, pageHeight = 2000).last())
+    }
 }
