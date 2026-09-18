@@ -1,0 +1,10 @@
+{
+    "schemaVersion": 1,
+    "sourceImageFileName": "IMG-20260820-WA0001.jpg",
+    "sourceImageSha256": "11c314f118ead62ebb4434e8ba1ba51dbf99f35df552c1f92f4e28f299be0f09",
+    "pipelineVersion": "2026.09.17-1",
+    "capturedAtEpochMs": 1789660800000,
+    "transcriptionSource": "AI_TRANSCRIBED",
+    "blockRoleLabels": [],
+    "notes": "HOLD-OUT page: never used to tune the pipeline, only to check that a change also helps pages it was not tuned on. Transcribed 2026-09-17 by an AI model reading the photo directly; not yet checked by a person."
+}

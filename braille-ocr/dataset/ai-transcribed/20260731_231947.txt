@@ -1,0 +1,11 @@
+PERPUSTAKAAN
+A. Anggota Perputakaan
+1. Semua murid SMA Regina Pacis adalah anggota perpustakaan.
+2. Semua murid SMA Regina Pacis bisa mengakses Digital Library SMA Regina Pacis
+3. Setiap anggota perpustakaan harus memiliki kartu pelajar untuk bisa meminjam koleksi perpustakaan
+B. Tata Cara Peminjaman dan Pengembalian Buku
+1. Setiap meminjam/mengembalikan buku, kartu pelajar harus dibawa.
+2. Buku yang dikehendaki dapat dipilih dari daftar katalog dan semua peminjam buku baik yang dibawa pulang/dibaca di perpustakaan harus penggunakan kartu pelajar.
+3. Buku referensi seperti, Ensiklopedi, Kamus, Auto Biografi, buku langka serta buku-buku mahal tidak boleh dibawa pulang, hanya boleh dibaca di perpustakaan.
+4. Setiap anggota hanya diperbolehkan meminjam maksimal 2 (dua) buku untuk 1 minggu.
+5. Lama peminjaman maksimal 1 minggu. bila melebihi waktu yang telah ditentukan dikenakan denda sebesar Rp.500,- per hari per buku

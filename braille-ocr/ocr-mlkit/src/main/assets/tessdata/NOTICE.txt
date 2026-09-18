@@ -1,0 +1,2 @@
+ind.traineddata and eng.traineddata are the unmodified "fast" LSTM models from
+https://github.com/tesseract-ocr/tessdata_fast, licensed under the Apache License 2.0.

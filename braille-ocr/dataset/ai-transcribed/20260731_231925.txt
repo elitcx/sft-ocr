@@ -1,0 +1,24 @@
+SARANA PRASARANA SEKOLAH
+No RUANG KANTOR No RUANG PENUNJANG
+1 Ruang Kepala Sekolah 1 Auditorium
+2 Ruang Wakasek 2 Smart Classroom
+3 Ruang Guru 3 Meeting Room
+4 Ruang Guru BK 4 Ursula Hall
+5 Ruang Tata Usaha 5 Ruang TPPK
+6 Ruang Tata Usaha Lobby 6 Ruang UKS
+7 Ruang Perpustakaan 7 Ruang OSIS
+8 Workstation 8 Ruang Band
+9 Ruang Karawitan
+No LABORATORIUM 10 Ruang Kolintang
+1 Laboratorium Fisika 11 Lapangan Basket
+2 Laboratorium Biologi 12 Lapangan Futsal
+3 Laboratorium Kimia 13 Jogging Track
+4 Laboratorium Komputer 14 Lapangan Volley
+15 Bak Lompat Jauh
+16 Ruang Arsip
+17 Gudang Peralatan
+18 Ruang Fotocopy
+19 Gudang Rumah Tangga
+20 Gudang Pramuka
+21 Gudang Buku
+22 Toilet Putra dan Putri

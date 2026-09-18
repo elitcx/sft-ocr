@@ -1,0 +1,10 @@
+{
+    "schemaVersion": 1,
+    "sourceImageFileName": "20260731_231608.jpg",
+    "sourceImageSha256": "d5f2288887d8a452b4e2d54e037ccc28ff25fd5eb25751c51eafb1063cec1b55",
+    "pipelineVersion": "2026.09.17-1",
+    "capturedAtEpochMs": 1789660800000,
+    "transcriptionSource": "AI_TRANSCRIBED",
+    "blockRoleLabels": [],
+    "notes": "HOLD-OUT page: never used to tune the pipeline, only to check that a change also helps pages it was not tuned on. Transcribed 2026-09-17 by an AI model reading the photo directly; not yet checked by a person."
+}

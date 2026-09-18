@@ -84,6 +84,23 @@ object FrameRotation {
         return RawTextResult(imageWidth = newWidth, imageHeight = newHeight, lines = rotatedLines)
     }
 
+    /**
+     * The inverse of [apply] for a single box: takes a box in the upright frame (e.g. from a
+     * second recognizer that was handed an already-rotated bitmap) back to the frame of
+     * size [originalWidth] x [originalHeight] the primary recognizer reported in.
+     */
+    fun unturnBox(box: BoxF, rotationDegrees: Int, originalWidth: Int, originalHeight: Int): BoxF {
+        val normalized = ((rotationDegrees % 360) + 360) % 360
+        if (normalized == 0) return box
+        require(normalized % 90 == 0) { "rotationDegrees must be a multiple of 90, was $rotationDegrees" }
+        fun unturn(p: PointF): PointF = when (normalized) {
+            90 -> PointF(p.y, originalHeight - p.x)
+            180 -> PointF(originalWidth - p.x, originalHeight - p.y)
+            else -> PointF(originalWidth - p.y, p.x) // 270
+        }
+        return enclosing(box.corners().map(::unturn))
+    }
+
     private fun BoxF.corners(): List<PointF> =
         listOf(PointF(left, top), PointF(right, top), PointF(right, bottom), PointF(left, bottom))
 

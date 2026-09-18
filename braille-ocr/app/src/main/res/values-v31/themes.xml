@@ -1,0 +1,7 @@
+<resources>
+    <style name="Theme.BrailleOcr" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/paper_50</item>
+        <item name="android:windowSplashScreenBackground">@color/paper_50</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@color/ink_900</item>
+    </style>
+</resources>

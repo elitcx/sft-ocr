@@ -48,4 +48,11 @@ data class RawWord(
     val text: String,
     val box: BoxF,
     val confidence: Float? = null,
+    /**
+     * What a second, independent recognizer read at this word's position (space-joined
+     * if it saw several words there), attached by
+     * [id.dotcode.braille.ocr.spelling.ReadingVoter]. Null when there is no second reading.
+     */
+    val secondReading: String? = null,
+    val secondConfidence: Float? = null,
 )

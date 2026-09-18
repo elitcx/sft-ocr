@@ -33,6 +33,14 @@ data class StructuringConfig(
      * check below (it sits well inside the body's margin, not past it).
      */
     val marginFragmentMaxWidthFactor: Float = 8.0f,
+    /** See [FrameEdgeFragmentFilter]: how close to the frame's side a line must reach. */
+    val frameEdgeMarginFraction: Float = 0.015f,
+    /** See [FrameEdgeFragmentFilter]: edge-touching lines at least this wide are kept. */
+    val frameEdgeMaxWidthFraction: Float = 0.35f,
+    /** See [FrameEdgeFragmentFilter]: this many cut-off lines on one side mark a facing page. */
+    val frameEdgeMinStack: Int = 3,
+    /** See [FrameEdgeFragmentFilter]: a lone cut-off line is dropped only below this confidence. */
+    val frameEdgeLoneMaxConfidence: Float = 0.7f,
     /**
      * A candidate margin fragment must sit at least this many median character widths
      * to the right of the rightmost edge any non-narrow ("body") line reaches anywhere

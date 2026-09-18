@@ -29,6 +29,7 @@ dependencies {
     api(project(":ocr-core"))
     api(libs.kotlinx.coroutines.android)
     implementation(libs.mlkit.text.recognition)
+    implementation(libs.tesseract4android)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.exifinterface)
     testImplementation(libs.junit.jupiter)

@@ -8,6 +8,10 @@ package id.dotcode.braille.ocr.model
 enum class FailureReason { TooBlurry, TooDark, NoTextFound, ModelUnavailable, Cancelled }
 
 sealed interface OcrResult {
-    data class Success(val document: OcrDocument) : OcrResult
+    /**
+     * [uncorrected] is the same page before any spelling correction, or null when nothing
+     * was corrected - kept so a reader can compare and a training sample stays raw.
+     */
+    data class Success(val document: OcrDocument, val uncorrected: OcrDocument? = null) : OcrResult
     data class Failure(val reason: FailureReason, val detail: String? = null) : OcrResult
 }

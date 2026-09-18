@@ -13,8 +13,10 @@ package id.dotcode.braille.ocr.pipeline
  * Bump [CURRENT] whenever [StructuringConfig]'s defaults change, a structuring stage's
  * algorithm changes, or [id.dotcode.braille.ocr.model.BlockRole] gains/loses a case — anything
  * that would make an old sample's stored output stop matching what the pipeline produces today.
- * A cosmetic refactor with identical behavior does not need a bump.
+ * The second recognizer and the spelling pass
+ * (`id.dotcode.braille.ocr.spelling`), including their bundled data, count too: they
+ * rewrite the text a sample stores. A cosmetic refactor with identical behavior does not need a bump.
  */
 object PipelineVersion {
-    const val CURRENT: String = "2026.09.05-1"
+    const val CURRENT: String = "2026.09.17-1"
 }

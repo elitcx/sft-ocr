@@ -85,26 +85,39 @@ class OcrAccuracyHarnessTest {
         if (pairs.isEmpty()) Log.w(tag, "SKIPPED: $skipMessage")
         assumeTrue(skipMessage, pairs.isNotEmpty())
 
+        // Every page is read twice - recognizer only, then with the offline correction layer
+        // (second recognizer + dictionary) - so the layer's effect is measured, not assumed.
         val engine = OcrEngine(context)
         val expectedAll = StringBuilder()
+        val rawAll = StringBuilder()
         val actualAll = StringBuilder()
         var measured = 0
         try {
+            // An emulator is far slower than a phone; measure what the votes are worth
+            // without the phone's time limit cutting Tesseract off.
+            val corrected = OcrEngine.CorrectionSettings(enabled = true, secondReadGraceMs = 300_000L)
+            engine.correctionSettings = corrected
+            engine.warmUp()
             for ((image, transcript) in pairs) {
                 val expected = transcript.readText()
+
+                engine.correctionSettings = OcrEngine.CorrectionSettings(enabled = false)
+                val raw = flatten(image, engine.recognize(Uri.fromFile(image)))
+                engine.correctionSettings = corrected
                 val result = engine.recognize(Uri.fromFile(image))
-                val actual = when (result) {
-                    is OcrResult.Success -> DocumentFlattener.flatten(result.document)
-                    is OcrResult.Failure -> {
-                        // A rejected capture is a real accuracy outcome, not an excuse to
-                        // drop the sample: it scores as zero recognized text.
-                        Log.w(tag, "${image.name}: recognition failed reason=${result.reason} detail=${result.detail}")
-                        ""
+                val actual = flatten(image, result)
+
+                logReport("${image.name} [recognizer only]", ErrorRate.compare(expected, raw))
+                logReport("${image.name} [corrected]", ErrorRate.compare(expected, actual))
+                if (result is OcrResult.Success) {
+                    val t = result.document.timings
+                    Log.i(tag, "${image.name}: ocr=${t.recognizeMs}ms tesseract=${t.secondReadMs}ms (${t.secondReadWords} words) correct=${t.correctMs}ms total=${t.totalMs}ms")
+                    result.document.blocks.flatMap { it.corrections }.forEach {
+                        Log.i(tag, "${image.name}: corrected '${it.original}' -> '${it.corrected}'")
                     }
                 }
-                val report = ErrorRate.compare(expected, actual)
-                logReport(image.name, report)
                 expectedAll.append(expected).append('\n')
+                rawAll.append(raw).append('\n')
                 actualAll.append(actual).append('\n')
                 measured++
             }
@@ -114,7 +127,8 @@ class OcrAccuracyHarnessTest {
 
         val aggregate = ErrorRate.compare(expectedAll.toString(), actualAll.toString())
         Log.i(tag, "=== aggregate over $measured image(s) in $dirPath ===")
-        logReport("AGGREGATE", aggregate)
+        logReport("AGGREGATE [recognizer only]", ErrorRate.compare(expectedAll.toString(), rawAll.toString()))
+        logReport("AGGREGATE [corrected]", aggregate)
 
         assertTrue(
             aggregate.characterAccuracy > MIN_CHARACTER_ACCURACY,
@@ -122,6 +136,16 @@ class OcrAccuracyHarnessTest {
                 "$measured image(s) is at or below the required $MIN_CHARACTER_ACCURACY " +
                 "(CER ${"%.4f".format(aggregate.cer)}, WER ${"%.4f".format(aggregate.wer)})",
         )
+    }
+
+    private fun flatten(image: File, result: OcrResult): String = when (result) {
+        is OcrResult.Success -> DocumentFlattener.flatten(result.document)
+        is OcrResult.Failure -> {
+            // A rejected capture is a real accuracy outcome, not an excuse to
+            // drop the sample: it scores as zero recognized text.
+            Log.w(tag, "${image.name}: recognition failed reason=${result.reason} detail=${result.detail}")
+            ""
+        }
     }
 
     private fun logReport(label: String, report: AccuracyReport) {
@@ -135,7 +159,7 @@ class OcrAccuracyHarnessTest {
     }
 
     /**
-     * Copies the repo-committed seed dataset out of the test APK's assets into the cache dir
+     * Copies the repo-committed seed dataset out of the test APK's assets into app storage
      * (assets are a `Context.assets` stream, not a `File`, so the rest of this harness — and
      * `findPairs` — can't address them directly) and returns image/transcript pairs from it.
      * Missing or empty `assets/$ASSET_DIR` is a normal state (no seed committed yet, or an
@@ -149,7 +173,9 @@ class OcrAccuracyHarnessTest {
             Log.w(tag, "no bundled seed assets under $ASSET_DIR: ${e.message}")
             emptyList()
         }
-        val outDir = File(context.cacheDir, "ground-truth-seed").apply { mkdirs() }
+        // filesDir, not cacheDir: on a nearly full device the system evicts cache files
+        // mid-run, which once deleted a transcript between two pages.
+        val outDir = File(context.filesDir, "ground-truth-seed").apply { mkdirs() }
         return names
             .filter { it.substringAfterLast('.', "").lowercase() in IMAGE_EXTENSIONS }
             .sorted()

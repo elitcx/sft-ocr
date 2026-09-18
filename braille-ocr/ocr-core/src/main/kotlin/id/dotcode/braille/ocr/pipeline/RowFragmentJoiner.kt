@@ -109,6 +109,7 @@ class RowFragmentJoiner(private val config: StructuringConfig) {
         val box = union.copy(top = centerY - typicalHeight / 2f, bottom = centerY + typicalHeight / 2f)
         return a.copy(
             text = "${a.text} ${b.text}",
+            words = a.words + b.words,
             box = box,
             // Dropped rather than carried through: the union box no longer corresponds
             // to either fragment's tilted quadrilateral, and there is no well-defined

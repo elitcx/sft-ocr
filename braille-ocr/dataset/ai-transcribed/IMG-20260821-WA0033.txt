@@ -1,0 +1,6 @@
+Telaah Soal
+1. Diana bersepeda dengan kecepatan tetap 18 km/jam ke arah timur selama 100 s, kemudian berbelok ke utara dan bergerak dengan kecepatan 36 km/jam selama 60 s. Setelah itu, ia belok ke arah timur dengan kecepatan 18 km/jam selama 60 s. Berdasarkan informasi tersebut, beri tanda centang (✓) pada kolom Benar atau Salah untuk pernyataan berikut.
+Pernyataan Benar Salah
+Besar perpindahan Diana adalah 1.000 m.
+Besar kecepatan rata-rata gerak sepeda Diana adalah 1/2 m/s.
+Jarak yang ditempuh Diana adalah 1.400 m.

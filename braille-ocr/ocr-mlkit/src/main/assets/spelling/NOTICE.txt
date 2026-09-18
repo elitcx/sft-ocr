@@ -1,0 +1,9 @@
+id.txt, en.txt, id-known.txt and en-known.txt are derived from FrequencyWords by
+Hermit Dave (https://github.com/hermitdave/FrequencyWords), built from OpenSubtitles 2018
+data, licensed under CC-BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/).
+Changes: filtered to plain a-z words of two or more letters; the -known files keep only
+words beyond the 50k lists above a minimum count. Regenerate with
+tools/build_spelling_dictionary.py.
+
+id-school.txt is a short hand-written list of Indonesian school and curriculum terms that
+the corpus lists above miss or rank too low; it is only used to recognize real words.

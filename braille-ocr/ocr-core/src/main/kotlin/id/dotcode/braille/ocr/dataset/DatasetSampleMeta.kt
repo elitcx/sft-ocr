@@ -11,9 +11,15 @@ import kotlinx.serialization.json.Json
  * [RAW_OCR] until a human has read it against the photo and either fixed it or confirmed it,
  * at which point (and only then) it becomes [HUMAN_CORRECTED]. Nothing in this codebase may
  * treat [RAW_OCR] text as ground truth — see `docs/dataset-schema.md`.
+ *
+ * [AI_TRANSCRIBED] sits in between: an AI model read the photo itself (never the pipeline's
+ * output, so it does not just measure the pipeline agreeing with itself) and typed what it
+ * saw. It is independent evidence, good enough to compare pipeline changes against each
+ * other, but it is not verified: accuracy claims need [HUMAN_CORRECTED], and a person
+ * promotes a sample by checking it against the photo.
  */
 @Serializable
-enum class TranscriptionSource { RAW_OCR, HUMAN_CORRECTED }
+enum class TranscriptionSource { RAW_OCR, AI_TRANSCRIBED, HUMAN_CORRECTED }
 
 /**
  * A per-block role, kept alongside a sample as optional weak-supervision for a future block

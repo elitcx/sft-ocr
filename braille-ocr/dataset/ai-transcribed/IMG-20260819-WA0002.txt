@@ -1,0 +1,6 @@
+Latihan Soal Mandiri
+1. HOTS Perahu bergerak dengan kecepatan tetap 10 m/s ke barat selama 100 s, kemudian perahu berbelok ke selatan dan bergerak dengan kecepatan 15 m/s selama 80 s. Setelah itu, perahu berbelok lagi ke arah timur dan bergerak dengan kecepatan 25 m/s selama 20 s. Berdasarkan kondisi tersebut, beri tanda centang (✓) pada kolom Benar atau Salah untuk setiap pernyataan berikut.
+Pernyataan Benar Salah
+Besar perpindahan perahu dari posisi semula adalah 1.300 m.
+Jarak yang ditempuh perahu adalah 2.200 m
+Besar kecepatan rata-rata perahu tersebut adalah 6,5 m/s.

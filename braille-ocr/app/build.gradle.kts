@@ -12,8 +12,8 @@ android {
         applicationId = "id.dotcode.braille.ocr"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = 11
+        versionName = "0.3.0"
     }
     buildFeatures { compose = true }
     compileOptions {
@@ -51,6 +51,10 @@ kotlin {
 dependencies {
     implementation(project(":ocr-mlkit"))
     implementation(libs.androidx.core.ktx)
+    implementation(libs.mlkit.document.scanner)
+    // Guided capture reads the preview with the same recognizer the pipeline uses.
+    implementation(libs.mlkit.text.recognition)
+    implementation(libs.pdfbox.android)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
@@ -65,5 +69,6 @@ dependencies {
     debugImplementation(libs.compose.ui.tooling)
     testImplementation(libs.junit.jupiter)
     testImplementation(kotlin("test"))
+    testImplementation(libs.org.json)
     testRuntimeOnly(libs.junit.platform.launcher)
 }

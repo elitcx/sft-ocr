@@ -55,7 +55,7 @@ tool without duplicating the format.
 | `sourceImageSha256` | String | SHA-256 of the image's raw bytes. A renamed or re-copied file (same bytes) still matches. |
 | `pipelineVersion` | String | `PipelineVersion.CURRENT` at capture time — see below. |
 | `capturedAtEpochMs` | Long | When the *raw OCR* was produced (not when a human corrected it). |
-| `transcriptionSource` | `RAW_OCR` \| `HUMAN_CORRECTED` | **The field that matters.** See next section. |
+| `transcriptionSource` | `RAW_OCR` \| `AI_TRANSCRIBED` \| `HUMAN_CORRECTED` | **The field that matters.** See next section. |
 | `blockRoleLabels` | List | Per-block `(blockId, role, marker, verified)` — weak supervision for a future block classifier. `verified=false` until a human confirms it. |
 | `notes` | String? | Free text: how the sample was captured, anything unusual about it. |
 
@@ -80,6 +80,17 @@ level; the discipline is: **never commit or feed into the accuracy harness a `.t
 still `RAW_OCR`**. The seed dataset committed with this schema (four samples, see below) is
 `HUMAN_CORRECTED` by construction — each transcript was produced by reading the committed
 photo directly, not by copying pipeline output.
+
+### `AI_TRANSCRIBED` — independent, but unverified
+
+Added 2026-09-17. An `AI_TRANSCRIBED` transcript was typed by an AI model reading the
+**photo** directly — never the pipeline's output — so it does not suffer from the
+self-agreement problem above. It is not verified either, so it sits between the two: good
+enough to *rank* pipeline changes against each other on real captures, not good enough to
+*claim* an accuracy figure. A person promotes a sample to `HUMAN_CORRECTED` by checking it
+against the photo. The 16 samples in `braille-ocr/dataset/ai-transcribed/` are the first
+of these; `OcrExperimentHarnessTest` scores pipeline variants against them (its README has
+the transcription rules).
 
 ## The bootstrap workflow (turning 139 unlabelled photos into correctable drafts)
 

@@ -5,3 +5,6 @@ local.properties
 .idea/
 .kotlin/
 captures/
+
+# Local Gemini API key for GeminiLiveTest; never commit.
+.gemini-key

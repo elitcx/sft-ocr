@@ -4,6 +4,7 @@ import id.dotcode.braille.ocr.model.Alignment
 import id.dotcode.braille.ocr.model.OcrDocument
 import id.dotcode.braille.ocr.model.TextBlock
 import id.dotcode.braille.ocr.model.TextLine
+import id.dotcode.braille.ocr.model.TextWord
 import id.dotcode.braille.ocr.model.Timings
 import id.dotcode.braille.ocr.raw.RawTextResult
 import kotlin.math.abs
@@ -57,7 +58,8 @@ class DocumentStructurer(private val config: StructuringConfig = StructuringConf
         // including the fragments this drops, matching the existing precedent below
         // where ColumnSegmenter's own line drops likewise do not trigger a stats
         // recompute.
-        val marginFiltered = MarginFragmentFilter.filter(allLines, stats, config)
+        val inFrame = FrameEdgeFragmentFilter.filter(allLines, deskewed.result.imageWidth, config)
+        val marginFiltered = MarginFragmentFilter.filter(inFrame, stats, config)
         // Drop text from a folded/curved facing page BEFORE column detection ever sees
         // it - see FoldedPageAngleFilter's KDoc for why this must run earlier than, and
         // separately from, ColumnSegmenter's own facing-page check.
@@ -97,7 +99,15 @@ class DocumentStructurer(private val config: StructuringConfig = StructuringConf
                 relativeTextHeight = roleClassifier.relativeHeight(group, localBaselines[index]),
                 text = marker?.remainder ?: reflowed,
                 lines = group.lines.map {
-                    TextLine(it.text, it.box, it.confidence, it.recognizedLanguage)
+                    TextLine(
+                        text = it.text,
+                        box = it.box,
+                        confidence = it.confidence,
+                        recognizedLanguage = it.recognizedLanguage,
+                        words = it.words.map { w ->
+                            TextWord(w.text, w.confidence, w.secondReading, w.secondConfidence)
+                        },
+                    )
                 },
                 box = group.box,
                 confidence = averageConfidence(group.lines.mapNotNull { it.confidence }),

@@ -4,15 +4,33 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera.any" android:required="false" />
 
+    <!-- Optional Gemini text correction (GeminiCorrector); unused unless enabled in Pengaturan. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Feedback a student can feel: success, failure and aiming (Haptics). -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!-- OfflinePackages only downloads the scanner module and voices when online. -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- "Kirim ke ESP32" test bench (Esp32BluetoothSender): classic SPP to a paired device. -->
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-feature android:name="android.hardware.bluetooth" android:required="false" />
+    <!-- In-app pairing (CompanionPairing); falls back to Bluetooth settings without it. -->
+    <uses-feature android:name="android.software.companion_device_setup" android:required="false" />
+
     <application
         android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.BrailleOcr">
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
