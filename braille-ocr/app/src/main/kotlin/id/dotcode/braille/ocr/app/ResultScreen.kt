@@ -222,6 +222,8 @@ private fun DocumentResult(done: UiState.Done, result: OcrResult.Success, model:
             onRetryGemini = model::retryGeminiCorrection,
         )
 
+        PipelineCard(document = result.document, gemini = done.correction)
+
         BrailleOutputCard(plainText, onOpenReadMode = { nav.push(Route.Read) })
 
         SendSection(
@@ -445,6 +447,81 @@ fun formatDuration(seconds: Int): String = "%d:%02d".format(seconds / 60, second
 
 fun voiceLocale(language: String): java.util.Locale =
     if (language == AppPrefs.LANG_EN) java.util.Locale.US else java.util.Locale.forLanguageTag("id-ID")
+
+/**
+ * The three models that ran, with what each cost, collapsed by default.
+ *
+ * The timings already existed on [OcrDocument.timings] and already rendered in DetailScreen,
+ * but nobody opens Detail. Naming the models here is deliberate: "processing" tells a reader
+ * nothing, while "ML Kit", "Tesseract LSTM" and "Gemini" say plainly that this is a
+ * multi-model pipeline.
+ */
+@Composable
+private fun PipelineCard(document: OcrDocument, gemini: GeminiCorrection) {
+    val strings = LocalStrings.current
+    var expanded by rememberSaveable { mutableStateOf(false) }
+    val t = document.timings
+    BrlCard(
+        elevated = false,
+        border = BorderStroke(1.dp, Brl.Paper200),
+        contentPadding = PaddingValues(16.dp),
+        shape = RoundedCornerShape(20.dp),
+    ) {
+        Row(
+            Modifier.fillMaxWidth().clickable { expanded = !expanded },
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            BrlIcon(R.drawable.ic_data_object, tint = Brl.Ink500, size = 20.dp)
+            Spacer(Modifier.width(8.dp))
+            Text(strings.howItWorks, style = BrlText.Label, color = Brl.Ink700, modifier = Modifier.weight(1f))
+            Text("${t.totalMs} ms", style = BrlText.Caption, color = Brl.Ink500)
+            Spacer(Modifier.width(6.dp))
+            BrlIcon(
+                R.drawable.ic_expand_more,
+                tint = Brl.Ink400,
+                size = 20.dp,
+                modifier = Modifier.rotate(if (expanded) 180f else 0f),
+            )
+        }
+        AnimatedVisibility(
+            visible = expanded,
+            enter = expandVertically() + fadeIn(),
+            exit = shrinkVertically() + fadeOut(),
+        ) {
+            Column {
+                Spacer(Modifier.height(12.dp))
+                StageRow(strings.stageMlKit, "${t.recognizeMs} ms")
+                // Honest degradation: say the second reader was skipped rather than show 0 ms.
+                StageRow(
+                    strings.stageTesseract,
+                    if (t.secondReadWords > 0) "${t.secondReadMs} ms \u00B7 ${strings.secondReaderWords(t.secondReadWords)}"
+                    else strings.stageNotRun,
+                )
+                StageRow(strings.stageStructure, "${t.structureMs} ms")
+                StageRow(strings.stageCorrection, "${t.correctMs} ms")
+                StageRow(
+                    strings.stageGemini,
+                    when (gemini) {
+                        is GeminiCorrection.Applied ->
+                            if (gemini.changedBlocks == 0) strings.geminiNoChange
+                            else strings.geminiChanged(gemini.changedBlocks)
+                        is GeminiCorrection.Failed -> strings.geminiFailed
+                        GeminiCorrection.Off -> strings.stageNotRun
+                    },
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun StageRow(name: String, detail: String) {
+    Row(Modifier.fillMaxWidth().padding(vertical = 5.dp), verticalAlignment = Alignment.Top) {
+        Text(name, style = BrlText.BodySmall, color = Brl.Ink700, modifier = Modifier.weight(1f))
+        Spacer(Modifier.width(12.dp))
+        Text(detail, style = BrlText.Caption, color = Brl.Ink500)
+    }
+}
 
 @Composable
 private fun CorrectionStatus(
