@@ -32,6 +32,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -59,12 +60,17 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -171,6 +177,8 @@ private fun DocumentResult(done: UiState.Done, result: OcrResult.Success, model:
     val sampleState by model.sampleSaveState.collectAsState()
 
     var showOriginal by rememberSaveable(done.historyId) { mutableStateOf(false) }
+    // On by default: the demo depends on the highlighting being visible immediately.
+    var highlightCorrections by rememberSaveable(done.historyId) { mutableStateOf(true) }
     var showShare by remember { mutableStateOf(false) }
     val uncorrected = result.uncorrected
     // Everything below - views, exports, the send - follows whichever text is on screen.
@@ -200,6 +208,8 @@ private fun DocumentResult(done: UiState.Done, result: OcrResult.Success, model:
                 model.speech.stop(RESULT_SPEECH_KEY)
                 showOriginal = it
             },
+            // The pre-correction document has no corrections to mark up.
+            highlightCorrections = highlightCorrections && !showOriginal,
             model = model,
         )
 
@@ -207,6 +217,8 @@ private fun DocumentResult(done: UiState.Done, result: OcrResult.Success, model:
             corrected = result.document,
             gemini = done.correction,
             showOriginal = showOriginal,
+            highlightCorrections = highlightCorrections,
+            onHighlightCorrectionsChange = { highlightCorrections = it },
             onRetryGemini = model::retryGeminiCorrection,
         )
 
@@ -267,6 +279,7 @@ private fun TextCard(
     hasUncorrected: Boolean,
     showOriginal: Boolean,
     onShowOriginalChange: (Boolean) -> Unit,
+    highlightCorrections: Boolean,
     model: OcrViewModel,
 ) {
     val strings = LocalStrings.current
@@ -320,7 +333,9 @@ private fun TextCard(
                     } else Modifier,
                 ),
         ) {
-            shown.forEachIndexed { index, block -> ReadingBlock(block, isFirst = index == 0) }
+            shown.forEachIndexed { index, block ->
+                ReadingBlock(block, isFirst = index == 0, highlightCorrections = highlightCorrections)
+            }
             if (expanded && document.blocks.size > MAX_EXPANDED_BLOCKS) {
                 Text(
                     "+${document.blocks.size - MAX_EXPANDED_BLOCKS} ${strings.blocksLabel}",
@@ -436,6 +451,8 @@ private fun CorrectionStatus(
     corrected: OcrDocument,
     gemini: GeminiCorrection,
     showOriginal: Boolean,
+    highlightCorrections: Boolean,
+    onHighlightCorrectionsChange: (Boolean) -> Unit,
     onRetryGemini: () -> Unit,
 ) {
     val strings = LocalStrings.current
@@ -450,6 +467,17 @@ private fun CorrectionStatus(
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             tags.forEach { Tag(it, tone = TagTone.Info, icon = R.drawable.ic_spellcheck) }
         }
+    }
+    // Only offered when there is something to mark up, and never over the pre-correction text.
+    if (!showOriginal && offlineFixes > 0) {
+        Spacer(Modifier.height(8.dp))
+        BrlButton(
+            strings.showCorrections,
+            onClick = { onHighlightCorrectionsChange(!highlightCorrections) },
+            style = if (highlightCorrections) BrlButtonStyle.Primary else BrlButtonStyle.Outline,
+            icon = R.drawable.ic_spellcheck,
+            mini = true,
+        )
     }
     if (gemini is GeminiCorrection.Failed) {
         NoticeCard(
@@ -776,9 +804,38 @@ private fun shareFile(context: Context, file: java.io.File, mime: String, title:
  * it was actually detected.
  */
 @Composable
-fun ReadingBlock(block: TextBlock, isFirst: Boolean) {
-    val fullText = if (block.marker != null) "${block.marker} ${block.text}" else block.text
+fun ReadingBlock(block: TextBlock, isFirst: Boolean, highlightCorrections: Boolean = false) {
+    val strings = LocalStrings.current
+    val markerPrefix = if (block.marker != null) "${block.marker} " else ""
+    val fullText = markerPrefix + block.text
     val isHeading = block.role == BlockRole.TITLE || block.role == BlockRole.HEADING
+
+    // Offsets are found in block.text, then shifted past the marker the screen prepends.
+    val spans = remember(block, highlightCorrections) {
+        if (!highlightCorrections) emptyList()
+        else CorrectionHighlighting.spansIn(block.text, block.corrections)
+            .map { it.copy(start = it.start + markerPrefix.length, end = it.end + markerPrefix.length) }
+    }
+    var revealed by remember(block, spans) { mutableStateOf<CorrectionSpan?>(null) }
+    var layout by remember(block, spans) { mutableStateOf<TextLayoutResult?>(null) }
+
+    // A block with no corrections must cost nothing and render exactly as it always has.
+    val rendered = remember(fullText, spans) {
+        if (spans.isEmpty()) AnnotatedString(fullText) else buildAnnotatedString {
+            append(fullText)
+            spans.forEach {
+                addStyle(SpanStyle(background = Brl.Vanila200, fontWeight = FontWeight.Bold), it.start, it.end)
+            }
+        }
+    }
+
+    // TalkBack gets the correction spoken, not a colour it cannot see.
+    val spokenDescription = remember(fullText, spans, strings) {
+        if (spans.isEmpty()) fullText
+        else fullText + spans.joinToString(prefix = ". ", separator = ". ") {
+            "${it.corrected} ${strings.correctionReadAs(it.original, it.corrected)}"
+        }
+    }
 
     val topPadding = when {
         isFirst -> 0.dp
@@ -810,9 +867,36 @@ fun ReadingBlock(block: TextBlock, isFirst: Boolean) {
             // A block reads as one focusable unit under TalkBack; headings are navigable.
             .clearAndSetSemantics {
                 if (isHeading) heading()
-                contentDescription = fullText
+                contentDescription = spokenDescription
             },
     ) {
-        Text(text = fullText, style = style, color = color, textAlign = textAlign, modifier = Modifier.fillMaxWidth())
+        Column(Modifier.fillMaxWidth()) {
+            Text(
+                text = rendered,
+                style = style,
+                color = color,
+                textAlign = textAlign,
+                onTextLayout = { layout = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .then(
+                        if (spans.isEmpty()) Modifier else Modifier.pointerInput(spans) {
+                            detectTapGestures { position ->
+                                val offset = layout?.getOffsetForPosition(position) ?: return@detectTapGestures
+                                val hit = spans.firstOrNull { offset >= it.start && offset < it.end }
+                                revealed = if (hit == revealed) null else hit
+                            }
+                        },
+                    ),
+            )
+            revealed?.let { span ->
+                Spacer(Modifier.height(6.dp))
+                Tag(
+                    "${span.original} → ${span.corrected}",
+                    tone = TagTone.Vanila,
+                    icon = R.drawable.ic_spellcheck,
+                )
+            }
+        }
     }
 }

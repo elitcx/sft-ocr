@@ -143,6 +143,8 @@ interface Strings {
     val exportJson: String
     val exportJsonDesc: String
     fun offlineFixes(count: Int): String
+    val showCorrections: String
+    fun correctionReadAs(original: String, corrected: String): String
     val geminiNoChange: String
     fun geminiChanged(blocks: Int): String
     val geminiFailed: String
@@ -456,6 +458,9 @@ object StringsId : Strings {
     override val exportJson = "Ekspor JSON"
     override val exportJsonDesc = "Data lengkap untuk diagnosis"
     override fun offlineFixes(count: Int) = "Koreksi offline: $count kata"
+    override val showCorrections = "Tampilkan koreksi"
+    override fun correctionReadAs(original: String, corrected: String) =
+        "dikoreksi dari \u201C$original\u201D menjadi \u201C$corrected\u201D"
     override val geminiNoChange = "Dicek Gemini: tanpa perubahan"
     override fun geminiChanged(blocks: Int) = "Gemini: $blocks blok diubah"
     override val geminiFailed = "Koreksi Gemini gagal"
@@ -802,6 +807,9 @@ object StringsEn : Strings {
     override val exportJson = "Export JSON"
     override val exportJsonDesc = "Full data for diagnosis"
     override fun offlineFixes(count: Int) = "Offline fixes: $count words"
+    override val showCorrections = "Show corrections"
+    override fun correctionReadAs(original: String, corrected: String) =
+        "corrected from \u201C$original\u201D to \u201C$corrected\u201D"
     override val geminiNoChange = "Checked by Gemini: no changes"
     override fun geminiChanged(blocks: Int) = "Gemini: $blocks blocks changed"
     override val geminiFailed = "Gemini correction failed"
