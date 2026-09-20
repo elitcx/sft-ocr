@@ -16,17 +16,18 @@ headless Android emulator. They are not standalone-Tesseract numbers.
 
 ### Where the error goes, lever by lever
 
-Diagnostic corpus, **n = 14 pages, 15,597 reference characters**. Each row adds one lever to
+Diagnostic corpus, **n = 14 pages, 15,597 reference characters / 2,262 reference words**.
+CER is weighted by reference characters, WER by reference words — matching `compare_dumps.py`. Each row adds one lever to
 the row above it, so the deltas are separable.
 
 | Lever | CER | WER |
 | --- | --- | --- |
-| Recognizer only (ML Kit, no correction, no reordering) | 18.54% | 29.04% |
-| + offline correction layer | 18.49% | 28.73% |
-| **+ reading-order fix** (`rebuildRowsFromWords`, this session) | **15.44%** | **25.23%** |
+| Recognizer only (ML Kit, no correction, no reordering) | 18.54% | 28.69% |
+| + offline correction layer | 18.49% | 28.38% |
+| **+ reading-order fix** (`rebuildRowsFromWords`, this session) | **15.44%** | **25.07%** |
 | + Gemini online pass | *not measured — see below* | |
 
-The ordering fix is worth **−3.05 pp CER and −3.50 pp WER**, roughly **60× the offline
+The ordering fix is worth **−3.05 pp CER and −3.31 pp WER**, roughly **60× the offline
 correction layer's contribution** on the same corpus. 3 pages improved, 11 unchanged, 0
 made worse. Full per-page table and the acceptance criteria in §4.5.1.
 
