@@ -330,4 +330,63 @@ data class StructuringConfig(
      * gathered so far.
      */
     val minFoldedPageRetainedLineShareFraction: Float = 0.5f,
+    /**
+     * [WordRowRebuilder]: the widest horizontal gap, in median character widths, that two
+     * words may span and still belong to the same printed row. Ordinary word spacing is
+     * about one character width; justified text and a contents page's dotted leaders
+     * stretch it further, so this is deliberately loose. It exists mainly as an upper
+     * bound that keeps the two sides of a column gutter from welding into one row before
+     * [ColumnSegmenter] can separate them - a gutter is far wider than any word space.
+     */
+    val wordRowMaxGapCharWidths: Float = 6.0f,
+    /**
+     * [WordRowRebuilder]: how far, as a fraction of median word height, a word's vertical
+     * centre may step from the previous word's on the same row. A curved page drifts
+     * gradually, so each word-to-word step is small even where the row's two ends differ
+     * by much more than this; the drift accumulates along the chain rather than being
+     * measured against a fixed baseline. Kept below the typical row pitch so a chain
+     * cannot climb into the row above or below.
+     */
+    val wordRowMaxVerticalStepFactor: Float = 0.6f,
+    /**
+     * Enables [WordRowRebuilder], which re-derives printed rows from word boxes before any
+     * other stage runs, on pages where the recognizer chained across a row boundary.
+     *
+     * On by default. It is safe to leave on because the rebuilder is self-gating: it only
+     * touches a page whose lines demonstrably skip over text that sits inside them (see
+     * [crossChainMinIntruders]), so a capture the recognizer grouped correctly is passed
+     * through byte for byte. An earlier version rebuilt every page unconditionally and
+     * silently changed column detection, facing-page rejection and marker extraction on
+     * captures that had nothing wrong with them; the gate exists because of that.
+     *
+     * Measured (JVM, real recognizer dumps, AI transcripts as reference):
+     * - `real-curved-230858-raw.json` - the curved handbook page this was built for -
+     *   reads its opening sentence and its dates in printed order instead of
+     *   "Tujuh puluh panjang yang lima tahun" and "Juli 17".
+     * - `real-spread-223954-raw.json` - an open-book spread the gate DOES fire on -
+     *   38.76% -> 37.22% CER. Turning this on without the word-level facing-page
+     *   rejection in [WordRowRebuilder] took the same page to 67.58%, because rebuilding
+     *   absorbs the facing page's cut-off fragments into long rows and destroys the
+     *   "short line at the frame edge" signal [FrameEdgeFragmentFilter] rejects them by.
+     *   Do not enable this without that rejection.
+     *
+     * Kept as a switch so a regression can be bisected against the recognizer's own
+     * grouping without reverting code.
+     */
+    val rebuildRowsFromWords: Boolean = true,
+    /**
+     * [WordRowRebuilder]: how close, as a fraction of median word height, an intruding
+     * word's vertical centre must be to a gap's own height before it counts as evidence
+     * that the recognizer chained across a row boundary. Words far above or below the gap
+     * belong to other rows and say nothing about this one.
+     */
+    val crossChainHeightFactor: Float = 0.8f,
+    /**
+     * [WordRowRebuilder]: how many intruding words must sit inside one intra-line gap
+     * before the page is treated as cross-chained and its rows rebuilt. Two is enough to
+     * rule out a single stray fragment while still firing on a genuinely skipped run of
+     * words; measured against the committed fixtures this fires on the curved capture and
+     * on none of the others.
+     */
+    val crossChainMinIntruders: Int = 2,
 )
