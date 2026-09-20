@@ -34,7 +34,17 @@ class DocumentStructurer(private val config: StructuringConfig = StructuringConf
      * [FrameRotation]'s KDoc for the bug this separation fixes.
      */
     fun structure(raw: RawTextResult, timings: Timings = Timings(), rotationDegrees: Int = 0): OcrDocument {
-        val uprightRaw = RotationPlausibilityGuard.correct(FrameRotation.apply(raw, rotationDegrees), config)
+        // Re-derive printed rows from word boxes before anything reads a line's text: on a
+        // curved page the recognizer's own line grouping already interleaves neighbouring
+        // rows, and no later stage can repair a line whose text is out of order inside
+        // itself. See WordRowRebuilder's KDoc for the capture this was measured on.
+        //
+        // This runs before FrameRotation because the recognizer is handed the rotation up
+        // front (`InputImage.fromBitmap(bitmap, rotation)`), so its word boxes already come
+        // back in reading orientation even though the frame's width and height do not.
+        val regrouped =
+            if (config.rebuildRowsFromWords) WordRowRebuilder.rebuild(raw, config, rotationDegrees) else raw
+        val uprightRaw = RotationPlausibilityGuard.correct(FrameRotation.apply(regrouped, rotationDegrees), config)
         val usable = uprightRaw.copy(lines = uprightRaw.lines.filter { it.text.isNotBlank() })
         if (usable.lines.isEmpty()) {
             return OcrDocument(
