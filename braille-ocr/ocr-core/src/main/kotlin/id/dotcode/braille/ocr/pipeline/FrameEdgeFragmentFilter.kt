@@ -1,6 +1,7 @@
 package id.dotcode.braille.ocr.pipeline
 
 import id.dotcode.braille.ocr.raw.RawLine
+import id.dotcode.braille.ocr.raw.RawWord
 
 /**
  * Drops short lines cut off by the left or right edge of the photo - almost always the
@@ -52,4 +53,47 @@ object FrameEdgeFragmentFilter {
         // A page that is nothing but edge fragments is better read badly than not at all.
         return kept.ifEmpty { lines }
     }
+
+    /**
+     * The same judgement as [filter], expressed over words instead of lines.
+     *
+     * [WordRowRebuilder] replaces the recognizer's line grouping, which destroys the
+     * "short line at the frame edge" signal [filter] depends on - measured, that let 469
+     * characters of facing-page text through on an open-book spread. Deciding per word,
+     * before any regrouping, keeps the judgement independent of a grouping we are about
+     * to discard.
+     *
+     * Identity semantics: the returned set is compared by reference, so callers must
+     * filter the SAME [RawWord] instances that were passed in.
+     */
+    fun edgeWords(
+        lines: List<RawLine>,
+        frameWidth: Int,
+        config: StructuringConfig,
+    ): Set<RawWord> {
+        if (frameWidth <= 0 || lines.size < 2) return emptySet()
+        val margin = frameWidth * config.frameEdgeMarginFraction
+        val maxWidth = frameWidth * config.frameEdgeMaxWidthFraction
+
+        fun sideOf(line: RawLine): Side? = when {
+            line.box.width >= maxWidth -> null
+            line.box.left < margin -> Side.LEFT
+            line.box.right > frameWidth - margin -> Side.RIGHT
+            else -> null
+        }
+
+        val stacks = lines.mapNotNull(::sideOf).groupingBy { it }.eachCount()
+        val rejected = java.util.Collections.newSetFromMap(java.util.IdentityHashMap<RawWord, Boolean>())
+        for (line in lines) {
+            val side = sideOf(line) ?: continue
+            val stacked = (stacks[side] ?: 0) >= config.frameEdgeMinStack
+            val unsure = (line.confidence ?: 1f) < config.frameEdgeLoneMaxConfidence
+            if (stacked || unsure) rejected += line.words
+        }
+        // Same guard as filter(): a page that is nothing but edge fragments is better
+        // read badly than not at all.
+        val total = lines.sumOf { it.words.size }
+        return if (rejected.size >= total) emptySet() else rejected
+    }
+
 }
