@@ -109,8 +109,15 @@ internal object GeminiProtocol {
 
     const val DEFAULT_MODEL = "gemini-3.5-flash"
 
-    /** Tried in order when the chosen model stays overloaded or out of quota. */
-    val FALLBACK_MODELS = listOf("gemini-3.5-flash-lite", "gemini-3.5-flash", "gemini-3.6-flash")
+    /**
+     * Tried in order when the chosen model stays overloaded or out of quota.
+     *
+     * `gemini-3.5-flash-lite` is deliberately NOT here. Measured on three pages it took
+     * CER from 14.54% to 14.90% - 0 pages improved, 1 unchanged, 2 made worse. Falling
+     * back to it silently degrades the page instead of failing, and for a reader who
+     * cannot see the page a quiet wrong answer is worse than a visible skipped pass.
+     */
+    val FALLBACK_MODELS = listOf("gemini-3.5-flash", "gemini-3.6-flash")
 
     /**
      * A block whose "correction" changes more than this share of its characters is kept as
