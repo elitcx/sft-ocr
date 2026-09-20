@@ -7,7 +7,9 @@ import kotlin.math.max
 enum class Instruction {
     NO_TEXT,
     TOO_DARK,
+    UNEVEN_LIGHT,
     TILT,
+    SINGLE_PAGE,
     MOVE_LEFT,
     MOVE_RIGHT,
     MOVE_UP,
@@ -38,6 +40,15 @@ data class FrameReading(
     val motion: Float = 0f,
     /** Degrees away from holding the phone flat over the page. */
     val tiltDegrees: Float = 0f,
+    /** True when the preview looks like an open book rather than one page - see [PageSplit]. */
+    val spreadDetected: Boolean = false,
+    /**
+     * How unevenly the frame is lit: 0 when every part is equally bright, approaching 1
+     * when one region is far darker than another. [brightness] is a mean over the whole
+     * frame, so a hand's shadow falling across half the page leaves it perfectly
+     * acceptable while costing the recognizer that half.
+     */
+    val lightSpread: Float = 0f,
 ) {
     val centerX: Float get() = (textLeft + textRight) / 2
     val centerY: Float get() = (textTop + textBottom) / 2
@@ -121,21 +132,34 @@ class GuidanceEngine(
         }
         if (reading.brightness < DARK) return Instruction.TOO_DARK
 
-        // Text running off an edge loses words, so that is corrected before framing.
-        val offLeft = reading.textLeft <= EDGE
-        val offRight = reading.textRight >= 1f - EDGE
-        val offTop = reading.textTop <= EDGE
-        val offBottom = reading.textBottom >= 1f - EDGE
-        when {
-            offLeft && offRight -> return Instruction.MOVE_BACK
-            offTop && offBottom -> return Instruction.MOVE_BACK
-            offLeft -> return Instruction.MOVE_LEFT
-            offRight -> return Instruction.MOVE_RIGHT
-            offTop -> return Instruction.MOVE_UP
-            offBottom -> return Instruction.MOVE_DOWN
-        }
-
+        // EVERY framing rule below is inside `if (!relaxed)`, and that is load-bearing
+        // rather than tidy. These checks used to return before the relaxation guard, so
+        // the engine's only escape hatch could not reach them: a page filling the
+        // viewfinder tripped the edge test on both sides, answered "move back" forever,
+        // and never took the shot at any distance the student tried. It was an
+        // unreachable state, not a slow one. A student who cannot see the screen has no
+        // way to discover why nothing is happening, so no rule may outrank the relax.
         if (!relaxed) {
+            // An open book is reframed first. A spread spans the frame, so the edge rule
+            // below would answer "move back" - which keeps both pages in shot and makes
+            // the capture worse. Moving in on one page fixes the framing and removes the
+            // facing page together.
+            if (reading.spreadDetected) return Instruction.SINGLE_PAGE
+
+            // Text running off an edge loses words, so that is corrected before framing.
+            val offLeft = reading.textLeft <= EDGE
+            val offRight = reading.textRight >= 1f - EDGE
+            val offTop = reading.textTop <= EDGE
+            val offBottom = reading.textBottom >= 1f - EDGE
+            when {
+                offLeft && offRight -> return Instruction.MOVE_BACK
+                offTop && offBottom -> return Instruction.MOVE_BACK
+                offLeft -> return Instruction.MOVE_LEFT
+                offRight -> return Instruction.MOVE_RIGHT
+                offTop -> return Instruction.MOVE_UP
+                offBottom -> return Instruction.MOVE_DOWN
+            }
+
             if (reading.coverage < MIN_COVERAGE) return Instruction.MOVE_CLOSER
             if (reading.coverage > MAX_COVERAGE) return Instruction.MOVE_BACK
             val offX = reading.centerX - 0.5f
@@ -146,6 +170,10 @@ class GuidanceEngine(
             if (abs(offY) > CENTER_TOLERANCE) {
                 return if (offY < 0) Instruction.MOVE_UP else Instruction.MOVE_DOWN
             }
+
+            // Asked for last of the framing rules: a shadow is worth moving out of the way,
+            // but not before the page is actually in shot.
+            if (reading.lightSpread > MAX_LIGHT_SPREAD) return Instruction.UNEVEN_LIGHT
         }
 
         val sharpEnough = reading.sharpness >= if (relaxed) RELAXED_SHARPNESS else MIN_SHARPNESS
@@ -169,10 +197,29 @@ class GuidanceEngine(
 
     private companion object {
         const val DARK = 0.22f
+
+        /**
+         * How uneven the lighting may be before the student is told about it. A page lit
+         * from one side is normal and readable; the case worth speaking up about is a hard
+         * shadow - a hand, the phone itself, the photographer - lying across the text.
+         */
+        const val MAX_LIGHT_SPREAD = 0.45f
         const val MAX_TILT = 28f
-        const val EDGE = 0.02f
+        /**
+         * How close to the frame edge text may sit before the student is told words are
+         * being cut off. Deliberately tight ONLY in absolute terms: filling the
+         * viewfinder with the page is what gives the recognizer the most pixels, so a
+         * 1% margin is a good photo, not a near miss. Measured against the engine's own
+         * framing sweep, 0.02 made every framing tighter than a 2% margin unreachable.
+         */
+        const val EDGE = 0.01f
         const val MIN_COVERAGE = 0.12f
-        const val MAX_COVERAGE = 0.88f
+        /**
+         * Text may fill almost the whole frame before the student is asked to back off.
+         * At 0.88 a page framed with 3% margins - a good photo - waited out the full
+         * relax timeout before it was taken.
+         */
+        const val MAX_COVERAGE = 0.95f
         const val CENTER_TOLERANCE = 0.14f
         const val MIN_SHARPNESS = 0.45f
         const val RELAXED_SHARPNESS = 0.3f

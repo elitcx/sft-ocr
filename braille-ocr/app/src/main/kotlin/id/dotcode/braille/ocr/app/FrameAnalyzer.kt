@@ -61,6 +61,8 @@ class FrameAnalyzer(
                 sharpness = stats.sharpness,
                 motion = stats.motion,
                 tiltDegrees = tilt(),
+                spreadDetected = recognized?.spread == true,
+                lightSpread = stats.lightSpread,
             ),
         )
 
@@ -84,7 +86,7 @@ class FrameAnalyzer(
             .addOnSuccessListener { result ->
                 val lines = result.textBlocks.flatMap { it.lines }
                 text = if (lines.isEmpty()) {
-                    TextBounds(0f, 0f, 0f, 0f, 0, System.currentTimeMillis())
+                    TextBounds(0f, 0f, 0f, 0f, lineCount = 0, at = System.currentTimeMillis())
                 } else {
                     var left = Float.MAX_VALUE
                     var top = Float.MAX_VALUE
@@ -98,12 +100,24 @@ class FrameAnalyzer(
                             bottom = maxOf(bottom, box.bottom.toFloat())
                         }
                     }
+                    // Per-line spans, not just their union: an open book and a single
+                    // page have the SAME bounding box, and only the gap between the lines
+                    // tells them apart. See PageSplit.
+                    val spans = lines.mapNotNull { line ->
+                        line.boundingBox?.let {
+                            LineSpan(
+                                left = (it.left / upright.first).coerceIn(0f, 1f),
+                                right = (it.right / upright.first).coerceIn(0f, 1f),
+                            )
+                        }
+                    }
                     TextBounds(
                         left = (left / upright.first).coerceIn(0f, 1f),
                         top = (top / upright.second).coerceIn(0f, 1f),
                         right = (right / upright.first).coerceIn(0f, 1f),
                         bottom = (bottom / upright.second).coerceIn(0f, 1f),
                         lineCount = lines.size,
+                        spread = PageSplit.looksLikeTwoPages(spans),
                         at = System.currentTimeMillis(),
                     )
                 }
@@ -185,10 +199,47 @@ class FrameAnalyzer(
             // A flat, textureless frame is not "sharp"; it just has nothing in it.
             sharpness = if (contrast < MIN_CONTRAST) 0f else sharpness.toFloat(),
             motion = motion.toFloat(),
+            lightSpread = lightSpread(samples, columns, rows),
         )
     }
 
-    private data class Stats(val brightness: Float, val sharpness: Float, val motion: Float)
+    /**
+     * How unevenly the frame is lit, from the brightest and darkest ninth of it.
+     *
+     * Mean brightness cannot see this: a hard shadow lying across half the page leaves the
+     * mean perfectly healthy while costing the recognizer that half. One of the corpus's
+     * worst captures is a well-exposed contents page with the photographer's own shadow
+     * down the middle of it.
+     */
+    private fun lightSpread(samples: IntArray, columns: Int, rows: Int): Float {
+        var darkest = Double.MAX_VALUE
+        var brightest = 0.0
+        for (by in 0 until BLOCKS) {
+            for (bx in 0 until BLOCKS) {
+                var sum = 0L
+                var count = 0
+                for (y in (by * rows / BLOCKS) until ((by + 1) * rows / BLOCKS)) {
+                    for (x in (bx * columns / BLOCKS) until ((bx + 1) * columns / BLOCKS)) {
+                        sum += samples[y * columns + x]
+                        count++
+                    }
+                }
+                if (count == 0) continue
+                val blockMean = sum.toDouble() / count
+                darkest = minOf(darkest, blockMean)
+                brightest = maxOf(brightest, blockMean)
+            }
+        }
+        if (brightest <= 0.0 || darkest == Double.MAX_VALUE) return 0f
+        return ((brightest - darkest) / brightest).coerceIn(0.0, 1.0).toFloat()
+    }
+
+    private data class Stats(
+        val brightness: Float,
+        val sharpness: Float,
+        val motion: Float,
+        val lightSpread: Float = 0f,
+    )
 
     private data class TextBounds(
         val left: Float,
@@ -196,6 +247,7 @@ class FrameAnalyzer(
         val right: Float,
         val bottom: Float,
         val lineCount: Int,
+        val spread: Boolean = false,
         val at: Long,
     )
 
@@ -207,6 +259,9 @@ class FrameAnalyzer(
         const val SHARP_GRADIENT = 14.0
         const val MOTION_SCALE = 12.0
         const val MIN_CONTRAST = 8.0
+
+        /** The frame is divided into this many blocks per side to measure uneven light. */
+        const val BLOCKS = 3
     }
 }
 

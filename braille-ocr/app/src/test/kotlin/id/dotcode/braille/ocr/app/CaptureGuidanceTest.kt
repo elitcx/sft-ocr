@@ -145,4 +145,142 @@ class CaptureGuidanceTest {
         assertTrue(near > far, "near=$near far=$far")
         assertEquals(0f, engine.update(goodFrame().copy(hasText = false), 200).closeness)
     }
+
+    @Test
+    fun `a page that fills the frame is still photographed`() {
+        // The defect this pins, reported from a real Galaxy S24 FE: aiming so the page
+        // fills the viewfinder - which is exactly what gives the recognizer the most
+        // pixels to work with - produced "move back" forever and never took the shot.
+        // The edge checks returned before the relaxation guard, so the engine's only
+        // escape hatch could not reach them and the state was unreachable, not merely
+        // slow. Twenty seconds is well past relaxAfterMs.
+        val engine = GuidanceEngine()
+        engine.reset(0)
+        val fillsFrame = goodFrame().copy(
+            textLeft = 0.01f, textTop = 0.01f, textRight = 0.99f, textBottom = 0.99f,
+        )
+        var now = 0L
+        var captured = false
+        while (now < 20_000 && !captured) {
+            now += 100
+            captured = engine.update(fillsFrame, now).capture
+        }
+        assertTrue(captured, "a page filling the frame was never photographed")
+    }
+
+    @Test
+    fun `no frame with text can leave the student unable to take a photo`() {
+        // The invariant the bug above violated, and the one worth keeping: whatever a
+        // reading looks like, if there is text in it the engine must eventually take the
+        // shot. A blind student cannot see why nothing is happening, so an unreachable
+        // state is the worst failure this class has - strictly worse than a mediocre
+        // photo. Any future rule that can block capture indefinitely fails here.
+        val deadline = 9_000L + 700L + 1_000L
+        for (margin in listOf(0.0f, 0.005f, 0.02f, 0.05f, 0.2f, 0.45f)) {
+            for (shiftX in listOf(-0.3f, 0f, 0.3f)) {
+                val engine = GuidanceEngine()
+                engine.reset(0)
+                val reading = goodFrame().copy(
+                    textLeft = (margin + shiftX).coerceIn(0f, 1f),
+                    textTop = margin,
+                    textRight = (1f - margin + shiftX).coerceIn(0f, 1f),
+                    textBottom = 1f - margin,
+                    sharpness = 0.35f,
+                    motion = 0.4f,
+                )
+                var now = 0L
+                var captured = false
+                while (now < deadline && !captured) {
+                    now += 100
+                    captured = engine.update(reading, now).capture
+                }
+                assertTrue(
+                    captured,
+                    "no photo for margin=$margin shiftX=$shiftX after ${deadline}ms",
+                )
+            }
+        }
+    }
+
+
+    @Test
+    fun `a tightly framed page is photographed promptly, not after the relax`() {
+        // Capturing "eventually, once it gives up" is not a fix - it is a 9-second wait
+        // with a stream of wrong advice in the student's ear. Filling the frame with the
+        // page is the framing that gives the recognizer the most pixels, so it must be
+        // taken quickly. Measured: before the retune the instant band started at a 5%
+        // margin, and anything tighter than 2% was unreachable entirely.
+        for (margin in listOf(0.015f, 0.03f, 0.05f, 0.1f)) {
+            val engine = GuidanceEngine()
+            engine.reset(0)
+            val reading = goodFrame().copy(
+                textLeft = margin, textTop = margin,
+                textRight = 1f - margin, textBottom = 1f - margin,
+            )
+            var now = 0L
+            var capturedAt = -1L
+            while (now < 20_000 && capturedAt < 0) {
+                now += 33
+                if (engine.update(reading, now).capture) capturedAt = now
+            }
+            assertTrue(
+                capturedAt in 1..3_000,
+                "margin=$margin was photographed at ${capturedAt}ms, not promptly",
+            )
+        }
+    }
+
+
+    @Test
+    fun `an open book is reframed onto one page before anything else`() {
+        // A spread spans the frame, so the edge rule would otherwise say "move back" -
+        // the opposite of what fixes it. Moving closer to one page fixes the framing AND
+        // removes the facing page, so it has to outrank the edge advice.
+        val engine = GuidanceEngine()
+        engine.reset(0)
+        val spread = goodFrame().copy(
+            textLeft = 0.02f, textRight = 0.98f, spreadDetected = true,
+        )
+        val (guidance, _) = engine.hold(spread, 0, 1_000)
+        assertEquals(Instruction.SINGLE_PAGE, guidance.instruction)
+    }
+
+    @Test
+    fun `a shadow across the page is called out once the framing is right`() {
+        val engine = GuidanceEngine()
+        engine.reset(0)
+        val shadowed = goodFrame().copy(lightSpread = 0.7f)
+        val (guidance, _) = engine.hold(shadowed, 0, 1_000)
+        assertEquals(Instruction.UNEVEN_LIGHT, guidance.instruction)
+    }
+
+    @Test
+    fun `even lighting is never called a shadow`() {
+        val engine = GuidanceEngine()
+        engine.reset(0)
+        val (guidance, _) = engine.hold(goodFrame().copy(lightSpread = 0.15f), 0, 1_000)
+        assertEquals(Instruction.READY, guidance.instruction)
+    }
+
+    @Test
+    fun `neither new warning can stop the photo being taken`() {
+        // The invariant from `no frame with text can leave the student unable to take a
+        // photo`, applied to the two checks added afterwards. Both are advice, not gates.
+        for (reading in listOf(
+            goodFrame().copy(spreadDetected = true),
+            goodFrame().copy(lightSpread = 0.95f),
+            goodFrame().copy(spreadDetected = true, lightSpread = 0.95f),
+        )) {
+            val engine = GuidanceEngine()
+            engine.reset(0)
+            var now = 0L
+            var captured = false
+            while (now < 11_000 && !captured) {
+                now += 100
+                captured = engine.update(reading, now).capture
+            }
+            assertTrue(captured, "a warning blocked the photo: $reading")
+        }
+    }
+
 }

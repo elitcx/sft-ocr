@@ -328,7 +328,9 @@ object StringsId : Strings {
     override fun instruction(instruction: Instruction) = when (instruction) {
         Instruction.NO_TEXT -> "Arahkan kamera ke teks"
         Instruction.TOO_DARK -> "Kurang cahaya"
+        Instruction.UNEVEN_LIGHT -> "Ada bayangan di halaman"
         Instruction.TILT -> "Luruskan ponsel di atas kertas"
+        Instruction.SINGLE_PAGE -> "Terlihat dua halaman, dekatkan ke satu"
         Instruction.MOVE_LEFT -> "Geser ke kiri"
         Instruction.MOVE_RIGHT -> "Geser ke kanan"
         Instruction.MOVE_UP -> "Geser ke atas"
@@ -674,7 +676,9 @@ object StringsEn : Strings {
     override fun instruction(instruction: Instruction) = when (instruction) {
         Instruction.NO_TEXT -> "Point the camera at text"
         Instruction.TOO_DARK -> "Not enough light"
+        Instruction.UNEVEN_LIGHT -> "Shadow on the page"
         Instruction.TILT -> "Hold the phone flat over the paper"
+        Instruction.SINGLE_PAGE -> "Two pages in view, move closer to one"
         Instruction.MOVE_LEFT -> "Move left"
         Instruction.MOVE_RIGHT -> "Move right"
         Instruction.MOVE_UP -> "Move up"
