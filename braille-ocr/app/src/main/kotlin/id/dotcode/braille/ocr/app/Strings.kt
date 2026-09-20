@@ -143,6 +143,16 @@ interface Strings {
     val exportJson: String
     val exportJsonDesc: String
     fun offlineFixes(count: Int): String
+    val showCorrections: String
+    fun correctionReadAs(original: String, corrected: String): String
+    val howItWorks: String
+    val stageMlKit: String
+    val stageTesseract: String
+    val stageStructure: String
+    val stageCorrection: String
+    val stageGemini: String
+    val stageNotRun: String
+    fun secondReaderWords(count: Int): String
     val geminiNoChange: String
     fun geminiChanged(blocks: Int): String
     val geminiFailed: String
@@ -456,6 +466,17 @@ object StringsId : Strings {
     override val exportJson = "Ekspor JSON"
     override val exportJsonDesc = "Data lengkap untuk diagnosis"
     override fun offlineFixes(count: Int) = "Koreksi offline: $count kata"
+    override val showCorrections = "Tampilkan koreksi"
+    override fun correctionReadAs(original: String, corrected: String) =
+        "dikoreksi dari \u201C$original\u201D menjadi \u201C$corrected\u201D"
+    override val howItWorks = "Bagaimana ini bekerja"
+    override val stageMlKit = "ML Kit \u2014 pengenalan teks neural di perangkat"
+    override val stageTesseract = "Tesseract LSTM \u2014 pembaca kedua, sepenuhnya luring"
+    override val stageStructure = "Penataan \u2014 kolom dan urutan baca"
+    override val stageCorrection = "Koreksi luring \u2014 dua bacaan dan kamus"
+    override val stageGemini = "Gemini \u2014 perbaikan dengan konteks kalimat (daring)"
+    override val stageNotRun = "tidak berjalan"
+    override fun secondReaderWords(count: Int) = "$count kata dibandingkan"
     override val geminiNoChange = "Dicek Gemini: tanpa perubahan"
     override fun geminiChanged(blocks: Int) = "Gemini: $blocks blok diubah"
     override val geminiFailed = "Koreksi Gemini gagal"
@@ -802,6 +823,17 @@ object StringsEn : Strings {
     override val exportJson = "Export JSON"
     override val exportJsonDesc = "Full data for diagnosis"
     override fun offlineFixes(count: Int) = "Offline fixes: $count words"
+    override val showCorrections = "Show corrections"
+    override fun correctionReadAs(original: String, corrected: String) =
+        "corrected from \u201C$original\u201D to \u201C$corrected\u201D"
+    override val howItWorks = "How this works"
+    override val stageMlKit = "ML Kit \u2014 on-device neural text recognition"
+    override val stageTesseract = "Tesseract LSTM \u2014 second reader, fully offline"
+    override val stageStructure = "Structuring \u2014 columns and reading order"
+    override val stageCorrection = "Offline correction \u2014 two readings and a lexicon"
+    override val stageGemini = "Gemini \u2014 sentence-context repair (online)"
+    override val stageNotRun = "did not run"
+    override fun secondReaderWords(count: Int) = "$count words compared"
     override val geminiNoChange = "Checked by Gemini: no changes"
     override fun geminiChanged(blocks: Int) = "Gemini: $blocks blocks changed"
     override val geminiFailed = "Gemini correction failed"
