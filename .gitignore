@@ -6,3 +6,12 @@ local.properties
 .kotlin/
 captures/
 .superpowers/
+
+# Fine-tuning outputs: an 8 MB experimental model and its split records.
+# Kept out of git deliberately - the experiment is documented in
+# docs/accuracy-and-training-report-2026-09-20.md and the model did not
+# change app output, so there is nothing to ship.
+artifacts/
+
+# Gemini API key for the correction-pass measurement. Never commit a key.
+gemini_key.txt
