@@ -629,6 +629,26 @@ class OcrViewModel(application: Application) : AndroidViewModel(application) {
         clearConnectionTest()
     }
 
+    /**
+     * Remembers the word a scan was left on, so reopening it from History continues the
+     * read instead of restarting at word one.
+     *
+     * Called as the student moves, debounced by the reading screen: a page is a few hundred
+     * words and each save rewrites a meta file, so writing on every word would be hundreds
+     * of writes for one read.
+     */
+    fun rememberReadingPosition(id: String, wordIndex: Int) {
+        val entry = allHistory.value.firstOrNull { it.id == id } ?: return
+        if (entry.lastWord == wordIndex) return
+        val updated = entry.copy(lastWord = wordIndex)
+        allHistory.update { entries -> entries.map { if (it.id == id) updated else it } }
+        viewModelScope.launch(Dispatchers.IO) { runCatching { historyStore.updateMeta(updated) } }
+    }
+
+    /** Where to open [id]: see [resumeIndex] for the rules. */
+    fun readingPositionOf(id: String?): Int =
+        id?.let { key -> allHistory.value.firstOrNull { it.id == key }?.lastWord } ?: 0
+
     private fun markSent(id: String) {
         val entry = allHistory.value.firstOrNull { it.id == id } ?: return
         if (entry.sentToDevice) return

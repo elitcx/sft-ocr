@@ -119,4 +119,44 @@ class HistoryStoreTest {
         assertEquals("satu dua…", HistoryStore.shorten("satu dua tiga empat", 12))
         assertEquals("pendek", HistoryStore.shorten("  pendek ", 12))
     }
+
+    @Test
+    fun `a reading position survives a round trip`() {
+        val saved = entry("a", 1_000).copy(lastWord = 120)
+        assertEquals(120, HistoryStore.parseMeta(HistoryStore.metaJson(saved)).lastWord)
+    }
+
+    @Test
+    fun `history written before reading positions existed opens at the beginning`() {
+        // Meta files on devices that already have this app have no lastWord key. Parsing
+        // must treat that as "start at the beginning" rather than throwing, or the update
+        // would make every past scan unopenable.
+        val old = """{"id":"a","createdAt":1000,"title":"Judul","preview":"isi",
+            "sourceKind":"CAMERA","wordCount":3,"corrected":false,"sentToDevice":false}"""
+        val parsed = HistoryStore.parseMeta(old)
+        assertEquals(0, parsed.lastWord)
+        assertEquals("a", parsed.id)
+    }
+
+    @Test
+    fun `a half-read page resumes where it stopped`() {
+        assertEquals(120, resumeIndex(lastWord = 120, wordCount = 250))
+    }
+
+    @Test
+    fun `a page that was read to the end starts over`() {
+        // Dropping someone on the last word of a page they already finished gives them
+        // nowhere to go. Starting over is the only useful thing to do.
+        assertEquals(0, resumeIndex(lastWord = 249, wordCount = 250))
+    }
+
+    @Test
+    fun `a position beyond the text is clamped`() {
+        // The document can be re-corrected between readings, so a stored position may no
+        // longer exist. It must never land outside the word list.
+        assertEquals(0, resumeIndex(lastWord = 900, wordCount = 250))
+        assertEquals(0, resumeIndex(lastWord = 5, wordCount = 0))
+        assertEquals(0, resumeIndex(lastWord = -3, wordCount = 250))
+    }
+
 }

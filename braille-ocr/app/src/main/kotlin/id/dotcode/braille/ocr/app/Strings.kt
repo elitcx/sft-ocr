@@ -190,6 +190,9 @@ interface Strings {
     fun brailleFor(word: String): String
     val nextWordAction: String
     val previousWordAction: String
+    /** Spoken when a scan reopens part-read, so a resumed read is not mistaken for a fault. */
+    fun resumedAt(index: Int, total: Int): String
+    val startOver: String
 
     // History
     val historyTitle: String
@@ -515,6 +518,8 @@ object StringsId : Strings {
     override fun brailleFor(word: String) = "Braille untuk $word"
     override val nextWordAction = "Kata berikutnya"
     override val previousWordAction = "Kata sebelumnya"
+    override fun resumedAt(index: Int, total: Int) = "Melanjutkan dari kata $index dari $total"
+    override val startOver = "Mulai dari awal"
 
     override val historyTitle = "Riwayat"
     override val tagPhoto = "Foto"
@@ -863,6 +868,8 @@ object StringsEn : Strings {
     override fun brailleFor(word: String) = "Braille for $word"
     override val nextWordAction = "Next word"
     override val previousWordAction = "Previous word"
+    override fun resumedAt(index: Int, total: Int) = "Continuing from word $index of $total"
+    override val startOver = "Start from the beginning"
 
     override val historyTitle = "History"
     override val tagPhoto = "Photo"

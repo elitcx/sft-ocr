@@ -78,12 +78,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
+import kotlinx.coroutines.delay
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.min
 import androidx.compose.ui.unit.sp
 import id.dotcode.braille.ocr.model.OcrResult
 
 private const val SPEECH_KEY = "read"
+
+/** Separate from [SPEECH_KEY] so the resume notice is not cut off by the first word. */
+private const val RESUME_KEY = "read-resume"
+
+/** How long the student must settle on a word before it is worth writing to disk. */
+private const val POSITION_SAVE_DELAY_MS = 1_200L
 
 @Composable
 fun ReadScreen(model: OcrViewModel) {
@@ -99,7 +106,13 @@ fun ReadScreen(model: OcrViewModel) {
     }
 
     val text = remember(success.document) { ReadingText.of(TextExport.toPlainText(success.document)) }
-    var index by rememberSaveable(done.historyId) { mutableIntStateOf(0) }
+    // Reopening a scan continues where it was left off. resumeIndex holds the two rules
+    // worth stating: a page already read to the end starts over, and a position that no
+    // longer fits the text (the document can be re-corrected between readings) is dropped.
+    val resumeAt = remember(done.historyId, text) {
+        resumeIndex(model.readingPositionOf(done.historyId), text.words.size)
+    }
+    var index by rememberSaveable(done.historyId) { mutableIntStateOf(resumeAt) }
     var forward by remember { mutableStateOf(true) }
     var showSettings by remember { mutableStateOf(false) }
     val reading by model.reading.collectAsState()
@@ -126,10 +139,35 @@ fun ReadScreen(model: OcrViewModel) {
         if (latestReading.autoSpeak) speakWord(word)
         if (latestReading.autoSend) model.sendWord(word.spoken)
     }
+    // Saving on every word would rewrite the meta file a few hundred times per page, so
+    // the position is written only once the student settles. Moving on cancels the pending
+    // save; onDispose below covers closing the page before the delay elapses.
+    val historyId = done.historyId
+    if (historyId != null) {
+        LaunchedEffect(index, historyId) {
+            delay(POSITION_SAVE_DELAY_MS)
+            model.rememberReadingPosition(historyId, index)
+        }
+    }
+    val latestSavedIndex by rememberUpdatedState(index)
     DisposableEffect(Unit) {
         onDispose {
             model.speech.stop(SPEECH_KEY)
             model.clearWordSendState()
+            if (historyId != null) model.rememberReadingPosition(historyId, latestSavedIndex)
+        }
+    }
+
+    // A student who cannot see the screen and is dropped into the middle of a page has no
+    // way to tell a resumed read from a broken one, so the app says which it is.
+    LaunchedEffect(done.historyId) {
+        if (resumeAt > 0) {
+            model.speech.speak(
+                RESUME_KEY,
+                strings.resumedAt(resumeAt + 1, text.words.size),
+                voiceLocale(latestReading.voiceLanguage),
+                latestReading.speechRate,
+            )
         }
     }
 
@@ -249,6 +287,10 @@ fun ReadScreen(model: OcrViewModel) {
         ReadSettingsSheet(
             reading = reading,
             onChange = model::setReading,
+            onStartOver = {
+                go(0)
+                showSettings = false
+            },
             onDismiss = { showSettings = false },
         )
     }
@@ -388,6 +430,7 @@ private fun WordSendIndicator(model: OcrViewModel, visible: Boolean) {
 private fun ReadSettingsSheet(
     reading: AppPrefs.Reading,
     onChange: (AppPrefs.Reading) -> Unit,
+    onStartOver: () -> Unit,
     onDismiss: () -> Unit,
 ) {
     val strings = LocalStrings.current
@@ -414,6 +457,14 @@ private fun ReadSettingsSheet(
                 strings.autoSend, reading.autoSend,
                 { onChange(reading.copy(autoSend = it)) },
                 description = strings.autoSendDesc,
+            )
+            // Lives here rather than on a button of its own: the reading screen is driven by
+            // swipes, and one more tappable target is one more thing to find by accident.
+            BrlButton(
+                strings.startOver,
+                onStartOver,
+                modifier = Modifier.fillMaxWidth(),
+                style = BrlButtonStyle.Outline,
             )
         }
     }

@@ -15,7 +15,24 @@ data class HistoryEntry(
     val wordCount: Int,
     val corrected: Boolean,
     val sentToDevice: Boolean,
+    /**
+     * The word this scan was last left on, so reopening it continues the read instead of
+     * restarting. Zero means the beginning - which is also what every meta file written
+     * before this field existed parses as, so no migration is needed.
+     */
+    val lastWord: Int = 0,
 )
+
+/**
+ * Where to open a past scan, given the word it was last left on.
+ *
+ * Kept out of the reading screen so it can be tested: the two cases that matter are a page
+ * already read to the end - where resuming would drop the student on the last word with
+ * nowhere to go - and a position that no longer exists, which happens when a document is
+ * re-corrected between readings and comes back with fewer words.
+ */
+fun resumeIndex(lastWord: Int, wordCount: Int): Int =
+    if (lastWord <= 0 || lastWord >= wordCount - 1) 0 else lastWord
 
 /**
  * Past scans, on this device only: `<id>.meta.json` (the list row) beside `<id>.doc.json`
@@ -92,6 +109,7 @@ class HistoryStore(private val dir: File, private val maxEntries: Int = MAX_ENTR
             .put("wordCount", entry.wordCount)
             .put("corrected", entry.corrected)
             .put("sentToDevice", entry.sentToDevice)
+            .put("lastWord", entry.lastWord)
             .toString()
 
         fun parseMeta(json: String): HistoryEntry {
@@ -106,6 +124,7 @@ class HistoryStore(private val dir: File, private val maxEntries: Int = MAX_ENTR
                 wordCount = o.optInt("wordCount"),
                 corrected = o.optBoolean("corrected"),
                 sentToDevice = o.optBoolean("sentToDevice"),
+                lastWord = o.optInt("lastWord"),
             )
         }
 
